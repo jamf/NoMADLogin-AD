@@ -11,11 +11,10 @@
 
 #endif /* NoMADLogin_h */
 
-#import <Foundation/Foundation.h>
-#include <CoreServices/CoreServices.h>
-#include <Security/AuthorizationPlugin.h>
-#include <Security/AuthSession.h>
-#include <Security/AuthorizationTags.h>
+@import Foundation;
+@import Security.AuthorizationPlugin;
+@import Security.AuthSession;
+@import DirectoryService;
 
 // Plugin constants
 

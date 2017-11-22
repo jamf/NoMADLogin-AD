@@ -6,14 +6,8 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#include <CoreServices/CoreServices.h>
-#include <Security/AuthorizationPlugin.h>
-#include <Security/AuthSession.h>
-#include <Security/AuthorizationTags.h>
-
 #import "NoMADLogin.h"
-#import "NoMADLogin-Swift.h"
+#import "NoMADLogin_AD-Swift.h"
 
 NoMADLogin *authorizationPlugin = nil;
 
@@ -113,20 +107,6 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         
         CheckAD *checkAD = [[CheckAD alloc] initWithMechanism:mechanism];
         [checkAD run];
-    } else if (mechanism->fCheckOkta) {
-        
-        NSLog(@"Calling CheckOkta");
-        
-        CheckOkta *checkOkta = [[CheckOkta alloc] initWithMechanism:mechanism];
-        [checkOkta run];
-        
-    } else if (mechanism->fCheckOktaNonModal) {
-        
-        NSLog(@"Calling CheckOktaNonModal");
-        
-        CheckOkta *checkOkta = [[CheckOkta alloc] initWithMechanism:mechanism];
-        [checkOkta nonmodal];
-        
     } else if (mechanism->fCreateUser) {
         
         NSLog(@"Calling Create User");

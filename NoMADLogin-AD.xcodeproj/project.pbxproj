@@ -63,6 +63,7 @@
 				9CBDCFBB1FC5CE6400CF73F4 /* UI */,
 				9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */,
 				9CBDCF9C1FC4CEE300CF73F4 /* Products */,
+				9CBDCFA71FC5CDB500CF73F4 /* NoMADLogin-AD-Bridging-Header.h */,
 				9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -78,7 +79,6 @@
 		9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */ = {
 			isa = PBXGroup;
 			children = (
-				9CBDCFA71FC5CDB500CF73F4 /* NoMADLogin-AD-Bridging-Header.h */,
 				9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */,
 			);
 			path = "NoMADLogin-AD";
@@ -271,6 +271,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -319,6 +320,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -338,7 +340,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLogin-AD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
@@ -358,7 +360,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLogin-AD-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
