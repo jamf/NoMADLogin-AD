@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Cocoa
 //import Security.AuthorizationTags
 import SecurityInterface.SFAuthorizationPluginView
 

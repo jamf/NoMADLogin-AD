@@ -8,7 +8,8 @@
 
 import Cocoa
 import Security.AuthorizationPlugin
-//import Security.AuthorizationTags
+import OpenDirectory
+import NoMAD_ADAuth
 
 class SignIn: NSWindowController {
     
@@ -40,7 +41,7 @@ class SignIn: NSWindowController {
         super.windowDidLoad()
         
         // get an image
-        let fameworkURL = Bundle.init(identifier: "menu.nomad.NoMADLogin")?.bundleURL
+        let fameworkURL = Bundle.init(identifier: "menu.nomad.NoMADLoginAD")?.bundleURL
         
         NSLog((fameworkURL?.absoluteString)!)
         

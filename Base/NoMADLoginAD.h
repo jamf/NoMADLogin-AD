@@ -6,10 +6,10 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-#ifndef NoMADLogin_h
-#define NoMADLogin_h
+#ifndef NoMADLoginAD_h
+#define NoMADLoginAD_h
 
-#endif /* NoMADLogin_h */
+#endif /* NoMADLoginAD_h */
 
 @import Foundation;
 @import Security.AuthorizationPlugin;
@@ -52,7 +52,7 @@ typedef struct MechanismRecord MechanismRecord;
 #pragma mark
 #pragma mark ObjC AuthPlugin Wrapper
 
-@interface NoMADLogin : NSObject
+@interface NoMADLoginAD : NSObject
 
 // Mechanism parts
 

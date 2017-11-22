@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenDirectory
 
 class CreateUser: NoLoMechanism {
     

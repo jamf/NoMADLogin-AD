@@ -8,6 +8,7 @@
 
 import Foundation
 import Security
+import OpenDirectory
 
 enum HintType : String {
     case user = "NoMAD.user"
@@ -21,7 +22,7 @@ enum HintType : String {
 
 class NoLoMechanism: NSObject {
     
-    let contextDomain : NSString = "menu.nomad.NoMADLogin"
+    let contextDomain : NSString = "menu.nomad.NoMADLoginAD"
     
     var mechanism : UnsafePointer<MechanismRecord>
     

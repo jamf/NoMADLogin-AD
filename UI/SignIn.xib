@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="SignIn" customModule="NoMADLogin" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="SignIn" customModule="NoMADLogin_AD" customModuleProvider="target">
             <connections>
                 <outlet property="domain" destination="ktB-bz-Qqt" id="Nsn-IH-wYf"/>
                 <outlet property="imageView" destination="C6d-sv-yXM" id="h6w-xM-lUP"/>
@@ -22,7 +22,7 @@
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES"/>
             <rect key="contentRect" x="276" y="219" width="862" height="496"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="862" height="496"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -102,17 +102,17 @@ DQ
                     <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C6d-sv-yXM">
                         <rect key="frame" x="292" y="204" width="279" height="272"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NoMADLogo" id="2vJ-kZ-7Fn"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NoMADLogo500px" id="2vJ-kZ-7Fn"/>
                     </imageView>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="566" y="261"/>
+            <point key="canvasLocation" x="139" y="164"/>
         </window>
     </objects>
     <resources>
-        <image name="NoMADLogo" width="120" height="120"/>
+        <image name="NoMADLogo500px" width="120" height="120"/>
     </resources>
 </document>

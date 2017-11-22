@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
+		9C9740271FC5DEAA00D9EAE6 /* NoMAD_ADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */; };
 		9CBDCFA51FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */; };
 		9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */; };
 		9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */; };
 		9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */; };
 		9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */; };
 		9CBDCFB11FC5CDB600CF73F4 /* FakeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAC1FC5CDB600CF73F4 /* FakeUser.swift */; };
-		9CBDCFB51FC5CE2200CF73F4 /* NoMADLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB31FC5CE2100CF73F4 /* NoMADLogin.m */; };
+		9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */; };
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CBDCFBD1FC5CEAD00CF73F4 /* UNIXUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFBC1FC5CEAD00CF73F4 /* UNIXUtilities.swift */; };
@@ -23,17 +25,22 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLogin-AD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NoMADLogin-AD.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		9C97401E1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
+		9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad-usercreate"; sourceTree = "<group>"; };
+		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
+		9C9740211FC5DE4500D9EAE6 /* console-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-usercreate"; sourceTree = "<group>"; };
+		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CBDCFA71FC5CDB500CF73F4 /* NoMADLogin-AD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoMADLogin-AD-Bridging-Header.h"; sourceTree = "<group>"; };
+		9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoMADLoginAD-Bridging-Header.h"; sourceTree = "<group>"; };
 		9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUser.swift; sourceTree = "<group>"; };
 		9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogOnly.swift; sourceTree = "<group>"; };
 		9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoLoMechanism.swift; sourceTree = "<group>"; };
 		9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckAD.swift; sourceTree = "<group>"; };
 		9CBDCFAC1FC5CDB600CF73F4 /* FakeUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeUser.swift; sourceTree = "<group>"; };
-		9CBDCFB31FC5CE2100CF73F4 /* NoMADLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoMADLogin.m; sourceTree = "<group>"; };
-		9CBDCFB41FC5CE2100CF73F4 /* NoMADLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMADLogin.h; sourceTree = "<group>"; };
+		9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoMADLoginAD.m; sourceTree = "<group>"; };
+		9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMADLoginAD.h; sourceTree = "<group>"; };
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CBDCFBC1FC5CEAD00CF73F4 /* UNIXUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNIXUtilities.swift; sourceTree = "<group>"; };
@@ -54,6 +61,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */ = {
+			isa = PBXGroup;
+			children = (
+				9C97401E1FC5DE4500D9EAE6 /* console-ad */,
+				9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */,
+				9C9740201FC5DE4500D9EAE6 /* console.bak */,
+				9C9740211FC5DE4500D9EAE6 /* console-usercreate */,
+			);
+			path = "evaluate-mechanisms";
+			sourceTree = "<group>";
+		};
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
@@ -63,7 +81,9 @@
 				9CBDCFBB1FC5CE6400CF73F4 /* UI */,
 				9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */,
 				9CBDCF9C1FC4CEE300CF73F4 /* Products */,
-				9CBDCFA71FC5CDB500CF73F4 /* NoMADLogin-AD-Bridging-Header.h */,
+				9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */,
+				9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */,
+				9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */,
 				9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -71,7 +91,7 @@
 		9CBDCF9C1FC4CEE300CF73F4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9CBDCF9B1FC4CEE300CF73F4 /* NoMADLogin-AD.bundle */,
+				9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,8 +127,8 @@
 		9CBDCFB61FC5CE2900CF73F4 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				9CBDCFB41FC5CE2100CF73F4 /* NoMADLogin.h */,
-				9CBDCFB31FC5CE2100CF73F4 /* NoMADLogin.m */,
+				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
+				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -136,9 +156,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9CBDCF9A1FC4CEE300CF73F4 /* NoMADLogin-AD */ = {
+		9CBDCF9A1FC4CEE300CF73F4 /* NoMADLoginAD */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLogin-AD" */;
+			buildConfigurationList = 9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLoginAD" */;
 			buildPhases = (
 				9CBDCF971FC4CEE300CF73F4 /* Sources */,
 				9CBDCF981FC4CEE300CF73F4 /* Frameworks */,
@@ -148,9 +168,9 @@
 			);
 			dependencies = (
 			);
-			name = "NoMADLogin-AD";
+			name = NoMADLoginAD;
 			productName = "NoMADLogin-AD";
-			productReference = 9CBDCF9B1FC4CEE300CF73F4 /* NoMADLogin-AD.bundle */;
+			productReference = 9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -181,7 +201,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9CBDCF9A1FC4CEE300CF73F4 /* NoMADLogin-AD */,
+				9CBDCF9A1FC4CEE300CF73F4 /* NoMADLoginAD */,
 			);
 		};
 /* End PBXProject section */
@@ -191,7 +211,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
+				9C9740271FC5DEAA00D9EAE6 /* NoMAD_ADAuth.framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,7 +233,7 @@
 				9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9CBDCFBD1FC5CEAD00CF73F4 /* UNIXUtilities.swift in Sources */,
-				9CBDCFB51FC5CE2200CF73F4 /* NoMADLogin.m in Sources */,
+				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
 				9CBDCFC21FC5CECB00CF73F4 /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,8 +292,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Debug;
 		};
@@ -319,28 +343,33 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		9CBDCFA21FC4CEE300CF73F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = "menu.nomad.NoMADLogin-AD";
+				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLogin-AD-Bridging-Header.h";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SKIP_INSTALL = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLoginAD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
+				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
@@ -348,19 +377,22 @@
 		9CBDCFA31FC4CEE300CF73F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = "menu.nomad.NoMADLogin-AD";
+				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLogin-AD-Bridging-Header.h";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SKIP_INSTALL = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "NoMADLoginAD-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
+				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
@@ -377,7 +409,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLogin-AD" */ = {
+		9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLoginAD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9CBDCFA21FC4CEE300CF73F4 /* Debug */,

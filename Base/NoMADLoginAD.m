@@ -6,10 +6,10 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-#import "NoMADLogin.h"
-#import "NoMADLogin_AD-Swift.h"
+#import "NoMADLoginAD.h"
+#import "NoMADLoginAD-Swift.h"
 
-NoMADLogin *authorizationPlugin = nil;
+NoMADLoginAD *authorizationPlugin = nil;
 
 static OSStatus PluginDestroy(AuthorizationPluginRef inPlugin) {
     return [authorizationPlugin PluginDestroy:inPlugin];
@@ -50,7 +50,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
                                           AuthorizationPluginRef *outPlugin,
                                           const AuthorizationPluginInterface **outPluginInterface) {
     if (authorizationPlugin == nil) {
-        authorizationPlugin = [[NoMADLogin alloc] init];
+        authorizationPlugin = [[NoMADLoginAD alloc] init];
     }
     
     return [authorizationPlugin AuthorizationPluginCreate:callbacks
@@ -60,7 +60,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
 
 // Implementation
 
-@implementation NoMADLogin
+@implementation NoMADLoginAD
 
 - (OSStatus)AuthorizationPluginCreate:(const AuthorizationCallbacks *)callbacks
                             PluginRef:(AuthorizationPluginRef *)outPlugin
@@ -627,11 +627,11 @@ static void PrintAuthState(MechanismRecord *mechanism)
         
         for (argIndex = 0; argIndex < arguments->count; argIndex++) {
             NSLog(@
-                     "NullAuth:PrintAuthState: arg[%lu]='%.*s'",
-                     (unsigned long) argIndex,
-                     (int) arguments->values[argIndex].length,
-                     (char *) arguments->values[argIndex].data
-                     );
+                  "NullAuth:PrintAuthState: arg[%lu]='%.*s'",
+                  (unsigned long) argIndex,
+                  (int) arguments->values[argIndex].length,
+                  (char *) arguments->values[argIndex].data
+                  );
         }
     } else {
         NSLog(@"NullAuth:PrintAuthState: GetArguments err=%ld", (long) err);
