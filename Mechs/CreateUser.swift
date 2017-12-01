@@ -99,9 +99,9 @@ class CreateUser: NoLoMechanism {
         } catch {
             print("Unable to create account.")
         }
-        
+
         var password = pass
-        
+
         if pass == nil || pass == "" {
             password = randomString(length: 24)
             

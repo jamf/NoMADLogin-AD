@@ -11,8 +11,7 @@ import Cocoa
 //import Security.AuthorizationTags
 import SecurityInterface.SFAuthorizationPluginView
 
-class CheckAD : NoLoMechanism {
-    
+class CheckAD: NoLoMechanism {
     @objc func run() {
         NSApp.activate(ignoringOtherApps: true)
         let signIn = SignIn(windowNibName: NSNib.Name(rawValue: "SignIn"))
