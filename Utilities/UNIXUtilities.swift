@@ -11,7 +11,6 @@ import Foundation
 import SystemConfiguration
 import IOKit
 
-
 /// A simple wrapper around NSTask
 ///
 /// - Parameters:
@@ -158,17 +157,14 @@ public func getConsoleUser() -> String {
     return userName
 }
 
-
 /// Finds the serial number of the Mac.
 ///
 /// - Returns: The serial number of the Mac as a `String`.
 public func getSerial() -> String {
-    let platformExpert: io_service_t = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
-    let platformSerialNumberKey = kIOPlatformSerialNumberKey
-    let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, platformSerialNumberKey as CFString, kCFAllocatorDefault, 0)
+    let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
+    let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0)
     let serialNumber = serialNumberAsCFString?.takeUnretainedValue() as! String
     return serialNumber
-
 }
 
 /// Finds the MAC address of the primary ethernet connection.

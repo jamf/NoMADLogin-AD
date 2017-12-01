@@ -10,7 +10,7 @@ import Cocoa
 extension NSWindow {
     func forceToFrontAndFocus(_ sender: AnyObject?) {
         NSApp.activate(ignoringOtherApps: true)
-        self.makeKeyAndOrderFront(sender);
+        self.makeKeyAndOrderFront(sender)
     }
 }
 
@@ -37,11 +37,10 @@ extension UserDefaults {
 }
 
 extension String {
-    
     func trim() -> String {
         return self.trimmingCharacters(in: CharacterSet.whitespaces)
     }
-    
+
     func containsIgnoringCase(_ find: String) -> Bool {
         return self.range(of: find, options: NSString.CompareOptions.caseInsensitive) != nil
     }

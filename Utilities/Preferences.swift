@@ -55,7 +55,6 @@ let defaults = UserDefaults.standard
  WarnOnPasswordExpiration - Bool - Determines if NoMAD will warn the user that their password will expire soon
 */
 
-
 enum Preferences {
 
     static let adDomain = "ADDomain"
@@ -65,13 +64,13 @@ enum Preferences {
     static let authType = "AuthType"
     static let automaticRenew = "AutomaticRenew"
     static let automaticRenewTime = "AutomaticRenewTime"
-    
+
     static let changePasswordCommand = "ChangePasswordCommand"
     static let cnFilterString = "CNFilterString"
 
     static let defaultKerberosDomain = "DefaultKerberosDomain"
     static let dontShowWelcome = "DontShowWelcome"
-    
+
     static let firstRunDone = "FirstRunDone"
     static let forceTokend = "ForceTokend"
 
@@ -107,7 +106,7 @@ enum Preferences {
     static let menuPreferences = "MenuPreferences"
     static let menuSignIn = "MenuSignIn"
     static let messagePasswordChangePolicy = "MessagePasswordChangePolicy"
-    
+
     static let nomadLEURL = "NoMADLEURL"
 
     static let passwordChangeCommand = "PasswordChangeCommand"
@@ -118,7 +117,7 @@ enum Preferences {
     static let redirectURL = "RedirectURL"
 
     static let selfServicePath = "SelfServicePath"
-    
+
     static let signedIn = "SignedIn"
     static let signInCommand = "SignInCommand"
 
@@ -134,7 +133,7 @@ enum Preferences {
     static let warnOnCardRemoval = "WarnOnCardRemoval"
     static let warnonCardRemovalTime = "WarnOnCardRemovalTime"
 
-    static let allKeys = [ Preferences.adDomain, Preferences.authServer, Preferences.authType, Preferences.getHelpOptions, Preferences.getHelpType, Preferences.hideChangePassword, Preferences.hideGetHelp, Preferences.hideGetSoftware, Preferences.hideLockScreen, Preferences.hidePreferences, Preferences.hideQuit, Preferences.identities, Preferences.kerberosRealm, Preferences.keychainItems, Preferences.localPasswordSync, Preferences.menuChangePassword, Preferences.menuGetHelp, Preferences.menuGetSoftware, Preferences.menuLockScreen, Preferences.menuPreferences, Preferences.menuSignIn, Preferences.passwordChangeCommand, Preferences.passwordPolicy, Preferences.redirectURL, Preferences.selfServicePath, Preferences.selfServicePath, Preferences.signInCommand, Preferences.ticketsOnSignIn, Preferences.titleSignIn, Preferences.useKeychain, Preferences.userFirstName, Preferences.userLastName, Preferences.userLoginName, Preferences.warnOnPasswordExpiration, Preferences.warnOnCardRemoval, Preferences.warnonCardRemovalTime]
+    static let allKeys = [Preferences.adDomain, Preferences.authServer, Preferences.authType, Preferences.getHelpOptions, Preferences.getHelpType, Preferences.hideChangePassword, Preferences.hideGetHelp, Preferences.hideGetSoftware, Preferences.hideLockScreen, Preferences.hidePreferences, Preferences.hideQuit, Preferences.identities, Preferences.kerberosRealm, Preferences.keychainItems, Preferences.localPasswordSync, Preferences.menuChangePassword, Preferences.menuGetHelp, Preferences.menuGetSoftware, Preferences.menuLockScreen, Preferences.menuPreferences, Preferences.menuSignIn, Preferences.passwordChangeCommand, Preferences.passwordPolicy, Preferences.redirectURL, Preferences.selfServicePath, Preferences.selfServicePath, Preferences.signInCommand, Preferences.ticketsOnSignIn, Preferences.titleSignIn, Preferences.useKeychain, Preferences.userFirstName, Preferences.userLastName, Preferences.userLoginName, Preferences.warnOnPasswordExpiration, Preferences.warnOnCardRemoval, Preferences.warnonCardRemovalTime]
 
 }
 
