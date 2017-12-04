@@ -130,18 +130,8 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         err = mechanism->fPlugin->fCallbacks->SetResult(mechanism->fEngine, kAuthorizationResultAllow);
         return kAuthorizationResultAllow;
         
-    } else if (mechanism->fFakeUser) {
-        // inject a user name and password
-        
-        NSLog(@"Making a faked login");
-        
-        FakeUser *fakeUser = [[FakeUser alloc] initWithMechanism:mechanism];
-        [ fakeUser run];
-        
-        NSLog(@"Faked login done");
-
     }
-
+    
     //err = mechanism->fPlugin->fCallbacks->SetResult(mechanism->fEngine, kAuthorizationResultAllow);
     
     //return kAuthorizationResultAllow;
