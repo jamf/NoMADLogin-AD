@@ -13,13 +13,8 @@ class CreateUser: NoLoMechanism {
     
     @objc func run() {
         
-        if self.nomadPass != nil && !checkUser(name: (self.nomadUser?.components(separatedBy: "@").first)!) {
+        if self.nomadPass != nil && !checkForLocalUser(name: (self.nomadUser?.components(separatedBy: "@").first)!) {
 
-            NSLog("Starting create")
-
-            NSLog("NoMAD User: " + self.nomadUser!)
-            NSLog("NoMAD Pass: " + self.nomadPass!)
-            
             let cleanedUser = self.nomadUser?.components(separatedBy: "@").first ?? "error"
 
             createUser(name: cleanedUser,
@@ -41,8 +36,6 @@ class CreateUser: NoLoMechanism {
             
             setGID(gid: 20)
             setUID(uid: 10001)
-            
-            NSLog("Create User: Sign in from \(self.username!) and \(self.password!)")
 
             cliTask("/usr/sbin/createhomedir -c")
             

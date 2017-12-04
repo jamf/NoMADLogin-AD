@@ -410,7 +410,7 @@ class NoLoMechanism: NSObject {
         var err: OSStatus = noErr
         err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
             mechanism.pointee.fEngine, AuthorizationResult.allow)
-        NSLog("NoMADLogin: ", Int(err));
+        NSLog("NoMADLogin: %i", Int(err));
         return err
     }
     
@@ -421,34 +421,27 @@ class NoLoMechanism: NSObject {
         var err: OSStatus = noErr
         err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
             mechanism.pointee.fEngine, AuthorizationResult.deny)
-        NSLog("NoMADLogin: ", Int(err));
+        NSLog("NoMADLogin: %i", Int(err));
         return err
     }
-    
-    // functions for all mechs
-    
-    func checkUser(name: String) -> Bool {
-        
+
+    /// Checks to see if a given user exits in the DSLocal OD node.
+    ///
+    /// - Parameter name: The shortname of the user to check as a `String`.
+    /// - Returns: `true` if the user already exists locally. Otherwise `false`.
+    func checkForLocalUser(name: String) -> Bool {
         var records = [ODRecord]()
         let odsession = ODSession.default()
-        
-        // query OD local noes for the user name
-        
+
         do {
             let node = try ODNode.init(session: odsession, type: UInt32(kODNodeTypeLocalNodes))
             let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
-        } catch {
-            NSLog("Unable to get user account ODRecords")
+        } catch  {
+            let errorText = error.localizedDescription
+            myLogger.logit(.base, message: "Unable to get user account ODRecord: \(errorText)")
             return false
         }
-        
-        if ( records.count > 0 ) {
-            return true
-        } else {
-            return false
-        }
+        return records.count > 0 ? true : false
     }
-    
-    
 }

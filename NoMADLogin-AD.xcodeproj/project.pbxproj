@@ -13,7 +13,6 @@
 		9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */; };
 		9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */; };
 		9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */; };
-		9CBDCFB11FC5CDB600CF73F4 /* FakeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAC1FC5CDB600CF73F4 /* FakeUser.swift */; };
 		9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */; };
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
@@ -38,7 +37,6 @@
 		9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogOnly.swift; sourceTree = "<group>"; };
 		9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoLoMechanism.swift; sourceTree = "<group>"; };
 		9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckAD.swift; sourceTree = "<group>"; };
-		9CBDCFAC1FC5CDB600CF73F4 /* FakeUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeUser.swift; sourceTree = "<group>"; };
 		9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoMADLoginAD.m; sourceTree = "<group>"; };
 		9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMADLoginAD.h; sourceTree = "<group>"; };
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
@@ -118,7 +116,6 @@
 				9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */,
 				9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */,
 				9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */,
-				9CBDCFAC1FC5CDB600CF73F4 /* FakeUser.swift */,
 				9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */,
 			);
 			path = Mechs;
@@ -224,7 +221,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CBDCFB11FC5CDB600CF73F4 /* FakeUser.swift in Sources */,
 				9CBDCFC41FC5CECB00CF73F4 /* Logger.swift in Sources */,
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
