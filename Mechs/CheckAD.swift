@@ -6,7 +6,6 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-import Foundation
 import Cocoa
 import SecurityInterface.SFAuthorizationPluginView
 
@@ -17,9 +16,8 @@ class CheckAD: NoLoMechanism {
         signIn.mech = self.mechanism.pointee
         let windowTest = signIn.window
         if windowTest == nil {
-            NSLog("No dice on the window")
+            myLogger.logit(.base, message: "Could not create login window UI")
         }
-        NSLog("Setting up window")
         NSApp.runModal(for: signIn.window!)
     }
 }
