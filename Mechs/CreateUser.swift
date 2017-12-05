@@ -9,13 +9,13 @@
 import Foundation
 import OpenDirectory
 
+/// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
     
     @objc func run() {
-        
-        if self.nomadPass != nil && !checkForLocalUser(name: (self.nomadUser?.components(separatedBy: "@").first)!) {
+        if nomadPass != nil && !checkForLocalUser(name: (nomadUser?.components(separatedBy: "@").first)!) {
 
-            let cleanedUser = self.nomadUser?.components(separatedBy: "@").first ?? "error"
+            let cleanedUser = nomadUser?.components(separatedBy: "@").first ?? "error"
 
             createUser(name: cleanedUser,
                        first: "Test",

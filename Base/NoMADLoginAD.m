@@ -60,6 +60,9 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
 
 // Implementation
 
+/**
+ C implimentation of the actual authorization plugin since this is all a huge pain in Swift.
+ */
 @implementation NoMADLoginAD
 
 - (OSStatus)AuthorizationPluginCreate:(const AuthorizationCallbacks *)callbacks
