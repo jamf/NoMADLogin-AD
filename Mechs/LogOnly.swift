@@ -54,7 +54,7 @@ class LogOnly : NoLoMechanism {
         self.getTokens()
         
         for item in contextKeys {
-            let result = getContext(contextType: item)
+            let result = getContextValueFor(contextType: item)
             if result != nil {
                 myLogger.logit(.info, message: "Context Item \(item): \(String(describing: result))")
             }

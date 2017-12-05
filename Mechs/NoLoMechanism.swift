@@ -20,29 +20,122 @@ enum HintType : String {
 
 // lots of constants for working with hints and contexts
 
+
+/// Base class for authorization plugin mechanisms.
 class NoLoMechanism: NSObject {
-    
-    let contextDomain : NSString = "menu.nomad.NoMADLoginAD"
-    
-    var mechanism : UnsafePointer<MechanismRecord>
-    
-    @objc init(mechanism:UnsafePointer<MechanismRecord>) {
-        self.mechanism = mechanism
-    }
-        
+
+    ///  `string` is used to identify the authorization plugin context uniquely to this plugin
+    let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
     let kNoMADUser = "NoMAD.user"
     let kNoMADPass = "NoMAD.pass"
-    
-    // PRAGMA: utility functions
-    
-    // return the username of the authenticating user
-    
+
+    var mechanism: UnsafePointer<MechanismRecord>
+
+    //MARK: - Initializer
+    @objc init(mechanism: UnsafePointer<MechanismRecord>) {
+        self.mechanism = mechanism
+    }
+
+    //MARK: - Generic Context Value Functions
+
+    //context value - log only
+    func getContextValueFor(contextType: String) -> String? {
+
+        var value: UnsafePointer<AuthorizationValue>?
+        var flags = AuthorizationContextFlags()
+        var err: OSStatus = noErr
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
+            mechanism.pointee.fEngine, contextType, &flags, &value)
+
+        if err != errSecSuccess {
+            NSLog("NoMADLogin: couldn't retrieve context value: \(contextType)")
+            return nil
+        }
+
+        if contextType == "longname" {
+            let item = NSString.init(bytes: value!.pointee.data!,
+                                     length: value!.pointee.length, encoding: String.Encoding.utf8.rawValue)
+            return item as! String
+        } else {
+            let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
+            NSLog("\(contextType): \(String(describing: item))")
+        }
+
+        return nil
+    }
+
+    //context value - unused
+    func setContextItem(value: String, contextType: String) -> Bool {
+
+        // silly two-step
+
+        // add null byte to signify end of string
+
+        let tempdata = value + "\0"
+        var data = tempdata.data(using: .utf8)
+
+        let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
+
+        var value = AuthorizationValue(length: (data?.count)!,
+                                       data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
+
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
+            mechanism.pointee.fEngine, contextType, flags, &value)
+
+        NSLog("Setting context for: \(contextType)")
+        NSLog(err.description)
+
+        return (err == errSecSuccess)
+    }
+
+    //MARK: - Generic Hint Value Functions
+    // hint value  - unused
+    func setHint(type: HintType, item: String) -> Bool {
+        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: item)
+            else {
+                NSLog("NoLo:Failed to update hint: \(type)")
+                return false
+        }
+
+        var value = AuthorizationValue(length: data.count,
+                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
+
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
+            mechanism.pointee.fEngine, type.rawValue, &value)
+
+        return (err == errSecSuccess)
+
+    }
+
+    // hint value - log only
+    func getHint(hintType: String) -> String? {
+
+        var value : UnsafePointer<AuthorizationValue>? = nil
+        var err: OSStatus = noErr
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, hintType, &value)
+
+        if err != errSecSuccess {
+            NSLog("NoMADLogin: couldn't retrieve hint value: \(hintType)")
+            return nil
+        }
+
+        let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
+        guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
+            else {
+                NSLog("NoMADLogin: couldn't unpack hint value \(hintType)")
+                return nil
+        }
+        return (result as! String)
+    }
+
+
+    //context value - log only
     var username: String? {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var flags = AuthorizationContextFlags()
             var err: OSStatus = noErr
-            err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
+            err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
                 mechanism.pointee.fEngine, kAuthorizationEnvironmentUsername, &flags, &value)
             
             if err != errSecSuccess {
@@ -57,13 +150,14 @@ class NoLoMechanism: NSObject {
             return username.replacingOccurrences(of: "\0", with: "") as String
         }
     }
-    
+
+    //context value  - unused
     var password: String? {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var flags = AuthorizationContextFlags()
             var err: OSStatus = noErr
-            err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
+            err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
                 mechanism.pointee.fEngine, kAuthorizationEnvironmentPassword, &flags, &value)
             
             NSLog("attempted pass: " + String(describing: value.unsafelyUnwrapped))
@@ -79,12 +173,13 @@ class NoLoMechanism: NSObject {
             return pass.replacingOccurrences(of: "\0", with: "") as String
         }
     }
-    
+
+    // hint value - create user
     var nomadUser: String? {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var err: OSStatus = noErr
-            err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, kNoMADUser, &value)
+            err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, kNoMADUser, &value)
             
             if err != errSecSuccess {
                 NSLog("%@","couldn't retrieve hint value")
@@ -101,12 +196,13 @@ class NoLoMechanism: NSObject {
             return (result as! String)
         }
     }
-    
+
+    // hint value - create user
     var nomadPass: String? {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var err: OSStatus = noErr
-            err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, kNoMADPass, &value)
+            err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, kNoMADPass, &value)
             
             if err != errSecSuccess {
                 NSLog("%@","couldn't retrieve hint value")
@@ -123,13 +219,14 @@ class NoLoMechanism: NSObject {
             return (result as! String)
         }
     }
-    
+
+    //context value - log only
     var uid: uid_t {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var flags = AuthorizationContextFlags()
             var uid : uid_t = 0
-            if (self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
+            if (mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
                 mechanism.pointee.fEngine, ("uid" as NSString).utf8String!, &flags, &value)
                 == errSecSuccess) {
                 let uidData = Data.init(bytes: value!.pointee.data!, count: MemoryLayout<uid_t>.size)
@@ -138,7 +235,8 @@ class NoLoMechanism: NSObject {
             return uid
         }
     }
-    
+
+    //context value - create user
     func setUID(uid: Int) {
         
        // var value : UnsafePointer<AuthorizationValue>? = nil
@@ -148,13 +246,14 @@ class NoLoMechanism: NSObject {
         
         var value = AuthorizationValue(length: MemoryLayout<uid_t>.size, data: UnsafeMutableRawPointer.init(&data))
         
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
             self.mechanism.pointee.fEngine, "uid", flags, &value)
         
         NSLog("Setting context for: uid")
         NSLog(err.description)
     }
-    
+
+    //context value - create user
     func setGID(gid: Int) {
         
         // var value : UnsafePointer<AuthorizationValue>? = nil
@@ -164,74 +263,32 @@ class NoLoMechanism: NSObject {
         
         var value = AuthorizationValue(length: MemoryLayout<gid_t>.size, data: UnsafeMutableRawPointer.init(&data))
         
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
             self.mechanism.pointee.fEngine, "gid", flags, &value)
         
         NSLog("Setting context for: gid")
         NSLog(err.description)
         
     }
-    
-    func getContext(contextType: String) -> String? {
-        
-        var value : UnsafePointer<AuthorizationValue>? = nil
-        var flags = AuthorizationContextFlags()
-        var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetContextValue(
-            mechanism.pointee.fEngine, contextType, &flags, &value)
-        
-        if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve context value: \(contextType)")
-            return nil
-        }
-        
-        if contextType == "longname" {
-            let item = NSString.init(bytes: value!.pointee.data!,
-                                     length: value!.pointee.length, encoding: String.Encoding.utf8.rawValue)
-            return item as! String
-        } else {
-            let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-            NSLog("\(contextType): \(String(describing: item))")
-        }
-        
-        return nil
-    }
-    
-    func getHint(hintType: String) -> String? {
-        
-        var value : UnsafePointer<AuthorizationValue>? = nil
-        var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, hintType, &value)
-        
-        if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve hint value: \(hintType)")
-            return nil
-        }
-        
-        let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-        guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
-            else {
-                NSLog("NoMADLogin: couldn't unpack hint value \(hintType)")
-                return nil
-        }
-        return (result as! String)
-    }
-    
+
+
+    // log only
     func getArguments() {
         
         var value : UnsafePointer<AuthorizationValueVector>? = nil
         var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetArguments(mechanism.pointee.fEngine, &value)
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetArguments(mechanism.pointee.fEngine, &value)
         
         NSLog("Arguments: \(value.debugDescription)")
     }
-    
+
+    // log only
     func getTokens() {
         
         var value : Unmanaged<CFArray>? = nil
         var err: OSStatus = noErr
         if #available(OSX 10.13, *) {
-            err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetTokenIdentities(mechanism.pointee.fEngine, "" as CFTypeRef, &value)
+            err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetTokenIdentities(mechanism.pointee.fEngine, "" as CFTypeRef, &value)
         } else {
             // Fallback on earlier versions
         }
@@ -239,24 +296,10 @@ class NoLoMechanism: NSObject {
         NSLog("Tokens: \(value.debugDescription)")
         
     }
-    
-    func setHint(type: HintType, item: String) -> Bool {
-        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: item)
-            else {
-                NSLog("NoLo:Failed to update hint: \(type)")
-                return false
-        }
-        
-        var value = AuthorizationValue(length: data.count,
-                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-        
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
-            self.mechanism.pointee.fEngine, type.rawValue, &value)
-        
-        return (err == errSecSuccess)
-        
-    }
-    
+
+
+
+    //context value  - unused
     func setPassContext(pass: String) -> Bool {
         
         // silly two-step
@@ -273,15 +316,16 @@ class NoLoMechanism: NSObject {
         var value = AuthorizationValue(length: (data?.count)!,
                                        data: UnsafeMutableRawPointer(mutating: (data as! NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         
-        let err : OSStatus =  self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
-             self.mechanism.pointee.fEngine, kAuthorizationEnvironmentPassword, flags, &value)
+        let err : OSStatus =  mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
+             mechanism.pointee.fEngine, kAuthorizationEnvironmentPassword, flags, &value)
         
         NSLog("Setting pass context")
         NSLog(err.description)
         
         return (err == errSecSuccess)
     }
-    
+
+    //context value  - unused
     func setUserContext(user: String) -> Bool {
         
         // silly two-step
@@ -296,15 +340,16 @@ class NoLoMechanism: NSObject {
         var value = AuthorizationValue(length: (data?.count)!,
                                        data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         
-        let err : OSStatus =  self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
-             self.mechanism.pointee.fEngine, kAuthorizationEnvironmentUsername, flags, &value)
+        let err : OSStatus =  mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
+             mechanism.pointee.fEngine, kAuthorizationEnvironmentUsername, flags, &value)
         
         NSLog("Setting user context")
         NSLog(err.description)
         
         return (err == errSecSuccess)
     }
-    
+
+    // hint value  - unused
     func setPassHint(user: String) -> Bool {
         
         guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: user)
@@ -316,12 +361,13 @@ class NoLoMechanism: NSObject {
         var value = AuthorizationValue(length: data.count,
                                        data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
-            self.mechanism.pointee.fEngine, kNoMADPass, &value)
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
+            mechanism.pointee.fEngine, kNoMADPass, &value)
         
         return (err == errSecSuccess)
     }
-    
+
+    // hint value - - unused
     func setUserHint(user: String) -> Bool {
         
         guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: user)
@@ -333,35 +379,15 @@ class NoLoMechanism: NSObject {
         var value = AuthorizationValue(length: data.count,
                                        data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
-            self.mechanism.pointee.fEngine, kNoMADUser, &value)
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
+            mechanism.pointee.fEngine, kNoMADUser, &value)
         
         return (err == errSecSuccess)
     }
-    
-    func setContextItem(value: String, item: String) -> Bool {
-        
-        // silly two-step
-        
-        // add null byte to signify end of string
-        
-        let tempdata = value + "\0"
-        var data = tempdata.data(using: .utf8)
-        
-        let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-        
-        var value = AuthorizationValue(length: (data?.count)!,
-                                       data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
-        
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetContextValue(
-            self.mechanism.pointee.fEngine, item, flags, &value)
-        
-        NSLog("Setting context for: \(item)")
-        NSLog(err.description)
-        
-        return (err == errSecSuccess)
-    }
-    
+
+
+
+    // hint value  - unused
     func setBoolHintValue(_ encryptionWasEnabled : NSNumber) -> Bool {
         // Try and unwrap the optional NSData returned from archivedDataWithRootObject
         // This can be decoded on the other side with unarchiveObjectWithData
@@ -379,18 +405,19 @@ class NoLoMechanism: NSObject {
         // Use the MechanismRecord SetHintValue callback to set the
         // inter-mechanism context data
         
-        let err : OSStatus = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
-            self.mechanism.pointee.fEngine, contextDomain.utf8String!, &value)
+        let err : OSStatus = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetHintValue(
+            mechanism.pointee.fEngine, contextDomain.utf8String!, &value)
         
         return (err == errSecSuccess)
     }
     
     // This is how we get the inter-mechanism context data
-    
+
+    //context value  - unused
     func getBoolHintValue() -> Bool {
         var value : UnsafePointer<AuthorizationValue>? = nil
         var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, contextDomain.utf8String!, &value)
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.GetHintValue(mechanism.pointee.fEngine, contextDomain.utf8String!, &value)
         if err != errSecSuccess {
             NSLog("%@","couldn't retrieve hint value")
             return false
@@ -403,27 +430,29 @@ class NoLoMechanism: NSObject {
         }
         return (boolHint as AnyObject).boolValue
     }
-    
+
+    //MARK: - Mechanism Verdicts
     // Allow the login. End of the mechanism
     func allowLogin() -> OSStatus {
         NSLog("NoMADLogin: Login Allowed");
         var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
             mechanism.pointee.fEngine, AuthorizationResult.allow)
         NSLog("NoMADLogin: %i", Int(err));
         return err
     }
     
     // disallow login
-    
     func denyLogin() -> OSStatus {
         NSLog("NoMADLogin: Login Denied");
         var err: OSStatus = noErr
-        err = self.mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
+        err = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee.SetResult(
             mechanism.pointee.fEngine, AuthorizationResult.deny)
         NSLog("NoMADLogin: %i", Int(err));
         return err
     }
+
+    //MARK: - Directory Service Utilities
 
     /// Checks to see if a given user exits in the DSLocal OD node.
     ///
@@ -437,7 +466,7 @@ class NoLoMechanism: NSObject {
             let node = try ODNode.init(session: odsession, type: UInt32(kODNodeTypeLocalNodes))
             let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
-        } catch  {
+        } catch {
             let errorText = error.localizedDescription
             myLogger.logit(.base, message: "Unable to get user account ODRecord: \(errorText)")
             return false
