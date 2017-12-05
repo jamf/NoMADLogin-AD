@@ -40,11 +40,8 @@ struct MechanismRecord {
     AuthorizationEngineRef          fEngine;
     const PluginRecord *            fPlugin;
     Boolean                         fCheckAD;
-    Boolean                         fCheckOkta;
     Boolean                         fCreateUser;
-    Boolean                         fCheckOktaNonModal;
     Boolean                         fLogOnly;
-    Boolean                         fFakeUser;
 };
 
 typedef struct MechanismRecord MechanismRecord;

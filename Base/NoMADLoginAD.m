@@ -87,11 +87,8 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fEngine = inEngine;
     mechanism->fPlugin = (PluginRecord *)inPlugin;
     mechanism->fCheckAD = (strcmp(mechanismId, "CheckAD") == 0);
-    mechanism->fCheckOkta = (strcmp(mechanismId, "CheckOkta") == 0);
     mechanism->fCreateUser = (strcmp(mechanismId, "CreateUser") == 0);
-    mechanism->fCheckOktaNonModal = (strcmp(mechanismId, "CheckOktaNonModal") == 0);
     mechanism->fLogOnly = (strcmp(mechanismId, "LogOnly") == 0);
-    mechanism->fFakeUser = (strcmp(mechanismId, "FakeUser") == 0);
     *outMechanism = mechanism;
     return errSecSuccess;
 }
