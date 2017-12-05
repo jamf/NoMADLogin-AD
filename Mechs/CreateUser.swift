@@ -13,7 +13,7 @@ import OpenDirectory
 class CreateUser: NoLoMechanism {
     
     @objc func run() {
-        if nomadPass != nil && !checkForLocalUser(name: (nomadUser?.components(separatedBy: "@").first)!) {
+        if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: (nomadUser?.components(separatedBy: "@").first)!) {
 
             let cleanedUser = nomadUser?.components(separatedBy: "@").first ?? "error"
 

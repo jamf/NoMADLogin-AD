@@ -61,7 +61,7 @@ class SignIn: NSWindowController {
 
     @IBAction func signInClick(_ sender: Any) {
         animateUI()
-        if checkLocalUser(name: username.stringValue) {
+        if NoLoMechanism.checkForLocalUser(name: username.stringValue) {
             NSLog("User exists... passing on")
             setHints()
             completeLogin(authResult: .allow)
@@ -124,38 +124,7 @@ class SignIn: NSWindowController {
         NSApp.abortModal()
         self.window?.close()
     }
-    
-    /// Check to see if a user is present in the DSLocal domain.
-    ///
-    /// - Parameter name: A `String` containing the username to check for.
-    /// - Returns: A `Bool` that is true if the user is local. Otherwise false.
-    func checkLocalUser(name: String) -> Bool {
-        
-        var records = [ODRecord]()
-        let odsession = ODSession.default()
-        
-        // query OD local noes for the user name
-        do {
-            let node = try ODNode.init(session: odsession, type: UInt32(kODNodeTypeLocalNodes))
-            let query = try ODQuery.init(node: node,
-                                         forRecordTypes: kODRecordTypeUsers,
-                                         attribute: kODAttributeTypeRecordName,
-                                         matchType: UInt32(kODMatchEqualTo),
-                                         queryValues: name,
-                                         returnAttributes: kODAttributeTypeNativeOnly,
-                                         maximumResults: 0)
-            records = try query.resultsAllowingPartial(false) as! [ODRecord]
-        } catch {
-            //TODO: # Error handling
-            NSLog("Unable to get user account ODRecords")
-            return false
-        }
-        if ( records.count > 0 ) {
-            return true
-        }
-        return false
-    }
-    
+
     func setPassHint(user: String) -> Bool {
         NSLog("Setting passhint: %@ %i", #file, #line)
         guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: user)

@@ -458,7 +458,7 @@ class NoLoMechanism: NSObject {
     ///
     /// - Parameter name: The shortname of the user to check as a `String`.
     /// - Returns: `true` if the user already exists locally. Otherwise `false`.
-    func checkForLocalUser(name: String) -> Bool {
+    class func checkForLocalUser(name: String) -> Bool {
         var records = [ODRecord]()
         let odsession = ODSession.default()
 
