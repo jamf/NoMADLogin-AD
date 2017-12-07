@@ -13,34 +13,37 @@ import SecurityInterface.SFAuthorizationPluginView
 /// AuthorizationPlugin mechanism that simply logs the hint and context values that are being passed around.
 class LogOnly : NoLoMechanism {
     
-    let contextKeys = [kAuthorizationEnvironmentUsername, kAuthorizationEnvironmentPassword, kAuthorizationEnvironmentShared, kAuthorizationRightExecute, kAuthorizationEnvironmentIcon, kAuthorizationEnvironmentPrompt]
+    let contextKeys = [kAuthorizationEnvironmentUsername,
+                       kAuthorizationEnvironmentPassword,
+                       kAuthorizationEnvironmentShared,
+                       kAuthorizationRightExecute,
+                       kAuthorizationEnvironmentIcon,
+                       kAuthorizationEnvironmentPrompt]
     
-    let hintKeys = [
-        "uid",
-        "gid",
-        "longname",
-        "shell",
-        "authorize-right",
-        "authorize-rule",
-        "client-path",
-        "client-pid",
-        "client-type",
-        "client-uid",
-        "client-pid",
-        "tries",
-        "suggested-user",
-        "require-user-in-group",
-        "reason",
-        "token-name",
-        "afp_dir",
-        "kerberos-principal",
-        "mountpoint",
-        "new-password",
-        "show-add-to-keychain",
-        "add-to-keuychain",
-        "Home_Dir_Mount_Result",
-        "homeDirType",
-        ]
+    let hintKeys = ["uid",
+                    "gid",
+                    "longname",
+                    "shell",
+                    "authorize-right",
+                    "authorize-rule",
+                    "client-path",
+                    "client-pid",
+                    "client-type",
+                    "client-uid",
+                    "client-pid",
+                    "tries",
+                    "suggested-user",
+                    "require-user-in-group",
+                    "reason",
+                    "token-name",
+                    "afp_dir",
+                    "kerberos-principal",
+                    "mountpoint",
+                    "new-password",
+                    "show-add-to-keychain",
+                    "add-to-keuychain",
+                    "Home_Dir_Mount_Result",
+                    "homeDirType"]
     
     // class to iterate anything in the context and hits and print them out
     // heavily influenced by the Apple NullAuth sample code
@@ -50,8 +53,8 @@ class LogOnly : NoLoMechanism {
         myLogger.logit(.info, message: "User logging in: \(String(describing: username))")
         myLogger.logit(.info, message: "UID of user logging in: \(String(describing: uid))")
 
-        self.getArguments()
-        self.getTokens()
+        getArguments()
+        getTokens()
         
         for item in contextKeys {
             let result = getContextValueFor(contextType: item)
