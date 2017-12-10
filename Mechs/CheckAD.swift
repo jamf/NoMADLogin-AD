@@ -7,7 +7,6 @@
 //
 
 import Cocoa
-import SecurityInterface.SFAuthorizationPluginView
 
 class CheckAD: NoLoMechanism {
     @objc func run() {

@@ -8,7 +8,6 @@
 
 import Cocoa
 import Security.AuthorizationPlugin
-import OpenDirectory
 import NoMAD_ADAuth
 
 class SignIn: NSWindowController {
@@ -69,7 +68,7 @@ class SignIn: NSWindowController {
         password.isEnabled = !password.isEnabled
         
         spinner.isHidden = !spinner.isHidden
-        spinner.isHidden ? spinner.stopAnimation(nil) : spinner.startAnimation(nil)
+        spinner.isHidden ? spinner.stopAnimation(self) : spinner.startAnimation(self)
     }
 
     //MARK: - Login Context Functions
