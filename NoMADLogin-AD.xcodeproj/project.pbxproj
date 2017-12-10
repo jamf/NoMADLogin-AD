@@ -16,7 +16,6 @@
 		9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */; };
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
-		9CBDCFBD1FC5CEAD00CF73F4 /* UNIXUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFBC1FC5CEAD00CF73F4 /* UNIXUtilities.swift */; };
 		9CBDCFC21FC5CECB00CF73F4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */; };
 		9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */; };
 		9CBDCFC41FC5CECB00CF73F4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */; };
@@ -41,7 +40,6 @@
 		9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMADLoginAD.h; sourceTree = "<group>"; };
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
-		9CBDCFBC1FC5CEAD00CF73F4 /* UNIXUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UNIXUtilities.swift; sourceTree = "<group>"; };
 		9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -145,7 +143,6 @@
 				9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */,
 				9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */,
 				9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */,
-				9CBDCFBC1FC5CEAD00CF73F4 /* UNIXUtilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -228,7 +225,6 @@
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
-				9CBDCFBD1FC5CEAD00CF73F4 /* UNIXUtilities.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
 				9CBDCFC21FC5CECB00CF73F4 /* Preferences.swift in Sources */,
 			);
