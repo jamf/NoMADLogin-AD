@@ -76,8 +76,8 @@ class SignIn: NSWindowController {
 
     /// Set the authorization and context hints.
     fileprivate func setHints() {
-        setHint(type: .user, hint: username.stringValue)
-        setHint(type: .pass, hint: password.stringValue)
+        setHint(type: .noMADUser, hint: username.stringValue)
+        setHint(type: .noMADPass, hint: password.stringValue)
 
         setContext(type: kAuthorizationEnvironmentUsername, value: username.stringValue)
         setContext(type: kAuthorizationEnvironmentPassword, value: password.stringValue)

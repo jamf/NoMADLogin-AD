@@ -11,11 +11,11 @@ import Security
 import OpenDirectory
 
 enum HintType: String {
-    case user = "NoMAD.user"
-    case pass = "NoMAD.pass"
-    case first = "NoMAD.first"
-    case last = "NoMAD.last"
-    case full = "NoMAD.full"
+    case noMADUser
+    case noMADPass
+    case noMADFirst
+    case noMADLast
+    case noMADFull
 }
 
 // lots of constants for working with hints and contexts
@@ -26,8 +26,6 @@ class NoLoMechanism: NSObject {
 
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
     let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
-    let kNoMADUser = "NoMAD.user"
-    let kNoMADPass = "NoMAD.pass"
 
     /// A pointer to the MechanismRecord `struct`
     let mechanism: UnsafePointer<MechanismRecord>
@@ -187,7 +185,7 @@ class NoLoMechanism: NSObject {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var err: OSStatus = noErr
-            err = mechCallbacks.GetHintValue(mechEngine, kNoMADUser, &value)
+            err = mechCallbacks.GetHintValue(mechEngine, HintType.noMADUser.rawValue, &value)
             
             if err != errSecSuccess {
                 NSLog("%@","couldn't retrieve hint value")
@@ -210,7 +208,7 @@ class NoLoMechanism: NSObject {
         get {
             var value : UnsafePointer<AuthorizationValue>? = nil
             var err: OSStatus = noErr
-            err = mechCallbacks.GetHintValue(mechEngine, kNoMADPass, &value)
+            err = mechCallbacks.GetHintValue(mechEngine, HintType.noMADPass.rawValue, &value)
             
             if err != errSecSuccess {
                 NSLog("%@","couldn't retrieve hint value")
@@ -367,7 +365,7 @@ class NoLoMechanism: NSObject {
                                        data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         
         let err : OSStatus = mechCallbacks.SetHintValue(
-            mechEngine, kNoMADPass, &value)
+            mechEngine, HintType.noMADPass.rawValue, &value)
         
         return (err == errSecSuccess)
     }
@@ -385,7 +383,7 @@ class NoLoMechanism: NSObject {
                                        data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         
         let err : OSStatus = mechCallbacks.SetHintValue(
-            mechEngine, kNoMADUser, &value)
+            mechEngine, HintType.noMADUser.rawValue, &value)
         
         return (err == errSecSuccess)
     }

@@ -44,10 +44,10 @@ class LogOnly : NoLoMechanism {
                     "add-to-keuychain",
                     "Home_Dir_Mount_Result",
                     "homeDirType",
-                    "NoMAD.user",
-                    "NoMAD.first",
-                    "NoMAD.last",
-                    "NoMAD.full"]
+                    "noMADUser",
+                    "noMADFirst",
+                    "noMADLast",
+                    "noMADFull"]
     
     // class to iterate anything in the context and hits and print them out
     // heavily influenced by the Apple NullAuth sample code
