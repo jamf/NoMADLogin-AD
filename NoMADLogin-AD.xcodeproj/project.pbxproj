@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1ABAE2191FE07609007830FC /* DeMobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAE2181FE07609007830FC /* DeMobile.swift */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
 		9C9740271FC5DEAA00D9EAE6 /* NoMAD_ADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */; };
 		9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1ABAE2181FE07609007830FC /* DeMobile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeMobile.swift; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401E1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad-usercreate"; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */,
 				9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */,
 				9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */,
+				1ABAE2181FE07609007830FC /* DeMobile.swift */,
 			);
 			path = Mechs;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
+				1ABAE2191FE07609007830FC /* DeMobile.swift in Sources */,
 				9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9CBDCFBD1FC5CEAD00CF73F4 /* UNIXUtilities.swift in Sources */,
