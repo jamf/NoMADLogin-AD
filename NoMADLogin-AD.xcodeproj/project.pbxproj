@@ -23,11 +23,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C709EED1FE07D91006C74D1 /* loadAD.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = loadAD.bash; sourceTree = "<group>"; };
+		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401E1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad-usercreate"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
-		9C9740211FC5DE4500D9EAE6 /* console-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-usercreate"; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,10 +61,11 @@
 		9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */ = {
 			isa = PBXGroup;
 			children = (
+				9C709EED1FE07D91006C74D1 /* loadAD.bash */,
+				9C709EEE1FE07D91006C74D1 /* resetDB.bash */,
 				9C97401E1FC5DE4500D9EAE6 /* console-ad */,
 				9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */,
 				9C9740201FC5DE4500D9EAE6 /* console.bak */,
-				9C9740211FC5DE4500D9EAE6 /* console-usercreate */,
 			);
 			path = "evaluate-mechanisms";
 			sourceTree = "<group>";
