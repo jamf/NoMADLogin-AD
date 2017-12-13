@@ -54,8 +54,8 @@ class LogOnly : NoLoMechanism {
     
     @objc func run() {
         // starting with the context basics
-        myLogger.logit(.info, message: "User logging in: \(String(describing: username))")
-        myLogger.logit(.info, message: "UID of user logging in: \(String(describing: uid))")
+        NSLog("%@", "User logging in: \(String(describing: username))")
+        NSLog("%@", "UID of user logging in: \(String(describing: uid))")
 
         getArguments()
         getTokens()
@@ -63,14 +63,14 @@ class LogOnly : NoLoMechanism {
         for item in contextKeys {
             let result = getContextValueFor(contextType: item)
             if result != nil {
-                myLogger.logit(.info, message: "Context Item \(item): \(String(describing: result))")
+                NSLog("%@", "Context Item \(item): \(String(describing: result))")
             }
         }
         
         for item in hintKeys {
             let result = getHint(hintType: item)
             if result != nil {
-                myLogger.logit(.info, message: "Hint Item \(item): \(String(describing: result))")
+                NSLog("%@", "Hint Item \(item): \(String(describing: result))")
             }
         }
         let _ = allowLogin()

@@ -15,7 +15,7 @@ class CheckAD: NoLoMechanism {
         signIn.mech = mechanism.pointee
         let windowTest = signIn.window
         if windowTest == nil {
-            myLogger.logit(.base, message: "Could not create login window UI")
+            NSLog("%@", "Could not create login window UI")
         }
         NSApp.runModal(for: signIn.window!)
     }

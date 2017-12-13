@@ -468,7 +468,7 @@ class NoLoMechanism: NSObject {
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             let errorText = error.localizedDescription
-            myLogger.logit(.base, message: "Unable to get user account ODRecord: \(errorText)")
+            NSLog("%@",  "Unable to get user account ODRecord: \(errorText)")
             return false
         }
         return records.count > 0 ? true : false
