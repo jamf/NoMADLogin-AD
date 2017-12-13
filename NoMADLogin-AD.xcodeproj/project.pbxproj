@@ -17,7 +17,6 @@
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CBDCFC21FC5CECB00CF73F4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */; };
-		9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */; };
 		9CBDCFC41FC5CECB00CF73F4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */; };
 		9CD324911FD19979005C4266 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */; };
 /* End PBXBuildFile section */
@@ -42,7 +41,6 @@
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,7 +78,6 @@
 				9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */,
 				9CBDCF9C1FC4CEE300CF73F4 /* Products */,
 				9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */,
-				9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */,
 				9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */,
 				9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */,
 			);
@@ -124,6 +121,7 @@
 		9CBDCFB61FC5CE2900CF73F4 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */,
 				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
 				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
 			);
@@ -142,7 +140,6 @@
 		9CBDCFBE1FC5CEB100CF73F4 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				9CBDCFC01FC5CECA00CF73F4 /* Extensions.swift */,
 				9CBDCFC11FC5CECA00CF73F4 /* Logger.swift */,
 				9CBDCFBF1FC5CECA00CF73F4 /* Preferences.swift */,
 			);
@@ -225,7 +222,6 @@
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
-				9CBDCFC31FC5CECB00CF73F4 /* Extensions.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
 				9CBDCFC21FC5CECB00CF73F4 /* Preferences.swift in Sources */,
