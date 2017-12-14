@@ -16,6 +16,8 @@ class SignIn: NSWindowController {
     
     var mech: MechanismRecord?
     var session: NoMADSession?
+    var shortName = ""
+    var domainName = ""
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
@@ -39,15 +41,31 @@ class SignIn: NSWindowController {
         username.becomeFirstResponder()
     }
 
+    fileprivate func prepareAccountStrings() {
+        if domain.isHidden == false {
+            NSLog("%@", "using domain list")
+            shortName = username.stringValue
+            domainName = (domain.selectedItem?.title.uppercased())!
+        } else {
+            NSLog("%@", "using domain from text field")
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        }
+    }
+
     @IBAction func signInClick(_ sender: Any) {
         animateUI()
-        if NoLoMechanism.checkForLocalUser(name: username.stringValue) {
+        if username.stringValue.isEmpty {
+            NSLog("%@", "No username entered")
+            return
+        }
+        prepareAccountStrings()
+        if NoLoMechanism.checkForLocalUser(name: shortName) {
             setHints()
             completeLogin(authResult: .allow)
-        }  else if username.stringValue == "" {
-            // nothing to do here
         } else {
-            session = NoMADSession.init(domain: (domain.selectedItem?.title.uppercased())!, user: username.stringValue)
+            NSLog("User: %@, Domain: %@", shortName, domainName)
+            session = NoMADSession.init(domain: domainName, user: shortName)
             guard let session = session else {
                 NSLog("%@", "Could not create NoMADSession")
                 return
@@ -71,10 +89,10 @@ class SignIn: NSWindowController {
 
     /// Set the authorization and context hints.
     fileprivate func setHints() {
-        setHint(type: .noMADUser, hint: username.stringValue)
+        setHint(type: .noMADUser, hint: shortName)
         setHint(type: .noMADPass, hint: password.stringValue)
 
-        setContext(type: kAuthorizationEnvironmentUsername, value: username.stringValue)
+        setContext(type: kAuthorizationEnvironmentUsername, value: shortName)
         setContext(type: kAuthorizationEnvironmentPassword, value: password.stringValue)
     }
 
