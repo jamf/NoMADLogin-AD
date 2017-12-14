@@ -22,7 +22,6 @@ class SignIn: NSWindowController {
     @IBOutlet weak var password: NSSecureTextField!
     @IBOutlet weak var domain: NSPopUpButton!
     @IBOutlet weak var signIn: NSButton!
-    @IBOutlet weak var spinner: NSProgressIndicator!
     @IBOutlet weak var imageView: NSImageView!
     
 
@@ -66,9 +65,6 @@ class SignIn: NSWindowController {
         
         username.isEnabled = !username.isEnabled
         password.isEnabled = !password.isEnabled
-        
-        spinner.isHidden = !spinner.isHidden
-        spinner.isHidden ? spinner.stopAnimation(self) : spinner.startAnimation(self)
     }
 
     //MARK: - Login Context Functions
