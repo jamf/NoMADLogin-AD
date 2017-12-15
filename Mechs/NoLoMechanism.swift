@@ -16,6 +16,9 @@ enum HintType: String {
     case noMADFirst
     case noMADLast
     case noMADFull
+    case uid
+    case gid
+    case kerberos_principal
 }
 
 // lots of constants for working with hints and contexts
