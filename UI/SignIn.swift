@@ -41,27 +41,22 @@ class SignIn: NSWindowController {
         username.becomeFirstResponder()
     }
 
-    fileprivate func prepareAccountStrings() {
-        if domain.isHidden == false {
-            NSLog("%@", "using domain list")
-            shortName = username.stringValue
-            domainName = (domain.selectedItem?.title.uppercased())!
-        } else {
-            NSLog("%@", "using domain from text field")
-            shortName = (username.stringValue.components(separatedBy: "@").first)!
-            domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
-        }
-    }
-
+    /// When the sign in button is clicked we check a few things.
+    ///
+    /// 1. Check to see if the username field is blank, bail if it is. If not, animate the UI and process the user strings.
+    ///
+    /// 2. Check the user shortname and see if the account already exists in DSLocal. If so, simply set the hints and pass on.
+    ///
+    /// 3. Create a `NoMADSession` and see if we can authenticate as the user.
     @IBAction func signInClick(_ sender: Any) {
-        animateUI()
         if username.stringValue.isEmpty {
             NSLog("%@", "No username entered")
             return
         }
+        animateUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
-            setHints()
+            setPassthroughHints()
             completeLogin(authResult: .allow)
         } else {
             NSLog("User: %@, Domain: %@", shortName, domainName)
@@ -85,10 +80,25 @@ class SignIn: NSWindowController {
         password.isEnabled = !password.isEnabled
     }
 
+    /// Format the user and domain from the login window depending on the mode the window is in.
+    ///
+    /// I.e. are we picking a domain from a list or putting it on the user name with '@'.
+    fileprivate func prepareAccountStrings() {
+        if domain.isHidden == false {
+            NSLog("%@", "using domain list")
+            shortName = username.stringValue
+            domainName = (domain.selectedItem?.title.uppercased())!
+        } else {
+            NSLog("%@", "using domain from text field")
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        }
+    }
+
     //MARK: - Login Context Functions
 
-    /// Set the authorization and context hints.
-    fileprivate func setHints() {
+    /// Set the authorization and context hints. These are the basics we need to passthrough to the next mechanism.
+    fileprivate func setPassthroughHints() {
         setHint(type: .noMADUser, hint: shortName)
         setHint(type: .noMADPass, hint: password.stringValue)
 
@@ -152,7 +162,7 @@ extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADUserInformation(user: ADUserRecord) {
         NSLog("Looking up info for: %@", user.shortName)
-        setHints()
+        setPassthroughHints()
         completeLogin(authResult: .allow)
     }
 }
