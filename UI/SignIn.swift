@@ -50,7 +50,7 @@ class SignIn: NSWindowController {
     /// 3. Create a `NoMADSession` and see if we can authenticate as the user.
     @IBAction func signInClick(_ sender: Any) {
         if username.stringValue.isEmpty {
-            NSLog("%@", "No username entered")
+            NSLog("NoMAD Login %@", "No username entered")
             return
         }
         animateUI()
@@ -59,7 +59,7 @@ class SignIn: NSWindowController {
             setPassthroughHints()
             completeLogin(authResult: .allow)
         } else {
-            NSLog("User: %@, Domain: %@", shortName, domainName)
+            NSLog("NoMAD Login User: %@, Domain: %@", shortName, domainName)
             session = NoMADSession.init(domain: domainName, user: shortName)
             guard let session = session else {
                 NSLog("%@", "Could not create NoMADSession")
@@ -84,12 +84,12 @@ class SignIn: NSWindowController {
     ///
     /// I.e. are we picking a domain from a list or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
-        if domain.isHidden == false {
-            NSLog("%@", "using domain list")
+        if !domain.isHidden {
+            NSLog("NoMAD Login %@", "using domain list")
             shortName = username.stringValue
             domainName = (domain.selectedItem?.title.uppercased())!
         } else {
-            NSLog("%@", "using domain from text field")
+            NSLog("NoMAD Login %@", "using domain from text field")
             shortName = (username.stringValue.components(separatedBy: "@").first)!
             domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
         }
@@ -116,7 +116,7 @@ class SignIn: NSWindowController {
         var value = AuthorizationValue(length: data.count, data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetHintValue((mech?.fEngine)!, type.rawValue, &value))!
         guard err == errSecSuccess else {
-            NSLog("Set hint failed with: %@", err)
+            NSLog("NoMAD Login Set hint failed with: %@", err)
             return
         }
     }
@@ -132,7 +132,7 @@ class SignIn: NSWindowController {
         var value = AuthorizationValue(length: (data?.count)!, data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetContextValue((mech?.fEngine)!, type, .extractable, &value))!
         guard err == errSecSuccess else {
-            NSLog("Set context value failed with: %@", err)
+            NSLog("NoMAD Login Set context value failed with: %@", err)
             return
         }
     }
@@ -156,12 +156,12 @@ extension SignIn: NoMADUserSessionDelegate {
     }
     
     func NoMADAuthenticationFailed(error: Error, description: String) {
-        NSLog("Authentication failed with: %@", error.localizedDescription)
+        NSLog("NoMAD Login Authentication failed with: %@", error.localizedDescription)
         completeLogin(authResult: .deny)
     }
     
     func NoMADUserInformation(user: ADUserRecord) {
-        NSLog("Looking up info for: %@", user.shortName)
+        NSLog("NoMAD Login Looking up info for: %@", user.shortName)
         setPassthroughHints()
         completeLogin(authResult: .allow)
     }
