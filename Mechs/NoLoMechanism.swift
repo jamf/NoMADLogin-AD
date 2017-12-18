@@ -10,16 +10,7 @@ import Foundation
 import Security
 import OpenDirectory
 
-enum HintType: String {
-    case noMADUser
-    case noMADPass
-    case noMADFirst
-    case noMADLast
-    case noMADFull
-    case uid
-    case gid
-    case kerberos_principal
-}
+
 
 // lots of constants for working with hints and contexts
 
@@ -54,37 +45,37 @@ class NoLoMechanism: NSObject {
     //MARK: - Generic Context Value Functions
 
     //context value - log only
-    func getContextValueFor(contextType: String) -> String? {
+    func getContext(type: String) -> String? {
 
         var value: UnsafePointer<AuthorizationValue>?
         var flags = AuthorizationContextFlags()
-        let err = mechCallbacks.GetContextValue(mechEngine, contextType, &flags, &value)
+        let err = mechCallbacks.GetContextValue(mechEngine, type, &flags, &value)
 
         if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve context value: \(contextType)")
+            NSLog("NoMADLogin: couldn't retrieve context value: \(type)")
             return nil
         }
 
-        if contextType == "longname" {
-           return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
-//            let item = NSString.init(bytes: value!.pointee.data!, length: value!.pointee.length, encoding: String.Encoding.utf8.rawValue)
-//            return item as! String
+        if type == "longname" {
+            return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
+            //            let item = NSString.init(bytes: value!.pointee.data!, length: value!.pointee.length, encoding: String.Encoding.utf8.rawValue)
+            //            return item as! String
         } else {
             let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-            NSLog("\(contextType): \(String(describing: item))")
+            NSLog("\(type): \(String(describing: item))")
         }
 
         return nil
     }
 
     //context value - unused
-    func setContextItem(value: String, contextType: String) -> Bool {
+    func setValueFor(contextType: String, value: String) -> Bool {
 
         // silly two-step
 
         // add null byte to signify end of string
 
-        let tempdata = value + "\0"
+        let tempdata = contextType + "\0"
         var data = tempdata.data(using: .utf8)
 
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
@@ -94,7 +85,7 @@ class NoLoMechanism: NSObject {
 
         let err = mechCallbacks.SetContextValue(mechEngine, contextType, flags, &value)
 
-        NSLog("Setting context for: \(contextType)")
+        NSLog("Setting context for: \(value)")
         NSLog(err.description)
 
         return (err == errSecSuccess)
@@ -104,21 +95,21 @@ class NoLoMechanism: NSObject {
     //MARK: - Generic Hint Value Functions
 
     // hint value - log only
-    func getHint(hintType: String) -> String? {
+    func getHint(type: HintType) -> String? {
 
         var value : UnsafePointer<AuthorizationValue>? = nil
         var err: OSStatus = noErr
-        err = mechCallbacks.GetHintValue(mechEngine, hintType, &value)
+        err = mechCallbacks.GetHintValue(mechEngine, type.rawValue, &value)
 
         if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve hint value: \(hintType)")
+            NSLog("NoMADLogin: couldn't retrieve hint value: \(type)")
             return nil
         }
 
         let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
         guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
             else {
-                NSLog("NoMADLogin: couldn't unpack hint value \(hintType)")
+                NSLog("NoMADLogin: couldn't unpack hint value \(type)")
                 return nil
         }
         return (result as! String)
@@ -246,7 +237,7 @@ class NoLoMechanism: NSObject {
     //context value - create user
     func setUID(uid: Int) {
         
-       // var value : UnsafePointer<AuthorizationValue>? = nil
+        // var value : UnsafePointer<AuthorizationValue>? = nil
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
 
         var data = uid_t.init(bitPattern: Int32(uid))
@@ -323,7 +314,7 @@ class NoLoMechanism: NSObject {
                                        data: UnsafeMutableRawPointer(mutating: (data as! NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         
         let err : OSStatus =  mechCallbacks.SetContextValue(
-             mechEngine, kAuthorizationEnvironmentPassword, flags, &value)
+            mechEngine, kAuthorizationEnvironmentPassword, flags, &value)
         
         NSLog("Setting pass context")
         NSLog(err.description)
@@ -347,7 +338,7 @@ class NoLoMechanism: NSObject {
                                        data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         
         let err : OSStatus =  mechCallbacks.SetContextValue(
-             mechEngine, kAuthorizationEnvironmentUsername, flags, &value)
+            mechEngine, kAuthorizationEnvironmentUsername, flags, &value)
         
         NSLog("Setting user context")
         NSLog(err.description)

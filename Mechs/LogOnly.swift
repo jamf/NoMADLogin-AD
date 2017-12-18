@@ -61,14 +61,14 @@ class LogOnly : NoLoMechanism {
         getTokens()
         
         for item in contextKeys {
-            let result = getContextValueFor(contextType: item)
+            let result = getContext(type: item)
             if result != nil {
                 NSLog("%@", "Context Item \(item): \(String(describing: result))")
             }
         }
         
         for item in hintKeys {
-            let result = getHint(hintType: item)
+            let result = getHint(type: HintType(rawValue: item)!)
             if result != nil {
                 NSLog("%@", "Hint Item \(item): \(String(describing: result))")
             }

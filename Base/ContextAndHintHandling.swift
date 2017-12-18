@@ -41,6 +41,23 @@ extension ContextAndHintHandling {
         }
     }
 
+    func getHint(type: HintType) -> String? {
+        var value : UnsafePointer<AuthorizationValue>? = nil
+        var err: OSStatus = noErr
+        err = (mech?.fPlugin.pointee.fCallbacks.pointee.GetHintValue((mech?.fEngine)!, type.rawValue, &value))!
+        if err != errSecSuccess {
+            NSLog("NoMADLogin: couldn't retrieve hint value: \(type)")
+            return nil
+        }
+        let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
+        guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
+            else {
+                NSLog("NoMADLogin: couldn't unpack hint value \(type)")
+                return nil
+        }
+            return (result as! String)
+    }
+
     /// Set one of the known `AuthorizationTags` values to be used during mechanism evaluation.
     ///
     /// - Parameters:
@@ -55,5 +72,23 @@ extension ContextAndHintHandling {
             NSLog("NoMAD Login Set context value failed with: %@", err)
             return
         }
+    }
+
+    func getContext(type: String) -> String? {
+        var value: UnsafePointer<AuthorizationValue>?
+        var flags = AuthorizationContextFlags()
+        let err = mech?.fPlugin.pointee.fCallbacks.pointee.GetContextValue((mech?.fEngine)!, type, &flags, &value)
+        if err != errSecSuccess {
+            NSLog("NoMADLogin: couldn't retrieve context value: \(type)")
+            return nil
+        }
+        if type == "longname" {
+            return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
+        } else {
+            let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
+            NSLog("\(type): \(String(describing: item))")
+        }
+
+        return nil
     }
 }
