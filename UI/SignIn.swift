@@ -13,7 +13,6 @@ import NoMAD_ADAuth
 class SignIn: NSWindowController {
     
     //MARK: - setup variables
-    
     var mech: MechanismRecord?
     var session: NoMADSession?
     var shortName = ""
@@ -25,7 +24,6 @@ class SignIn: NSWindowController {
     @IBOutlet weak var domain: NSPopUpButton!
     @IBOutlet weak var signIn: NSButton!
     @IBOutlet weak var imageView: NSImageView!
-    
 
     //MARK: - UI Methods
     override func windowDidLoad() {
@@ -106,37 +104,6 @@ class SignIn: NSWindowController {
         setContext(type: kAuthorizationEnvironmentPassword, value: password.stringValue)
     }
 
-    /// Set a NoMAD Login Authorization mechanism hint.
-    ///
-    /// - Parameters:
-    ///   - type: A value from `HintType` representing the NoMad Login value to set.
-    ///   - hint: A `String` of the hint value to set.
-    func setHint(type: HintType, hint: String) {
-        let data = NSKeyedArchiver.archivedData(withRootObject: hint)
-        var value = AuthorizationValue(length: data.count, data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-        let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetHintValue((mech?.fEngine)!, type.rawValue, &value))!
-        guard err == errSecSuccess else {
-            NSLog("NoMAD Login Set hint failed with: %@", err)
-            return
-        }
-    }
-
-    /// Set one of the known `AuthorizationTags` values to be used during mechanism evaluation.
-    ///
-    /// - Parameters:
-    ///   - type: A `String` constant from AuthorizationTags.h representing the value to set.
-    ///   - value: A `String` value of the context value to set.
-    func setContext(type: String, value: String) {
-        let tempdata = value + "\0"
-        let data = tempdata.data(using: .utf8)
-        var value = AuthorizationValue(length: (data?.count)!, data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
-        let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetContextValue((mech?.fEngine)!, type, .extractable, &value))!
-        guard err == errSecSuccess else {
-            NSLog("NoMAD Login Set context value failed with: %@", err)
-            return
-        }
-    }
-
     /// Complete the NoLo process and either continue to the next Authorization Plugin or reset the NoLo window.
     ///
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
@@ -165,4 +132,10 @@ extension SignIn: NoMADUserSessionDelegate {
         setPassthroughHints()
         completeLogin(authResult: .allow)
     }
+}
+
+//MARK: - ContextAndHintHandling Conformance
+extension SignIn: ContextAndHintHandling {
+    func getContext(type: String) {}
+    func getHint(type: HintType) {}
 }

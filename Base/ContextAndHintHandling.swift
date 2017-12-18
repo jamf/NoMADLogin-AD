@@ -1,0 +1,59 @@
+//
+//  ContextAndHintHandling.swift
+//  NoMADLoginAD
+//
+//  Created by Josh Wisenbaker on 12/18/17.
+//  Copyright © 2017 NoMAD. All rights reserved.
+//
+
+enum HintType: String {
+    case noMADUser
+    case noMADPass
+    case noMADFirst
+    case noMADLast
+    case noMADFull
+    case uid
+    case gid
+    case kerberos_principal
+}
+
+protocol ContextAndHintHandling {
+    var mech: MechanismRecord? {get set}
+    func setContext(type: String, value: String)
+    func setHint(type: HintType, hint: String)
+    func getContext(type: String)
+    func getHint(type: HintType)
+}
+
+extension ContextAndHintHandling {
+    /// Set a NoMAD Login Authorization mechanism hint.
+    ///
+    /// - Parameters:
+    ///   - type: A value from `HintType` representing the NoMad Login value to set.
+    ///   - hint: A `String` of the hint value to set.
+    func setHint(type: HintType, hint: String) {
+        let data = NSKeyedArchiver.archivedData(withRootObject: hint)
+        var value = AuthorizationValue(length: data.count, data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
+        let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetHintValue((mech?.fEngine)!, type.rawValue, &value))!
+        guard err == errSecSuccess else {
+            NSLog("NoMAD Login Set hint failed with: %@", err)
+            return
+        }
+    }
+
+    /// Set one of the known `AuthorizationTags` values to be used during mechanism evaluation.
+    ///
+    /// - Parameters:
+    ///   - type: A `String` constant from AuthorizationTags.h representing the value to set.
+    ///   - value: A `String` value of the context value to set.
+    func setContext(type: String, value: String) {
+        let tempdata = value + "\0"
+        let data = tempdata.data(using: .utf8)
+        var value = AuthorizationValue(length: (data?.count)!, data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
+        let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetContextValue((mech?.fEngine)!, type, .extractable, &value))!
+        guard err == errSecSuccess else {
+            NSLog("NoMAD Login Set context value failed with: %@", err)
+            return
+        }
+    }
+}
