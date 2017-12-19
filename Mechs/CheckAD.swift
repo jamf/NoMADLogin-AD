@@ -12,7 +12,7 @@ class CheckAD: NoLoMechanism {
     @objc func run() {
         NSApp.activate(ignoringOtherApps: true)
         let signIn = SignIn(windowNibName: NSNib.Name(rawValue: "SignIn"))
-        signIn.mech = mechanism.pointee
+        signIn.mech = mech
         let windowTest = signIn.window
         if windowTest == nil {
             NSLog("%@", "Could not create login window UI")

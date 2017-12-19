@@ -18,11 +18,11 @@ enum HintType: String {
 }
 
 protocol ContextAndHintHandling {
-    var mech: MechanismRecord? {get set}
+    var mech: MechanismRecord? {get}
     func setContext(type: String, value: String)
     func setHint(type: HintType, hint: String)
-    func getContext(type: String)
-    func getHint(type: HintType)
+    func getContext(type: String) -> String?
+    func getHint(type: HintType) -> String?
 }
 
 extension ContextAndHintHandling {

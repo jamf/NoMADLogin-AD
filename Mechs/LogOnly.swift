@@ -53,9 +53,6 @@ class LogOnly : NoLoMechanism {
     // heavily influenced by the Apple NullAuth sample code
     
     @objc func run() {
-        // starting with the context basics
-        NSLog("%@", "User logging in: \(String(describing: username))")
-        NSLog("%@", "UID of user logging in: \(String(describing: uid))")
 
         getArguments()
         getTokens()

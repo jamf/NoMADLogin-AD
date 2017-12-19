@@ -134,8 +134,5 @@ extension SignIn: NoMADUserSessionDelegate {
     }
 }
 
-//MARK: - ContextAndHintHandling Conformance
-extension SignIn: ContextAndHintHandling {
-    func getContext(type: String) {}
-    func getHint(type: HintType) {}
-}
+//MARK: - ContextAndHintHandling Protocol
+extension SignIn: ContextAndHintHandling {}
