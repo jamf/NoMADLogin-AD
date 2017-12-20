@@ -53,10 +53,28 @@ class NoLoMechanism: NSObject {
 
     var nomadPass: String? {
         get {
-            guard let userName = getHint(type: .noMADPass) else {
+            guard let userPass = getHint(type: .noMADPass) else {
                 return nil
             }
-            return userName
+            return userPass
+        }
+    }
+
+    var nomadFirst: String? {
+        get {
+            guard let firstName = getHint(type: .noMADFirst) else {
+                return nil
+            }
+            return firstName
+        }
+    }
+
+    var nomadLast: String? {
+        get {
+            guard let lastName = getHint(type: .noMADLast) else {
+                return nil
+            }
+            return lastName
         }
     }
 
@@ -94,6 +112,7 @@ class NoLoMechanism: NSObject {
     func getTokens() {
         if #available(OSX 10.13, *) {
             var value : Unmanaged<CFArray>? = nil
+            defer {value?.release()}
             var err: OSStatus = noErr
             err = mechCallbacks.GetTokenIdentities(mechEngine, "" as CFTypeRef, &value)
             NSLog("Tokens: \(value.debugDescription)")
@@ -132,8 +151,8 @@ class NoLoMechanism: NSObject {
         let odsession = ODSession.default()
 
         do {
-            let node = try ODNode.init(session: odsession, type: UInt32(kODNodeTypeLocalNodes))
-            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             let errorText = error.localizedDescription

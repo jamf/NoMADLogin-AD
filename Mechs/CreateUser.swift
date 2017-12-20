@@ -12,19 +12,20 @@ import NoMAD_ADAuth
 
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
-    
+    let session = ODSession.default()
     @objc func run() {
-        if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: (nomadUser?.components(separatedBy: "@").first)!) {
-
-            let cleanedUser = nomadUser?.components(separatedBy: "@").first ?? "error"
-
-            createUser(name: cleanedUser,
-                       first: "Test",
-                       last: "User",
-                       pass: self.nomadPass!,
-                       uid: "10001",
+        if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
+            guard let uid = findFirstAvaliableUID() else {
+                NSLog("%@", "Could not find an avaliable UID")
+                return
+            }
+            createUser(shortName: nomadUser!,
+                       first: nomadFirst!,
+                       last: nomadLast!,
+                       pass: nomadPass!,
+                       uid: uid,
                        gid: "20",
-                       guid: nil,
+                       guid: UUID().uuidString,
                        changePass: true,
                        attributes: nil)
 
@@ -36,7 +37,7 @@ class CreateUser: NoLoMechanism {
             //setContextItem(value: "/bin/bash", item: "shell")
             
             setGID(gid: 20)
-            setUID(uid: 10001)
+            setUID(uid: Int(uid)!)
 
             cliTask("/usr/sbin/createhomedir -c")
             
@@ -51,11 +52,9 @@ class CreateUser: NoLoMechanism {
     
     // mark utility functions
     
-    func createUser(name: String, first: String, last: String, pass: String?, uid: String?, gid: String?, guid: String?, changePass: Bool?, attributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String?, gid: String?, guid: String?, changePass: Bool?, attributes: [String:Any]?) {
         
-        let nodeName = "/Local/Default"
-        let odsession = ODSession.default()
-        
+
         var newRecord: ODRecord?
         
         // note for anyone following behind me
@@ -66,7 +65,7 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypeFirstName: [first],
             kODAttributeTypeLastName: [last],
             kODAttributeTypeFullName: [first + " " + last],
-            kODAttributeTypeNFSHomeDirectory: [ "/Users/" + name ],
+            kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
             kODAttributeTypeUserShell: ["/bin/bash"],
             //"dsAttrTypeNative:writers_AvatarRepresentation" : [name],
         ]
@@ -81,15 +80,11 @@ class CreateUser: NoLoMechanism {
         
         if guid != nil {
             attrs[kODAttributeTypeGUID] = [guid]
-        } else {
-            // TESTING
-            //attrs[kODAttributeTypeGUID] = ["204F65A9-C7AF-4717-B90B-3045345E189B"]
-            //uuid_generate_random(<#T##out: UnsafeMutablePointer<UInt8>!##UnsafeMutablePointer<UInt8>!#>)
         }
         
         do {
-            let node = try ODNode.init(session: odsession, name: nodeName)
-            newRecord = try node.createRecord(withRecordType: kODRecordTypeUsers, name: name, attributes: attrs)
+            let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+            newRecord = try node.createRecord(withRecordType: kODRecordTypeUsers, name: shortName, attributes: attrs)
         } catch {
             print("Unable to create account.")
         }
@@ -115,7 +110,7 @@ class CreateUser: NoLoMechanism {
         
         if changePass! {
             do {
-                try newRecord?.addValue(name, toAttribute: "dsAttrTypeNative:writers_passwd")
+                try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:writers_passwd")
             } catch {
                 print("Unable to set writers_passwd")
             }
@@ -152,5 +147,25 @@ class CreateUser: NoLoMechanism {
         }
         
         return randomString
+    }
+
+    func findFirstAvaliableUID() -> String? {
+        var newUID = ""
+        for potentialUID in 501... {
+            do {
+                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeUniqueID, matchType: ODMatchType(kODMatchEqualTo), queryValues: String(potentialUID), returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+                let records = try query.resultsAllowingPartial(false) as! [ODRecord]
+                if records.isEmpty {
+                    newUID = String(potentialUID)
+                    break
+                }
+            } catch {
+                let errorText = error.localizedDescription
+                NSLog("%@",  "Ran into an ODError: \(errorText)")
+                return nil
+            }
+        }
+        return newUID
     }
 }

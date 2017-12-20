@@ -130,6 +130,8 @@ extension SignIn: NoMADUserSessionDelegate {
     func NoMADUserInformation(user: ADUserRecord) {
         NSLog("NoMAD Login Looking up info for: %@", user.shortName)
         setPassthroughHints()
+        setHint(type: .noMADFirst, hint: user.firstName)
+        setHint(type: .noMADLast, hint: user.lastName)
         completeLogin(authResult: .allow)
     }
 }
