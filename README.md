@@ -17,7 +17,7 @@ Please file any issues, or requested features, in the [project issue tracker](ht
 Getting started with NoLoAD is easy, but currently it takes a few steps. Be sure to have ssh enabled on your test Mac or VM so that you can still connect and revert to the Apple login window in case you run in to any issues.
 
 ### To install:
-1. Download the Preview 1 archive.
+1. [Download the Preview 1 archive.](https://gitlab.com/macshome/NoMADLogin-AD/uploads/6f3fc4b5a6f118c1ad04e838c3450762/NoMAD_Login_AD_Preview_1.zip)
 2. Make sure that you have SSH enabled on your test Mac.
 3. Make sure that you can login to your test Mac with SSH.
 4. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
