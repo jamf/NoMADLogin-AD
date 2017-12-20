@@ -29,20 +29,10 @@ class CreateUser: NoLoMechanism {
                        changePass: true,
                        attributes: nil)
 
-            //  set some user variables
-            // these don't do what they should, so keeping for future use
-            
-            //setContextItem(value: "/Users/test", item: "home")
-            //setContextItem(value: "Test User", item: "longname")
-            //setContextItem(value: "/bin/bash", item: "shell")
-            
             setGID(gid: 20)
             setUID(uid: Int(uid)!)
-
             cliTask("/usr/sbin/createhomedir -c")
-            
             allowLogin()
-
         } else {
             // no user to create
             NSLog("Skipping account creation")
@@ -51,10 +41,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    
     func createUser(shortName: String, first: String, last: String, pass: String?, uid: String?, gid: String?, guid: String?, changePass: Bool?, attributes: [String:Any]?) {
-        
-
         var newRecord: ODRecord?
         
         // note for anyone following behind me
@@ -99,7 +86,6 @@ class CreateUser: NoLoMechanism {
         }
         
         // now to set the password, skipping this step if NONE is specified
-        
         if pass != "NONE" {
             do {
                 try newRecord?.changePassword(nil, toPassword: password)
@@ -132,8 +118,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // func to get a random string
-    
-    func randomString(length: Int) -> String {
+        func randomString(length: Int) -> String {
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()"
         let len = UInt32(letters.length)
