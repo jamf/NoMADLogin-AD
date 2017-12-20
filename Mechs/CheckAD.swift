@@ -7,16 +7,15 @@
 //
 
 import Cocoa
-import SecurityInterface.SFAuthorizationPluginView
 
 class CheckAD: NoLoMechanism {
     @objc func run() {
         NSApp.activate(ignoringOtherApps: true)
         let signIn = SignIn(windowNibName: NSNib.Name(rawValue: "SignIn"))
-        signIn.mech = mechanism.pointee
+        signIn.mech = mech
         let windowTest = signIn.window
         if windowTest == nil {
-            myLogger.logit(.base, message: "Could not create login window UI")
+            NSLog("%@", "Could not create login window UI")
         }
         NSApp.runModal(for: signIn.window!)
     }
