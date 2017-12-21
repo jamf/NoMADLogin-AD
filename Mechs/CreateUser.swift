@@ -8,7 +8,7 @@
 
 import Foundation
 import OpenDirectory
-//import NoMAD_ADAuth
+import NoMAD_ADAuth
 
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {

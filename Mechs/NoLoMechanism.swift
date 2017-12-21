@@ -9,8 +9,7 @@
 import Foundation
 import Security
 import OpenDirectory
-
-
+import NoMAD_ADAuth
 
 // lots of constants for working with hints and contexts
 

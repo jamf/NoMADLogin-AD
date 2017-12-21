@@ -16,7 +16,7 @@ import OpenDirectory
 // Workflow
 //
 // 1. take short name and find user account
-// 2. if user is not a mobile account, mark auth as successul and return
+// 2. if user is not a mobile account, mark auth as successful and return
 // 3. if user is mobile, read in account, remove OriginalAuthAuthority and others
 // 4. save account and mark auth as successful
 
@@ -26,9 +26,33 @@ class DeMobilize : NoLoMechanism {
     
     // constants
     
-    //
+    let kAuthAuthority = "dsAttrTypeNative:authentication_authority"
     
-    func run() {
+    let removeAttrs = [
+        "cached_groups",
+        "cached_auth_policy",
+        "CopyTimestamp",
+        "AltSecurityIdentities",
+        "SMBPrimaryGroupSID",
+        "OriginalAuthenticationAuthority",
+        "OriginalNodeName",
+        "SMBSID",
+        "SMBScriptPath",
+        "SMBPasswordLastSet",
+        "SMBGroupRID",
+        "PrimaryNTDomain",
+        "AppleMetaRecordName",
+        "PrimaryNTDomain",
+        "MCXSettings",
+        "MCXFlags",
+        "accountPolicyData"
+    ]
+    
+    // globals
+    
+    var attributes : Array<String>? = nil
+    
+    @objc func run() {
         // sanity check to ensure we have valid information and a local user
         
         if nomadPass == nil {
@@ -46,7 +70,7 @@ class DeMobilize : NoLoMechanism {
         
         do {
             let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
-            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: nomadUser, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             let errorText = error.localizedDescription
@@ -55,7 +79,7 @@ class DeMobilize : NoLoMechanism {
             _ = allowLogin()
         }
         
-        if records.count = 0 {
+        if records.count == 0 {
             // no local user, this will most likely error out later, but not our place to say
             NSLog("%@",  "No local user record, passing on de-mobilzing.")
             _ = allowLogin()
@@ -64,7 +88,7 @@ class DeMobilize : NoLoMechanism {
         if records.count > 1 {
             // conflicting records, don't do anything
             NSLog("%@",  "Multiple local user records, passing on de-mobilzing.")
-
+            
             _ = allowLogin()
         }
         
@@ -75,25 +99,56 @@ class DeMobilize : NoLoMechanism {
         var authAuthority: Any?
         
         do {
-            authAuthority = try userRecord.values(forAttribute: "dsAttrTypeNative:authentication_authority") as Array
+            authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as Array
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             NSLog("%@",  "User did not have any AuthenticationAuthorities.")
             _ = allowLogin()
         }
         
-        var localAccount = false
+        var cachedAccount = false
         
         // iterate through the AuthAuthorities
+        // remove the Active Directory one if you find it
         
-        if authAuthority != nil && authAuthority.count > 0 {
-            attributes = authAuthority as! Array<String>
-            for item in attributes {
-                if item.contains("Active Directory") {
-                    
+        if authAuthority != nil {
+            attributes = authAuthority as? Array<String>
+            for item in 0...((attributes?.count)! - 1) {
+                if attributes![item].contains("Active Directory") {
+                    attributes!.remove(at: item)
+                    cachedAccount = true
+                    break
                 }
             }
         }
-
+        
+        if !cachedAccount {
+            NSLog("Account was not a cached account")
+            _ = allowLogin()
+        }
+        
+        // now to clean up the account
+        // first remove all the extraneous records
+        // we mark the try with ? as we don't want to error just because the attribute doesn't exist
+        
+        for attr in removeAttrs {
+            try? userRecord.removeValues(forAttribute: "dsAttrTypeNative:" + attr )
+        }
+        
+        // now to write back the cleansed AuthAuthority
+        
+        do {
+            try userRecord.setValue(attributes!, forAttribute: kAuthAuthority)
+        } catch {
+            NSLog("Unable to update the Authentication Authority")
+        }
+        
+        // group membership update?
+        
+        // unbind from AD?
+        
+        // we're done, let the user go
+        
+        _ = allowLogin()
     }
 }
