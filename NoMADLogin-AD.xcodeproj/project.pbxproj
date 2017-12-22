@@ -341,7 +341,7 @@
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -365,7 +365,7 @@
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
