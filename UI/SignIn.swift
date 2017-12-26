@@ -8,7 +8,10 @@
 
 import Cocoa
 import Security.AuthorizationPlugin
+import os
 import NoMAD_ADAuth
+
+let UILog = OSLog(subsystem: "menu.nomad.noload", category: "UI")
 
 class SignIn: NSWindowController {
     
@@ -27,15 +30,19 @@ class SignIn: NSWindowController {
 
     //MARK: - UI Methods
     override func windowDidLoad() {
+        os_log("Calling super.windowDidLoad", log: UILog, type: .debug)
         super.windowDidLoad()
         self.window?.isMovable = false
         self.window?.canBecomeVisibleWithoutLogin = true
+        os_log("Setting window level", log: UILog, type: .debug)
         self.window?.level = NSWindow.Level(rawValue: NSWindow.Level.screenSaver.rawValue + 1)
         self.window?.orderFrontRegardless()
         
         // make things look better
+        os_log("Tweaking appearance", log: UILog, type: .debug)
         self.window?.titlebarAppearsTransparent = true
         self.window?.backgroundColor = NSColor.white
+        os_log("Become first responder", log: UILog, type: .debug)
         username.becomeFirstResponder()
     }
 
