@@ -9,14 +9,16 @@
 import Foundation
 import OpenDirectory
 import NoMAD_ADAuth
+import os.log
 
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
     let session = ODSession.default()
     @objc func run() {
+        os_log("CreateUser mech starting", log: createUserLog, type: .debug)
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
             guard let uid = findFirstAvaliableUID() else {
-                NSLog("%@", "Could not find an avaliable UID")
+                os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return
             }
             createUser(shortName: nomadUser!,
@@ -26,99 +28,89 @@ class CreateUser: NoLoMechanism {
                        uid: uid,
                        gid: "20",
                        guid: UUID().uuidString,
-                       changePass: true,
+                       canChangePass: true,
                        attributes: nil)
 
             setGID(gid: 20)
             setUID(uid: Int(uid)!)
+            os_log("Creating local homefolder", log: createUserLog, type: .debug)
             cliTask("/usr/sbin/createhomedir -c")
+            os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
             allowLogin()
         } else {
             // no user to create
-            NSLog("Skipping account creation")
+            os_log("Skipping local account creation", log: createUserLog, type: .default)
+            os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
             allowLogin()
         }
+        os_log("CreateUser mech complete", log: createUserLog, type: .debug)
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String?, gid: String?, guid: String?, changePass: Bool?, attributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, attributes: [String:Any]?) {
         var newRecord: ODRecord?
-        
+        os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
+        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, guid)
+
         // note for anyone following behind me
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
         
-        var attrs: [AnyHashable:Any] = [
+        let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFirstName: [first],
             kODAttributeTypeLastName: [last],
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
             kODAttributeTypeUserShell: ["/bin/bash"],
-            //"dsAttrTypeNative:writers_AvatarRepresentation" : [name],
+            kODAttributeTypeUniqueID: [uid],
+            kODAttributeTypePrimaryGroupID: [gid],
+            kODAttributeTypeGUID: [guid]
         ]
-        
-        if uid != nil {
-            attrs[kODAttributeTypeUniqueID] = [uid]
-        }
-        
-        if gid != nil {
-            attrs[kODAttributeTypePrimaryGroupID] = [gid]
-        }
-        
-        if guid != nil {
-            attrs[kODAttributeTypeGUID] = [guid]
-        }
-        
+
         do {
+            os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
             let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
             newRecord = try node.createRecord(withRecordType: kODRecordTypeUsers, name: shortName, attributes: attrs)
         } catch {
-            print("Unable to create account.")
+            let errorText = error.localizedDescription
+            os_log("Unable to create account. Error: %{public}@", log: createUserLog, type: .default, errorText)
+            return
         }
+        os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
 
-        var password = pass
-
-        if pass == nil || pass == "" {
-            password = randomString(length: 24)
-            
-            // TODO: stash in system keychain
-            //print("Using random password: " + password!)
-        }
-        
-        // now to set the password, skipping this step if NONE is specified
-        if pass != "NONE" {
+        if canChangePass {
             do {
-                try newRecord?.changePassword(nil, toPassword: password)
-            } catch {
-                NSLog("Error setting password")
-            }
-        }
-        
-        if changePass! {
-            do {
+                os_log("Setting writers_passwd for new local user", log: createUserLog, type: .debug)
                 try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:writers_passwd")
             } catch {
-                print("Unable to set writers_passwd")
+                os_log("Unable to set writers_passwd", log: createUserLog, type: .default)
             }
         }
-        
-        // now to add any arbitrary attributes
-        
-        if attributes != nil {
-            for item in attributes! {
+
+        if let password = pass {
+            do {
+                os_log("Setting password for new local user", log: createUserLog, type: .debug)
+                try newRecord?.changePassword(nil, toPassword: password)
+            } catch {
+                os_log("Error setting password for new local user", log: createUserLog, type: .default)
+            }
+        }
+
+        if let attributes = attributes {
+            os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
+            for item in attributes {
                 do {
+                    os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
                     try newRecord?.addValue(item.value, toAttribute: item.key)
                 } catch {
-                    print(item.key)
+                    os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .default, item.key)
                 }
             }
         }
-        
-        // add a timestamp
     }
     
     // func to get a random string
-        func randomString(length: Int) -> String {
+    func randomString(length: Int) -> String {
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()"
         let len = UInt32(letters.length)
@@ -136,6 +128,7 @@ class CreateUser: NoLoMechanism {
 
     func findFirstAvaliableUID() -> String? {
         var newUID = ""
+        os_log("Checking for avaliable UID", log: createUserLog, type: .debug)
         for potentialUID in 501... {
             do {
                 let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
@@ -147,10 +140,11 @@ class CreateUser: NoLoMechanism {
                 }
             } catch {
                 let errorText = error.localizedDescription
-                NSLog("%@",  "Ran into an ODError: \(errorText)")
+                os_log("ODError searching for avaliable UID: %{public}@", log: createUserLog, type: .default, errorText)
                 return nil
             }
         }
+        os_log("Found first avaliable UID: %{public}@", log: createUserLog, type: .default, newUID)
         return newUID
     }
 }

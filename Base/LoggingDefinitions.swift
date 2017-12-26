@@ -8,5 +8,6 @@
 
 import os.log
 
-let UILog = OSLog(subsystem: "menu.nomad.noload", category: "UI")
-let MechanismLog = OSLog(subsystem: "menu.nomad.noload", category: "Mechanisms")
+let uiLog = OSLog(subsystem: "menu.nomad.noload", category: "UI")
+let checkADLog = OSLog(subsystem: "menu.nomad.noload", category: "CheckADMech")
+let createUserLog = OSLog(subsystem: "menu.nomad.noload", category: "CreateUserMech")
