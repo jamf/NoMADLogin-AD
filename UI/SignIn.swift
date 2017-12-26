@@ -8,7 +8,7 @@
 
 import Cocoa
 import Security.AuthorizationPlugin
-import os
+import os.log
 import NoMAD_ADAuth
 
 class SignIn: NSWindowController {
@@ -119,7 +119,7 @@ class SignIn: NSWindowController {
     ///
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
-        os_log("Complete login process with result: %{public}@", log: UILog, type: .debug, String.init(describing: authResult))
+        os_log("Complete login process with result: %{public}@", log: UILog, type: .debug, authResult.rawValue)
         let _ = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
         animateUI()
         NSApp.abortModal()
@@ -136,12 +136,12 @@ extension SignIn: NoMADUserSessionDelegate {
     }
     
     func NoMADAuthenticationFailed(error: Error, description: String) {
-        os_log("NoMAD Login Authentication failed with: %@", log: .default, error.localizedDescription)
+        os_log("NoMAD Login Authentication failed with: %{public}@", log: UILog, type: .default, error.localizedDescription)
         completeLogin(authResult: .deny)
     }
     
     func NoMADUserInformation(user: ADUserRecord) {
-        os_log("NoMAD Login Looking up info for: %@", log: UILog, type: .default, user.shortName)
+        os_log("NoMAD Login Looking up info for: %{public}@", log: UILog, type: .default, user.shortName)
         setPassthroughHints()
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
