@@ -65,6 +65,7 @@ class SignIn: NSWindowController {
             setPassthroughHints()
             completeLogin(authResult: .allow)
         } else {
+            session = NoMADSession.init(domain: domainName, user: shortName)
             os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: UILog, type: .default, shortName, domainName)
             guard let session = session else {
                 os_log("Could not create NoMADSession from SignIn window", log: UILog, type: .default)
