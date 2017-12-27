@@ -127,7 +127,7 @@ class NoLoMechanism: NSObject {
             }
         } else {
             os_log("Tokens are not supported on this version of macOS", log: noLoMechlog, type: .default)
-            return
+
         }
     }
 

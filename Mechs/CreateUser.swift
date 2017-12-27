@@ -31,18 +31,15 @@ class CreateUser: NoLoMechanism {
                        canChangePass: true,
                        attributes: nil)
 
-            setGID(gid: 20)
-            setUID(uid: Int(uid)!)
             os_log("Creating local homefolder", log: createUserLog, type: .debug)
             cliTask("/usr/sbin/createhomedir -c")
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
-            allowLogin()
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
             os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
-            allowLogin()
         }
+        allowLogin()
         os_log("CreateUser mech complete", log: createUserLog, type: .debug)
     }
     
@@ -73,7 +70,7 @@ class CreateUser: NoLoMechanism {
             newRecord = try node.createRecord(withRecordType: kODRecordTypeUsers, name: shortName, attributes: attrs)
         } catch {
             let errorText = error.localizedDescription
-            os_log("Unable to create account. Error: %{public}@", log: createUserLog, type: .default, errorText)
+            os_log("Unable to create account. Error: %{public}@", log: createUserLog, type: .error, errorText)
             return
         }
         os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
@@ -83,7 +80,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Setting writers_passwd for new local user", log: createUserLog, type: .debug)
                 try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:writers_passwd")
             } catch {
-                os_log("Unable to set writers_passwd", log: createUserLog, type: .default)
+                os_log("Unable to set writers_passwd", log: createUserLog, type: .error)
             }
         }
 
@@ -92,7 +89,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Setting password for new local user", log: createUserLog, type: .debug)
                 try newRecord?.changePassword(nil, toPassword: password)
             } catch {
-                os_log("Error setting password for new local user", log: createUserLog, type: .default)
+                os_log("Error setting password for new local user", log: createUserLog, type: .error)
             }
         }
 
@@ -103,10 +100,11 @@ class CreateUser: NoLoMechanism {
                     os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
                     try newRecord?.addValue(item.value, toAttribute: item.key)
                 } catch {
-                    os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .default, item.key)
+                    os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item.key)
                 }
             }
         }
+        os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
     }
     
     // func to get a random string
@@ -140,7 +138,7 @@ class CreateUser: NoLoMechanism {
                 }
             } catch {
                 let errorText = error.localizedDescription
-                os_log("ODError searching for avaliable UID: %{public}@", log: createUserLog, type: .default, errorText)
+                os_log("ODError searching for avaliable UID: %{public}@", log: createUserLog, type: .error, errorText)
                 return nil
             }
         }

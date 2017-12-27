@@ -61,14 +61,14 @@ class SignIn: NSWindowController {
         animateUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
-            os_log("Allowing local user login for %@", log: uiLog, type: .default, shortName)
+            os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
             setPassthroughHints()
             completeLogin(authResult: .allow)
         } else {
             session = NoMADSession.init(domain: domainName, user: shortName)
             os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
             guard let session = session else {
-                os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .default)
+                os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
                 return
             }
             session.userPass = password.stringValue
@@ -119,7 +119,7 @@ class SignIn: NSWindowController {
     ///
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
-        os_log("Complete login process with result: %{public}@", log: uiLog, type: .debug, authResult.rawValue)
+        os_log("Complete login process", log: uiLog, type: .debug)
         let _ = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
         animateUI()
         NSApp.abortModal()
