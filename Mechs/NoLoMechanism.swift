@@ -9,7 +9,7 @@
 import Foundation
 import Security
 import OpenDirectory
-
+import os.log
 
 
 // lots of constants for working with hints and contexts
@@ -36,10 +36,12 @@ class NoLoMechanism: NSObject {
     ///
     /// - Parameter mechanism: The base `AuthorizationPlugin` to be used.
     @objc init(mechanism: UnsafePointer<MechanismRecord>) {
+        os_log("Initializing NoLoSwiftMech", log: noLoMechlog, type: .debug)
         self.mech = mechanism.pointee
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
+        os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
     }
 
     var nomadUser: String? {
@@ -47,6 +49,7 @@ class NoLoMechanism: NSObject {
             guard let userName = getHint(type: .noMADUser) else {
                 return nil
             }
+            os_log("Computed nomadUser accessed: %{public}@", log: noLoMechlog, type: .debug, userName)
             return userName
         }
     }
@@ -56,6 +59,7 @@ class NoLoMechanism: NSObject {
             guard let userPass = getHint(type: .noMADPass) else {
                 return nil
             }
+            os_log("Computed nomadPass accessed: %@", log: noLoMechlog, type: .debug, userPass)
             return userPass
         }
     }
@@ -65,6 +69,7 @@ class NoLoMechanism: NSObject {
             guard let firstName = getHint(type: .noMADFirst) else {
                 return nil
             }
+            os_log("Computed nomadFirst accessed: %{public}@", log: noLoMechlog, type: .debug, firstName)
             return firstName
         }
     }
@@ -74,70 +79,81 @@ class NoLoMechanism: NSObject {
             guard let lastName = getHint(type: .noMADLast) else {
                 return nil
             }
+            os_log("Computed nomadLast accessed: %{public}@", log: noLoMechlog, type: .debug, lastName)
             return lastName
         }
     }
 
     //context value - create user
     func setUID(uid: Int) {
-        // var value : UnsafePointer<AuthorizationValue>? = nil
+        os_log("Setting context hint for UID: %{public}@", log: noLoMechlog, type: .debug, uid)
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
         var data = uid_t.init(bitPattern: Int32(uid))
         var value = AuthorizationValue(length: MemoryLayout<uid_t>.size, data: UnsafeMutableRawPointer.init(&data))
-        let err : OSStatus = mechCallbacks.SetContextValue(mechEngine, "uid", flags, &value)
-        NSLog("Setting context for: uid")
-        NSLog(err.description)
+        let error = mechCallbacks.SetContextValue(mechEngine, "uid", flags, &value)
+        if error != noErr {
+            logOSStatusErr(error, sender: "setUID")
+        }
     }
 
     //context value - create user
     func setGID(gid: Int) {
-        // var value : UnsafePointer<AuthorizationValue>? = nil
+        os_log("Setting context hint for GID: %{public}@", log: noLoMechlog, type: .debug, gid)
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
         var data = gid_t.init(bitPattern: Int32(gid))
         var value = AuthorizationValue(length: MemoryLayout<gid_t>.size, data: UnsafeMutableRawPointer.init(&data))
-        let err : OSStatus = mechCallbacks.SetContextValue(self.mechEngine, "gid", flags, &value)
-        NSLog("Setting context for: gid")
-        NSLog(err.description)
+        let error = mechCallbacks.SetContextValue(self.mechEngine, "gid", flags, &value)
+        if error != noErr {
+            logOSStatusErr(error, sender: "setGID")
+        }
     }
 
     // log only
     func getArguments() {
         var value : UnsafePointer<AuthorizationValueVector>? = nil
-        var err: OSStatus = noErr
-        err = mechCallbacks.GetArguments(mechEngine, &value)
-        NSLog("Arguments: \(value.debugDescription)")
-    }
+        let error = mechCallbacks.GetArguments(mechEngine, &value)
+        if error != noErr {
+            logOSStatusErr(error, sender: "getArguments")
+        }    }
 
     // log only
     func getTokens() {
         if #available(OSX 10.13, *) {
             var value : Unmanaged<CFArray>? = nil
             defer {value?.release()}
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetTokenIdentities(mechEngine, "" as CFTypeRef, &value)
-            NSLog("Tokens: \(value.debugDescription)")
+            let error = mechCallbacks.GetTokenIdentities(mechEngine, "" as CFTypeRef, &value)
+            if error != noErr {
+                logOSStatusErr(error, sender: "getTokens")
+            }
         } else {
-            NSLog("%@", "LATokens are not supported on this version of macOS")
-            return
+            os_log("Tokens are not supported on this version of macOS", log: noLoMechlog, type: .default)
+
         }
     }
 
     //MARK: - Mechanism Verdicts
     // Allow the login. End of the mechanism
     func allowLogin() -> OSStatus {
-        NSLog("NoMADLogin: Login Allowed");
-        let err = mechCallbacks.SetResult(mechEngine, .allow)
-        NSLog("NoMADLogin: %i", Int(err));
-        return err
+        os_log("Allowing login", log: noLoMechlog, type: .default)
+        let error = mechCallbacks.SetResult(mechEngine, .allow)
+        if error != noErr {
+            logOSStatusErr(error, sender: "allowLogin")
+        }
+        return error
     }
     
     // disallow login
     func denyLogin() -> OSStatus {
-        NSLog("NoMADLogin: Login Denied");
-        var err: OSStatus = noErr
-        err = mechCallbacks.SetResult(mechEngine, .deny)
-        NSLog("NoMADLogin: %i", Int(err));
-        return err
+        os_log("Denying login", log: noLoMechlog, type: .default)
+        let error = mechCallbacks.SetResult(mechEngine, .deny)
+        if error != noErr {
+            logOSStatusErr(error, sender: "denyLogin")
+        }
+        return error
+    }
+
+    func logOSStatusErr(_ error: OSStatus, sender: String) {
+        os_log("Error setting %{public}@ context hint: %{public}@", log: noLoMechlog, type: .error, sender, error)
     }
 
     //MARK: - Directory Service Utilities
@@ -147,16 +163,16 @@ class NoLoMechanism: NSObject {
     /// - Parameter name: The shortname of the user to check as a `String`.
     /// - Returns: `true` if the user already exists locally. Otherwise `false`.
     class func checkForLocalUser(name: String) -> Bool {
+        os_log("Checking for local username", log: noLoMechlog, type: .debug)
         var records = [ODRecord]()
         let odsession = ODSession.default()
-
         do {
             let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
             let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             let errorText = error.localizedDescription
-            NSLog("%@",  "Unable to get user account ODRecord: \(errorText)")
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
             return false
         }
         return records.count > 0 ? true : false
@@ -165,4 +181,3 @@ class NoLoMechanism: NSObject {
 
 //MARK: - ContextAndHintHandling Protocol
 extension NoLoMechanism: ContextAndHintHandling {}
-

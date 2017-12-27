@@ -15,6 +15,7 @@
 @import Security.AuthorizationPlugin;
 @import Security.AuthSession;
 @import DirectoryService;
+@import os.log;
 
 // Plugin constants
 
