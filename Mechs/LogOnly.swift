@@ -9,6 +9,7 @@
 import Foundation
 import Security.AuthorizationTags
 import SecurityInterface.SFAuthorizationPluginView
+import os.log
 
 /// AuthorizationPlugin mechanism that simply logs the hint and context values that are being passed around.
 class LogOnly : NoLoMechanism {
@@ -53,23 +54,28 @@ class LogOnly : NoLoMechanism {
     // heavily influenced by the Apple NullAuth sample code
     
     @objc func run() {
+        os_log("LogOnly mech starting", log: loggerMech, type: .debug)
 
+        os_log("Printing security context arguments", log: loggerMech, type: .debug)
         getArguments()
+        os_log("Printing LAContext Tokens", log: loggerMech, type: .debug)
         getTokens()
-        
+
+        os_log("Printing all context values:", log: loggerMech, type: .debug)
         for item in contextKeys {
-            let result = getContext(type: item)
-            if result != nil {
-                NSLog("%@", "Context Item \(item): \(String(describing: result))")
+            if let result = getContext(type: item) {
+                os_log("Context item %{public}@: %{public}@", log: loggerMech, type: .default, item, result)
             }
         }
-        
+
+        os_log("Printing all hint values:", log: loggerMech, type: .debug)
         for item in hintKeys {
-            let result = getHint(type: HintType(rawValue: item)!)
-            if result != nil {
-                NSLog("%@", "Hint Item \(item): \(String(describing: result))")
+            if let result = getHint(type: HintType(rawValue: item)!) {
+                os_log("Hint item %{public}@: %{public}@", log: loggerMech, type: .default, item, result)
             }
         }
+
         let _ = allowLogin()
+        os_log("LogOnly mech complete", log: loggerMech, type: .debug)
     }
 }
