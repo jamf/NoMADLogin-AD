@@ -120,7 +120,10 @@ class SignIn: NSWindowController {
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
         os_log("Complete login process", log: uiLog, type: .debug)
-        let _ = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
+        let error = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
+        if error != noErr {
+            os_log("Got error setting authentication result", log: uiLog, type: .error)
+        }
         animateUI()
         NSApp.abortModal()
         self.window?.close()
