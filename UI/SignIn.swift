@@ -138,6 +138,7 @@ extension SignIn: NoMADUserSessionDelegate {
     }
 
     func NoMADAuthenticationSucceded() {
+        os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
     }
     

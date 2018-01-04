@@ -9,7 +9,8 @@
 import Foundation
 import Security
 import OpenDirectory
-import NoMAD_ADAuth
+import os.log
+
 
 // lots of constants for working with hints and contexts
 
