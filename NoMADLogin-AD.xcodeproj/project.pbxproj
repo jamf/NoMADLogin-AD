@@ -20,20 +20,7 @@
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		1A9F63E01FEB18FB00099BE9 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		1A9F63E21FEB18FB00099BE9 /* AuthChanger */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AuthChanger; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A9F63EE1FEB1D7400099BE9 /* DeMobilize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
 		1A9F63F01FEB47BE00099BE9 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = "../../../Library/Developer/Xcode/DerivedData/NoMAD-ADAuth-etqbzuyvvpaozddzylfszpjawntu/Build/Products/Release/NoMAD_ADAuth.framework"; sourceTree = "<group>"; };
 		1A9F63F51FEB594500099BE9 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = "<group>"; };
@@ -59,13 +46,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1A9F63DF1FEB18FB00099BE9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9CBDCF981FC4CEE300CF73F4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,7 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */,
-				1A9F63E21FEB18FB00099BE9 /* AuthChanger */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,23 +144,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A9F63E11FEB18FB00099BE9 /* AuthChanger */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1A9F63E81FEB18FB00099BE9 /* Build configuration list for PBXNativeTarget "AuthChanger" */;
-			buildPhases = (
-				1A9F63DE1FEB18FB00099BE9 /* Sources */,
-				1A9F63DF1FEB18FB00099BE9 /* Frameworks */,
-				1A9F63E01FEB18FB00099BE9 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = AuthChanger;
-			productName = AuthChanger;
-			productReference = 1A9F63E21FEB18FB00099BE9 /* AuthChanger */;
-			productType = "com.apple.product-type.tool";
-		};
 		9CBDCF9A1FC4CEE300CF73F4 /* NoMADLoginAD */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLoginAD" */;
@@ -209,10 +171,6 @@
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = NoMAD;
 				TargetAttributes = {
-					1A9F63E11FEB18FB00099BE9 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
 					9CBDCF9A1FC4CEE300CF73F4 = {
 						CreatedOnToolsVersion = 9.1;
 						LastSwiftMigration = 0910;
@@ -233,7 +191,6 @@
 			projectRoot = "";
 			targets = (
 				9CBDCF9A1FC4CEE300CF73F4 /* NoMADLoginAD */,
-				1A9F63E11FEB18FB00099BE9 /* AuthChanger */,
 			);
 		};
 /* End PBXProject section */
@@ -251,13 +208,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1A9F63DE1FEB18FB00099BE9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9CBDCF971FC4CEE300CF73F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -276,30 +226,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1A9F63E61FEB18FB00099BE9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AAPZK3CB24;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-			};
-			name = Debug;
-		};
-		1A9F63E71FEB18FB00099BE9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AAPZK3CB24;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-			};
-			name = Release;
-		};
 		9CBDCF9F1FC4CEE300CF73F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -468,15 +394,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A9F63E81FEB18FB00099BE9 /* Build configuration list for PBXNativeTarget "AuthChanger" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1A9F63E61FEB18FB00099BE9 /* Debug */,
-				1A9F63E71FEB18FB00099BE9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9CBDCF961FC4CEE300CF73F4 /* Build configuration list for PBXProject "NoMADLogin-AD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
