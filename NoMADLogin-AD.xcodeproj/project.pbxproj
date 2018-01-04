@@ -140,6 +140,7 @@
 				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
 				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
 				9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */,
+				9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -231,6 +232,7 @@
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
+				9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */,
 				9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */,
 				1A9F63EF1FEB1D7400099BE9 /* DeMobilize.swift in Sources */,
 			);
@@ -363,12 +365,12 @@
 				);
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Resources @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Base/NoMADLoginAD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -391,12 +393,12 @@
 				);
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @executable_path/../Resources";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Resources @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Base/NoMADLoginAD-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;

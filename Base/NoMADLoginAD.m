@@ -9,8 +9,8 @@
 #import "NoMADLoginAD.h"
 #import "NoMADLoginAD-Swift.h"
 
-NoMADLoginAD *authorizationPlugin = nil;
 
+NoMADLoginAD *authorizationPlugin = nil;
 static OSStatus PluginDestroy(AuthorizationPluginRef inPlugin) {
     return [authorizationPlugin PluginDestroy:inPlugin];
 }
@@ -121,8 +121,6 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     } else if (mechanism->fLogOnly) {
         
         NSLog(@"Calling Log Only");
-        
-        AuthorizationContextFlags flags = kAuthorizationContextFlagExtractable;
 
         PrintAuthState(mechanism);
         
@@ -139,10 +137,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         NSLog(@"DeMobilze done");
         
     }
-    
-    //err = mechanism->fPlugin->fCallbacks->SetResult(mechanism->fEngine, kAuthorizationResultAllow);
-    
-    //return kAuthorizationResultAllow;
+
     return noErr;
 }
 

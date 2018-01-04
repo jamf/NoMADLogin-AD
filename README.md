@@ -2,7 +2,7 @@
 
 Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLoAD for short. This project can be seen as a companion to our other AD authentication product for macOS, [NoMAD](https://nomad.menu). You can use either one independently from each other, and both contain all the bits and pieces you need to talk to AD.
 
-NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
+NoLoAD is a replacement login window for macOS 10.12 and higher. **(Currently it is only working on 10.13+)** It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
 This is an early release of NoLoAD and is suitable for testing. It is not the feature complete version that will eventually ship, but right now it supports the core NoLoAD features.
