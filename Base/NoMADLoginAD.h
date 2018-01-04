@@ -42,6 +42,7 @@ struct MechanismRecord {
     Boolean                         fCheckAD;
     Boolean                         fCreateUser;
     Boolean                         fLogOnly;
+    Boolean                         fDeMobilize;
 };
 
 typedef struct MechanismRecord MechanismRecord;

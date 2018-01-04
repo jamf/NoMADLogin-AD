@@ -9,14 +9,7 @@
 import Foundation
 import Security
 import OpenDirectory
-
-enum HintType: String {
-    case noMADUser
-    case noMADPass
-    case noMADFirst
-    case noMADLast
-    case noMADFull
-}
+import NoMAD_ADAuth
 
 // lots of constants for working with hints and contexts
 
@@ -28,7 +21,7 @@ class NoLoMechanism: NSObject {
     let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
 
     /// A pointer to the MechanismRecord `struct`
-    let mechanism: UnsafePointer<MechanismRecord>
+    let mech: MechanismRecord?
 
     /// A convience property to access the `AuthorizationCallbacks` of the Authorization plug-in.
     let mechCallbacks: AuthorizationCallbacks
@@ -42,403 +35,97 @@ class NoLoMechanism: NSObject {
     ///
     /// - Parameter mechanism: The base `AuthorizationPlugin` to be used.
     @objc init(mechanism: UnsafePointer<MechanismRecord>) {
-        self.mechanism = mechanism
+        self.mech = mechanism.pointee
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
     }
 
-    //MARK: - Generic Context Value Functions
-
-    //context value - log only
-    func getContextValueFor(contextType: String) -> String? {
-
-        var value: UnsafePointer<AuthorizationValue>?
-        var flags = AuthorizationContextFlags()
-        let err = mechCallbacks.GetContextValue(mechEngine, contextType, &flags, &value)
-
-        if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve context value: \(contextType)")
-            return nil
-        }
-
-        if contextType == "longname" {
-           return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
-//            let item = NSString.init(bytes: value!.pointee.data!, length: value!.pointee.length, encoding: String.Encoding.utf8.rawValue)
-//            return item as! String
-        } else {
-            let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-            NSLog("\(contextType): \(String(describing: item))")
-        }
-
-        return nil
-    }
-
-    //context value - unused
-    func setContextItem(value: String, contextType: String) -> Bool {
-
-        // silly two-step
-
-        // add null byte to signify end of string
-
-        let tempdata = value + "\0"
-        var data = tempdata.data(using: .utf8)
-
-        let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-
-        var value = AuthorizationValue(length: (data?.count)!,
-                                       data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
-
-        let err = mechCallbacks.SetContextValue(mechEngine, contextType, flags, &value)
-
-        NSLog("Setting context for: \(contextType)")
-        NSLog(err.description)
-
-        return (err == errSecSuccess)
-    }
-
-
-    //MARK: - Generic Hint Value Functions
-
-    // hint value - log only
-    func getHint(hintType: String) -> String? {
-
-        var value : UnsafePointer<AuthorizationValue>? = nil
-        var err: OSStatus = noErr
-        err = mechCallbacks.GetHintValue(mechEngine, hintType, &value)
-
-        if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve hint value: \(hintType)")
-            return nil
-        }
-
-        let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-        guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
-            else {
-                NSLog("NoMADLogin: couldn't unpack hint value \(hintType)")
-                return nil
-        }
-        return (result as! String)
-    }
-
-    // hint value  - unused
-    func setHint(type: HintType, item: String) -> Bool {
-        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: item)
-            else {
-                NSLog("NoLo:Failed to update hint: \(type)")
-                return false
-        }
-
-        var value = AuthorizationValue(length: data.count,
-                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-
-        let err : OSStatus = mechCallbacks.SetHintValue(mechEngine, type.rawValue, &value)
-
-        return (err == errSecSuccess)
-    }
-
-    //context value - log only
-    var username: String? {
-        get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var flags = AuthorizationContextFlags()
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetContextValue(mechEngine, kAuthorizationEnvironmentUsername, &flags, &value)
-            
-            if err != errSecSuccess {
-                return nil
-            }
-            
-            guard let username = NSString.init(bytes: value!.pointee.data!,
-                                               length: value!.pointee.length,
-                                               encoding: String.Encoding.utf8.rawValue)
-                else { return nil }
-            
-            return username.replacingOccurrences(of: "\0", with: "") as String
-        }
-    }
-
-    //context value  - unused
-    var password: String? {
-        get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var flags = AuthorizationContextFlags()
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetContextValue(mechEngine, kAuthorizationEnvironmentPassword, &flags, &value)
-            
-            NSLog("attempted pass: " + String(describing: value.unsafelyUnwrapped))
-
-            if err != errSecSuccess {
-                return nil
-            }
-            guard let pass = NSString.init(bytes: value!.pointee.data!,
-                                           length: value!.pointee.length,
-                                           encoding: String.Encoding.utf8.rawValue)
-                else { return nil }
-            
-            return pass.replacingOccurrences(of: "\0", with: "") as String
-        }
-    }
-
-    // hint value - create user
     var nomadUser: String? {
         get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetHintValue(mechEngine, HintType.noMADUser.rawValue, &value)
-            
-            if err != errSecSuccess {
-                NSLog("%@","couldn't retrieve hint value")
+            guard let userName = getHint(type: .noMADUser) else {
                 return nil
             }
-            
-            let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length) //UnsafePointer<UInt8>(value!.pointee.data)
-            guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
-                else {
-                    NSLog("couldn't unpack hint value")
-                    return nil
-            }
-            
-            return (result as! String)
+            return userName
         }
     }
 
-    // hint value - create user
     var nomadPass: String? {
         get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetHintValue(mechEngine, HintType.noMADPass.rawValue, &value)
-            
-            if err != errSecSuccess {
-                NSLog("%@","couldn't retrieve hint value")
+            guard let userPass = getHint(type: .noMADPass) else {
                 return nil
             }
-            
-            let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length) //UnsafePointer<UInt8>(value!.pointee.data)
-            guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
-                else {
-                    NSLog("couldn't unpack hint value")
-                    return nil
-            }
-            
-            return (result as! String)
+            return userPass
         }
     }
 
-    //context value - log only
-    var uid: uid_t {
+    var nomadFirst: String? {
         get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var flags = AuthorizationContextFlags()
-            var uid : uid_t = 0
-            if mechCallbacks.GetContextValue(mechEngine, ("uid" as NSString).utf8String!, &flags, &value) == errSecSuccess {
-                let uidData = Data.init(bytes: value!.pointee.data!, count: MemoryLayout<uid_t>.size)
-                (uidData as NSData).getBytes(&uid, length: MemoryLayout<uid_t>.size)
+            guard let firstName = getHint(type: .noMADFirst) else {
+                return nil
             }
-            return uid
+            return firstName
+        }
+    }
+
+    var nomadLast: String? {
+        get {
+            guard let lastName = getHint(type: .noMADLast) else {
+                return nil
+            }
+            return lastName
         }
     }
 
     //context value - create user
     func setUID(uid: Int) {
-        
-       // var value : UnsafePointer<AuthorizationValue>? = nil
+        // var value : UnsafePointer<AuthorizationValue>? = nil
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-
         var data = uid_t.init(bitPattern: Int32(uid))
-        
         var value = AuthorizationValue(length: MemoryLayout<uid_t>.size, data: UnsafeMutableRawPointer.init(&data))
-        
         let err : OSStatus = mechCallbacks.SetContextValue(mechEngine, "uid", flags, &value)
-        
         NSLog("Setting context for: uid")
         NSLog(err.description)
     }
 
     //context value - create user
     func setGID(gid: Int) {
-        
         // var value : UnsafePointer<AuthorizationValue>? = nil
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-        
         var data = gid_t.init(bitPattern: Int32(gid))
-        
         var value = AuthorizationValue(length: MemoryLayout<gid_t>.size, data: UnsafeMutableRawPointer.init(&data))
-        
-        let err : OSStatus = mechCallbacks.SetContextValue(
-            self.mechEngine, "gid", flags, &value)
-        
+        let err : OSStatus = mechCallbacks.SetContextValue(self.mechEngine, "gid", flags, &value)
         NSLog("Setting context for: gid")
         NSLog(err.description)
-        
     }
-
 
     // log only
     func getArguments() {
-        
         var value : UnsafePointer<AuthorizationValueVector>? = nil
         var err: OSStatus = noErr
         err = mechCallbacks.GetArguments(mechEngine, &value)
-        
         NSLog("Arguments: \(value.debugDescription)")
     }
 
     // log only
     func getTokens() {
-        
-        var value : Unmanaged<CFArray>? = nil
-        var err: OSStatus = noErr
         if #available(OSX 10.13, *) {
+            var value : Unmanaged<CFArray>? = nil
+            defer {value?.release()}
+            var err: OSStatus = noErr
             err = mechCallbacks.GetTokenIdentities(mechEngine, "" as CFTypeRef, &value)
+            NSLog("Tokens: \(value.debugDescription)")
         } else {
-            // Fallback on earlier versions
+            NSLog("%@", "LATokens are not supported on this version of macOS")
+            return
         }
-        
-        NSLog("Tokens: \(value.debugDescription)")
-        
-    }
-
-
-
-    //context value  - unused
-    func setPassContext(pass: String) -> Bool {
-        
-        // silly two-step
-        
-        let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-        
-        // add null byte to signify end of string
-        
-        let tempdata = pass + "\0"
-        var data = tempdata.data(using: .utf8)
-        
-        //var value = AuthorizationValue(length: (data?.count)!, data: &data)
-        
-        var value = AuthorizationValue(length: (data?.count)!,
-                                       data: UnsafeMutableRawPointer(mutating: (data as! NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
-        
-        let err : OSStatus =  mechCallbacks.SetContextValue(
-             mechEngine, kAuthorizationEnvironmentPassword, flags, &value)
-        
-        NSLog("Setting pass context")
-        NSLog(err.description)
-        
-        return (err == errSecSuccess)
-    }
-
-    //context value  - unused
-    func setUserContext(user: String) -> Bool {
-        
-        // silly two-step
-        
-        // add null byte to signify end of string
-        
-        let tempdata = user + "\0"
-        var data = tempdata.data(using: .utf8)
-        
-        let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
-        
-        var value = AuthorizationValue(length: (data?.count)!,
-                                       data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
-        
-        let err : OSStatus =  mechCallbacks.SetContextValue(
-             mechEngine, kAuthorizationEnvironmentUsername, flags, &value)
-        
-        NSLog("Setting user context")
-        NSLog(err.description)
-        
-        return (err == errSecSuccess)
-    }
-
-    // hint value  - unused
-    func setPassHint(user: String) -> Bool {
-        
-        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: user)
-            else {
-                NSLog("NoLo:Failed to update user name in hint.");
-                return false
-        }
-        
-        var value = AuthorizationValue(length: data.count,
-                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-        
-        let err : OSStatus = mechCallbacks.SetHintValue(
-            mechEngine, HintType.noMADPass.rawValue, &value)
-        
-        return (err == errSecSuccess)
-    }
-
-    // hint value - - unused
-    func setUserHint(user: String) -> Bool {
-        
-        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: user)
-            else {
-                NSLog("NoLo:Failed to update user name in hint.");
-                return false
-        }
-        
-        var value = AuthorizationValue(length: data.count,
-                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-        
-        let err : OSStatus = mechCallbacks.SetHintValue(
-            mechEngine, HintType.noMADUser.rawValue, &value)
-        
-        return (err == errSecSuccess)
-    }
-
-
-
-    // hint value  - unused
-    func setBoolHintValue(_ encryptionWasEnabled : NSNumber) -> Bool {
-        // Try and unwrap the optional NSData returned from archivedDataWithRootObject
-        // This can be decoded on the other side with unarchiveObjectWithData
-        
-        guard let data : Data = NSKeyedArchiver.archivedData(withRootObject: encryptionWasEnabled)
-            else {
-                NSLog("Crypt:MechanismInvoke:Check:setHintValue:[+] Failed to unwrap data");
-                return false
-        }
-        
-        // Fill the AuthorizationValue struct with our data
-        var value = AuthorizationValue(length: data.count,
-                                       data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
-        
-        // Use the MechanismRecord SetHintValue callback to set the
-        // inter-mechanism context data
-        
-        let err : OSStatus = mechCallbacks.SetHintValue(
-            mechEngine, contextDomain.utf8String!, &value)
-        
-        return (err == errSecSuccess)
-    }
-    
-    // This is how we get the inter-mechanism context data
-
-    //context value  - unused
-    func getBoolHintValue() -> Bool {
-        var value : UnsafePointer<AuthorizationValue>? = nil
-        var err: OSStatus = noErr
-        err = mechCallbacks.GetHintValue(mechEngine, contextDomain.utf8String!, &value)
-        if err != errSecSuccess {
-            NSLog("%@","couldn't retrieve hint value")
-            return false
-        }
-        let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length) //UnsafePointer<UInt8>(value!.pointee.data)
-        guard let boolHint = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
-            else {
-                NSLog("couldn't unpack hint value")
-                return false
-        }
-        return (boolHint as AnyObject).boolValue
     }
 
     //MARK: - Mechanism Verdicts
     // Allow the login. End of the mechanism
     func allowLogin() -> OSStatus {
         NSLog("NoMADLogin: Login Allowed");
-        let err = mechCallbacks.SetResult(mechEngine, AuthorizationResult.allow)
+        let err = mechCallbacks.SetResult(mechEngine, .allow)
         NSLog("NoMADLogin: %i", Int(err));
         return err
     }
@@ -447,7 +134,7 @@ class NoLoMechanism: NSObject {
     func denyLogin() -> OSStatus {
         NSLog("NoMADLogin: Login Denied");
         var err: OSStatus = noErr
-        err = mechCallbacks.SetResult(mechEngine, AuthorizationResult.deny)
+        err = mechCallbacks.SetResult(mechEngine, .deny)
         NSLog("NoMADLogin: %i", Int(err));
         return err
     }
@@ -463,14 +150,18 @@ class NoLoMechanism: NSObject {
         let odsession = ODSession.default()
 
         do {
-            let node = try ODNode.init(session: odsession, type: UInt32(kODNodeTypeLocalNodes))
-            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             let errorText = error.localizedDescription
-            myLogger.logit(.base, message: "Unable to get user account ODRecord: \(errorText)")
+            NSLog("%@",  "Unable to get user account ODRecord: \(errorText)")
             return false
         }
         return records.count > 0 ? true : false
     }
 }
+
+//MARK: - ContextAndHintHandling Protocol
+extension NoLoMechanism: ContextAndHintHandling {}
+
