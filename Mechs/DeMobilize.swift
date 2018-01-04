@@ -6,7 +6,6 @@
 //  Copyright © 2017 NoMAD. All rights reserved.
 //
 
-import Foundation
 import OpenDirectory
 
 // class to de-mobilize a mobile account

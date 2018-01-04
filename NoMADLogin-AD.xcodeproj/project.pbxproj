@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A9F63E51FEB18FB00099BE9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9F63E41FEB18FB00099BE9 /* main.swift */; };
 		1A9F63EF1FEB1D7400099BE9 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9F63EE1FEB1D7400099BE9 /* DeMobilize.swift */; };
 		1A9F63F61FEB594500099BE9 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9F63F51FEB594500099BE9 /* NoMAD_ADAuth.framework */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
@@ -35,7 +34,6 @@
 
 /* Begin PBXFileReference section */
 		1A9F63E21FEB18FB00099BE9 /* AuthChanger */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AuthChanger; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A9F63E41FEB18FB00099BE9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1A9F63EE1FEB1D7400099BE9 /* DeMobilize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
 		1A9F63F01FEB47BE00099BE9 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = "../../../Library/Developer/Xcode/DerivedData/NoMAD-ADAuth-etqbzuyvvpaozddzylfszpjawntu/Build/Products/Release/NoMAD_ADAuth.framework"; sourceTree = "<group>"; };
 		1A9F63F51FEB594500099BE9 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = "<group>"; };
@@ -79,14 +77,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1A9F63E31FEB18FB00099BE9 /* AuthChanger */ = {
-			isa = PBXGroup;
-			children = (
-				1A9F63E41FEB18FB00099BE9 /* main.swift */,
-			);
-			path = AuthChanger;
-			sourceTree = "<group>";
-		};
 		9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */ = {
 			isa = PBXGroup;
 			children = (
@@ -108,7 +98,6 @@
 				9CBDCFB21FC5CE0000CF73F4 /* Mechs */,
 				9CBDCFBB1FC5CE6400CF73F4 /* UI */,
 				9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */,
-				1A9F63E31FEB18FB00099BE9 /* AuthChanger */,
 				9CBDCF9C1FC4CEE300CF73F4 /* Products */,
 				9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */,
 				9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */,
@@ -266,7 +255,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A9F63E51FEB18FB00099BE9 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
