@@ -45,6 +45,9 @@ When you decide that you've had enough it's easy to go back to the standard logi
 * Intense debug logging can be enabled. ([See the wiki for details](https://gitlab.com/macshome/NoMADLogin-AD/wikis/Debug-Logging))
 * UI tweaking
 
+## What's next
+You can checkout the [roadmap page](https://gitlab.com/macshome/NoMADLogin-AD/wikis/roadmap) in our wiki.
+
 ## Known issues
 When logging in on 10.12, the first login for a newly created user may take a long time. Like several minutes long. We are working with Apple to understand why as it happens with users created with NoLoAD or System Preferences and it does not occur on 10.13.
 
