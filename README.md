@@ -2,7 +2,7 @@
 
 Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLoAD for short. This project can be seen as a companion to our other AD authentication product for macOS, [NoMAD](https://nomad.menu). You can use either one independently from each other, and both contain all the bits and pieces you need to talk to AD.
 
-NoLoAD is a replacement login window for macOS 10.12 and higher. **(Currently it is only working on 10.13+)** It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
+NoLoAD is a replacement login window for macOS 10.12 and higher. **(Currently there are known issues with 10.12)** It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
 This is an early release of NoLoAD and is suitable for testing. It is not the feature complete version that will eventually ship, but right now it supports the core NoLoAD features.
@@ -39,6 +39,9 @@ When you decide that you've had enough it's easy to go back to the standard logi
 1. Open a Terminal window in the evaluate-mechanisms folder of the Preview 1 archive.
 2. Run `sudo ./resetDB.bash` to reload the default `system.login.console` mechanisms into the AuthorizationDB.
 3. If you've had to do this from a SSH session (Remember setting that up before?) you can them simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
+
+## Known issues
+When logging in on 10.12, the first login for a newly created user may take a long time. Like several minutes long. We are working with Apple to understand why as it happens with users created with NoLoAD or System Preferences and it does not occur on 10.13.
 
 # Thanks
 Thanks to all of you for testing NoMAD Login AD! Please let us know about issues and features in the issue tracker. You can also find us on Slack in [nomad](https://macadmins.slack.com/messages/C1Y2Y14QG) and [nomad-login](https://macadmins.slack.com/messages/C88MFDLV8).
