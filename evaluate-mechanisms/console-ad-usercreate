@@ -14,6 +14,7 @@
 		<string>NoMADLoginAD:CheckAD</string>
 		<string>NoMADLoginAD:LogOnly</string>
         <string>NoMADLoginAD:CreateUser,privileged</string>
+        <string>builtin:login-begin</string>
 		<string>builtin:reset-password,privileged</string>
 		<string>builtin:forward-login,privileged</string>
 		<string>builtin:auto-login,privileged</string>
