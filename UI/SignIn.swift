@@ -133,14 +133,14 @@ class SignIn: NSWindowController {
 //MARK: - NoMADUserSessionDelegate
 extension SignIn: NoMADUserSessionDelegate {
     
+    func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
+        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .default, error.localizedDescription)
+        completeLogin(authResult: .deny)
+    }
+
     func NoMADAuthenticationSucceded() {
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
-    }
-    
-    func NoMADAuthenticationFailed(error: Error, description: String) {
-        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .default, error.localizedDescription)
-        completeLogin(authResult: .deny)
     }
     
     func NoMADUserInformation(user: ADUserRecord) {
