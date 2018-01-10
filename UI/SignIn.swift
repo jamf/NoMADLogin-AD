@@ -18,6 +18,9 @@ class SignIn: NSWindowController {
     var session: NoMADSession?
     var shortName = ""
     var domainName = ""
+
+    //MARK: - Preferences
+    let sharedDefaults = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
