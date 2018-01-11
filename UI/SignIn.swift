@@ -94,8 +94,9 @@ class SignIn: NSWindowController {
 
     /// Format the user and domain from the login window depending on the mode the window is in.
     ///
-    /// I.e. are we picking a domain from a list or putting it on the user name with '@'.
+    /// I.e. are we picking a domain from a list, using a managed domain, or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
+        os_log("Format user and domain strings", log: uiLog, type: .debug)
         guard isDomainManaged else {
             if !domain.isHidden {
                 os_log("Using domain list", log: uiLog, type: .default)
@@ -109,7 +110,11 @@ class SignIn: NSWindowController {
             return
         }
         os_log("Using managed domain", log: uiLog, type: .default)
-        os_log("Setting shortname for user: %{public}@", log: uiLog, type: .debug, username.stringValue)
+        if username.stringValue.contains("@")  {
+            os_log("Removing domain from username", log: uiLog, type: .default)
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            return
+        }
         shortName = username.stringValue
     }
 
