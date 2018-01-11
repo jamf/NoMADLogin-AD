@@ -18,6 +18,10 @@ class CheckAD: NoLoMechanism {
         let signIn = SignIn(windowNibName: NSNib.Name(rawValue: "SignIn"))
         os_log("Set mech for loginwindow", log: checkADLog, type: .debug)
         signIn.mech = mech
+        if let domain = self.managedDomain {
+            os_log("Set managed domain for loginwindow", log: checkADLog, type: .debug)
+            signIn.domainName = domain.uppercased()
+        }
         let windowTest = signIn.window
         if windowTest == nil {
             os_log("Could not create login window UI", log: checkADLog, type: .default)
