@@ -9,5 +9,5 @@
 import Foundation
 
 enum Preferences: String {
-    case aDDomain
+    case ADDomain
 }

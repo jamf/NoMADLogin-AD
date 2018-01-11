@@ -21,6 +21,8 @@ class NoLoMechanism: NSObject {
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
     let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
 
+    var managedDomain: String?
+
     /// A pointer to the MechanismRecord `struct`
     let mech: MechanismRecord?
 
@@ -41,7 +43,22 @@ class NoLoMechanism: NSObject {
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
+        self.managedDomain = getPreferences()
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
+    }
+
+    func getPreferences() -> String? {
+        guard let adDomain = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
+            os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
+            guard let adDomain = UserDefaults.standard.string(forKey: Preferences.ADDomain.rawValue) else {
+                os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
+                return nil
+            }
+            os_log("Found managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
+            return adDomain
+        }
+        os_log("Found shared managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
+        return adDomain
     }
 
     var nomadUser: String? {
@@ -152,6 +169,11 @@ class NoLoMechanism: NSObject {
         return error
     }
 
+    /// A simple method to send an OSStatus Error to the os.log error log with the name of the calling function.
+    ///
+    /// - Parameters:
+    ///   - error: The `OSStatus` error to log.
+    ///   - sender: A `String` to register as the sender of the error.
     func logOSStatusErr(_ error: OSStatus, sender: String) {
         os_log("Error setting %{public}@ context hint: %{public}@", log: noLoMechlog, type: .error, sender, error)
     }

@@ -18,9 +18,7 @@ class SignIn: NSWindowController {
     var session: NoMADSession?
     var shortName = ""
     var domainName = ""
-
-    //MARK: - Preferences
-    let sharedDefaults = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")
+    var isDomainManaged = false
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
@@ -43,6 +41,10 @@ class SignIn: NSWindowController {
         os_log("Tweaking appearance", log: uiLog, type: .debug)
         self.window?.titlebarAppearsTransparent = true
         self.window?.backgroundColor = NSColor.white
+        if !self.domainName.isEmpty {
+            username.placeholderString = "Username"
+            self.isDomainManaged = true
+        }
         os_log("Become first responder", log: uiLog, type: .debug)
         username.becomeFirstResponder()
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
@@ -94,15 +96,21 @@ class SignIn: NSWindowController {
     ///
     /// I.e. are we picking a domain from a list or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
-        if !domain.isHidden {
-            os_log("Using domain list", log: uiLog, type: .default)
-            shortName = username.stringValue
-            domainName = (domain.selectedItem?.title.uppercased())!
-        } else {
-            os_log("Using domain from text field", log: uiLog, type: .default)
-            shortName = (username.stringValue.components(separatedBy: "@").first)!
-            domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        guard isDomainManaged else {
+            if !domain.isHidden {
+                os_log("Using domain list", log: uiLog, type: .default)
+                shortName = username.stringValue
+                domainName = (domain.selectedItem?.title.uppercased())!
+            } else {
+                os_log("Using domain from text field", log: uiLog, type: .default)
+                shortName = (username.stringValue.components(separatedBy: "@").first)!
+                domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+            }
+            return
         }
+        os_log("Using managed domain", log: uiLog, type: .default)
+        os_log("Setting shortname for user: %{public}@", log: uiLog, type: .debug, username.stringValue)
+        shortName = username.stringValue
     }
 
     //MARK: - Login Context Functions
