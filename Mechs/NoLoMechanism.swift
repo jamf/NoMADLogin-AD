@@ -43,14 +43,18 @@ class NoLoMechanism: NSObject {
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
-        self.managedDomain = getPreferences()
+        self.managedDomain = getManagedDomain()
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
     }
 
-    func getPreferences() -> String? {
+    /// Looks in both the `com.trusourcelabs.NoMAD` and `menu.nomad.NoMADLoginAD` Defaults domains for the ADDomain key.
+    /// This domain will override anything the user enters in the username field.
+    ///
+    /// - Returns: The `String` for the ADDomain key if it exists.
+    func getManagedDomain() -> String? {
         guard let adDomain = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
             os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
-            guard let adDomain = UserDefaults.standard.string(forKey: Preferences.ADDomain.rawValue) else {
+            guard let adDomain = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
                 os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
                 return nil
             }
