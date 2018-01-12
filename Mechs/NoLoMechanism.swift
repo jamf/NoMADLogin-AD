@@ -6,14 +6,9 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-import Foundation
 import Security
 import OpenDirectory
 import os.log
-
-
-// lots of constants for working with hints and contexts
-
 
 /// Base class for authorization plugin mechanisms.
 class NoLoMechanism: NSObject {
@@ -21,6 +16,7 @@ class NoLoMechanism: NSObject {
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
     let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
 
+    /// If there is an AD domain set via preferences it will be here in a `String`
     var managedDomain: String?
 
     /// A pointer to the MechanismRecord `struct`

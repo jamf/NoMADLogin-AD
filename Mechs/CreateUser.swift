@@ -6,14 +6,16 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-import Foundation
 import OpenDirectory
-import NoMAD_ADAuth
 import os.log
+import NoMAD_ADAuth
 
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
+
+    //MARK: - Properties
     let session = ODSession.default()
+
     @objc func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
@@ -21,6 +23,14 @@ class CreateUser: NoLoMechanism {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return
             }
+
+            os_log("Checking for createLocalAdmin key", log: createUserLog, type: .debug)
+            var isAdmin = false
+            if let createAdmin = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.createAdminUser.rawValue) {
+                isAdmin = createAdmin
+                os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
+            }
+
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
@@ -29,25 +39,26 @@ class CreateUser: NoLoMechanism {
                        gid: "20",
                        guid: UUID().uuidString,
                        canChangePass: true,
+                       isAdmin: isAdmin,
                        attributes: nil)
 
             os_log("Creating local homefolder", log: createUserLog, type: .debug)
-            cliTask("/usr/sbin/createhomedir -c")
+            let _ = cliTask("/usr/sbin/createhomedir -c")
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
             os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
         }
-        allowLogin()
+        let _ = allowLogin()
         os_log("CreateUser mech complete", log: createUserLog, type: .debug)
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, attributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, isAdmin: Bool, attributes: [String:Any]?) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
-        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, guid)
+        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, guid, isAdmin.description)
 
         // note for anyone following behind me
         // you need to specify the attribute values in an array
@@ -104,6 +115,29 @@ class CreateUser: NoLoMechanism {
                 }
             }
         }
+
+        if isAdmin {
+            do {
+                os_log("Find the administrators group", log: createUserLog, type: .debug)
+                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                let query = try ODQuery.init(node: node,
+                                             forRecordTypes: kODRecordTypeGroups,
+                                             attribute: kODAttributeTypeRecordName,
+                                             matchType: ODMatchType(kODMatchEqualTo),
+                                             queryValues: "admin",
+                                             returnAttributes: kODAttributeTypeNativeOnly,
+                                             maximumResults: 1)
+                let results = try query.resultsAllowingPartial(false) as! [ODRecord]
+                let adminGroup = results.first
+
+                os_log("Adding user to administrators group", log: createUserLog, type: .debug)
+                try adminGroup?.addMemberRecord(newRecord)
+            } catch {
+                let errorText = error.localizedDescription
+                os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
+            }
+        }
+
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
     }
     
@@ -124,6 +158,9 @@ class CreateUser: NoLoMechanism {
         return randomString
     }
 
+    /// Finds the first avaliable UID in the DSLocal domain above 500 and returns it as a `String`
+    ///
+    /// - Returns: `String` representing the UID
     func findFirstAvaliableUID() -> String? {
         var newUID = ""
         os_log("Checking for avaliable UID", log: createUserLog, type: .debug)
