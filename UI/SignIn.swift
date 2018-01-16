@@ -13,7 +13,7 @@ import NoMAD_ADAuth
 
 class SignIn: NSWindowController {
     
-    //MARK: - setup variables
+    //MARK: - setup properties
     var mech: MechanismRecord?
     var session: NoMADSession?
     var shortName = ""
