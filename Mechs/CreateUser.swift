@@ -42,8 +42,8 @@ class CreateUser: NoLoMechanism {
                        isAdmin: isAdmin,
                        attributes: nil)
 
-            os_log("Creating local homefolder", log: createUserLog, type: .debug)
-            let _ = cliTask("/usr/sbin/createhomedir -c")
+            os_log("Creating local homefolder with command: /usr/sbin/createhomedir -l -L -u %{public}@", log: createUserLog, type: .debug, nomadUser!)
+            let _ = cliTask("/usr/sbin/createhomedir -l -L -u \(nomadUser!)")
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
         } else {
             // no user to create
