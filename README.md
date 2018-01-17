@@ -17,14 +17,14 @@ Please file any issues, or requested features, in the [project issue tracker](ht
 Getting started with NoLoAD is easy, but currently it takes a few steps. Be sure to have ssh enabled on your test Mac or VM so that you can still connect and revert to the Apple login window in case you run in to any issues.
 
 ### To install:
-1. [Download the Preview 2 archive.](https://gitlab.com/macshome/NoMADLogin-AD/uploads/7cc20af84afa353c9b8ee7b3cc7ed762/NoMAD_Login_AD_Preview_2.zip)
+1. Download the Preview 3 archive [NoMAD_Login_AD_Preview_3.zip](https://gitlab.com/macshome/NoMADLogin-AD/uploads/472edf5370df1318776f55ae09751a7c/NoMAD_Login_AD_Preview_3.zip)
 2. Make sure that you have SSH enabled on your test Mac.
 3. Make sure that you can login to your test Mac with SSH.
 4. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
 
 Now we need to configure the AuthorizationDB so that the NoLoAD bundle will load at the login window. We've provided some scripts and templates to make this easy to do and easy to undo.
 
-1. Open a Terminal window in the evaluate-mechanisms folder of the Preview 2 archive.
+1. Open a Terminal window in the evaluate-mechanisms folder of the Preview 3 archive.
 2. Run `sudo ./loadAD.bash` to load in the code bundle. All this script does is run the security command to load in the `console-ad-usercreate` file to AuthorizationDB.
 
 Now you should be able to logout and find yourself staring at the majesty of NoMAD Login.
@@ -41,12 +41,7 @@ When you decide that you've had enough it's easy to go back to the standard logi
 3. If you've had to do this from a SSH session (Remember setting that up before?) you can them simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
 
 ## What's new
-* Now runs on macOS 10.12
-* Intense debug logging can be enabled. ([See the wiki for details](https://gitlab.com/macshome/NoMADLogin-AD/wikis/Debug-Logging))
-* UI tweaking
-
-## What's next
-You can checkout the [roadmap page](https://gitlab.com/macshome/NoMADLogin-AD/wikis/roadmap) in our wiki.
+* [Defaults domain settings for local admin creation and managed AD domain names](https://gitlab.com/macshome/NoMADLogin-AD/wikis/preferences).
 
 ## Known issues
 When logging in on 10.12, the first login for a newly created user may take a long time. Like several minutes long. We are working with Apple to understand why as it happens with users created with NoLoAD or System Preferences and it does not occur on 10.13.
