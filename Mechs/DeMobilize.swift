@@ -29,23 +29,22 @@ class DeMobilize : NoLoMechanism {
     let kAuthAuthority = "dsAttrTypeNative:authentication_authority"
     
     let removeAttrs = [
-        "cached_groups",
-        "cached_auth_policy",
-        "CopyTimestamp",
-        "AltSecurityIdentities",
-        "SMBPrimaryGroupSID",
-        "OriginalAuthenticationAuthority",
-        "OriginalNodeName",
-        "SMBSID",
-        "SMBScriptPath",
-        "SMBPasswordLastSet",
-        "SMBGroupRID",
-        "PrimaryNTDomain",
-        "AppleMetaRecordName",
-        "PrimaryNTDomain",
-        "MCXSettings",
-        "MCXFlags",
-        "accountPolicyData"
+//        "cached_groups",
+//        "cached_auth_policy",
+        "dsAttrTypeStandard:CopyTimestamp",
+        "dsAttrTypeStandard:AltSecurityIdentities",
+        "dsAttrTypeStandard:OriginalAuthenticationAuthority",
+        "dsAttrTypeStandard:OriginalNodeName",
+        "dsAttrTypeStandard:SMBSID",
+        "dsAttrTypeStandard:SMBScriptPath",
+        "dsAttrTypeStandard:SMBPasswordLastSet",
+        "dsAttrTypeStandard:SMBGroupRID",
+        "dsAttrTypeStandard:SMBPrimaryGroupSID",
+        "dsAttrTypeStandard:PrimaryNTDomain",
+        "dsAttrTypeStandard:AppleMetaRecordName",
+        "dsAttrTypeStandard:MCXSettings",
+        "dsAttrTypeStandard:MCXFlags",
+        "dsAttrTypeNative:accountPolicyData"
     ]
     
     // globals
@@ -73,7 +72,12 @@ class DeMobilize : NoLoMechanism {
             os_log("Finding the DSLocal node", log: demobilizeLog, type: .debug)
             let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
             os_log("Building OD query for name %{public}@", log: demobilizeLog, type: .debug, nomadUser!)
-            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: nomadUser, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers,
+                                         attribute: kODAttributeTypeRecordName,
+                                         matchType: ODMatchType(kODMatchEqualTo),
+                                         queryValues: nomadUser,
+                                         returnAttributes: kODAttributeTypeNativeOnly,
+                                         maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
             os_log("ODError while trying to check for local user: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
@@ -108,7 +112,7 @@ class DeMobilize : NoLoMechanism {
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
-            os_log(" No Auth Authorities, strange place, but we'll let other mechs decide. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
+            os_log("No Auth Authorities, strange place, but we'll let other mechs decide. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
             _ = allowLogin()
             return
         }
@@ -144,7 +148,7 @@ class DeMobilize : NoLoMechanism {
         os_log("Removing cached attributes", log: demobilizeLog, type: .debug)
         for attr in removeAttrs {
             os_log("Removing %{public}@", log: demobilizeLog, type: .debug, attr)
-            try? userRecord.removeValues(forAttribute: "dsAttrTypeNative:" + attr )
+            try? userRecord.removeValues(forAttribute: attr)
         }
         
         // now to write back the cleansed AuthAuthority
