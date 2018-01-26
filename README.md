@@ -9,6 +9,7 @@ This is an early release of NoLoAD and is suitable for testing. It is not the fe
 
 * You can login to a Mac using AD without being bound
 * Just-in-time provisioning user provisioning to create a local account
+* "Demobilization" of previously cached AD accounts
 * Local accounts can always login
 
 Please file any issues, or requested features, in the [project issue tracker](https://gitlab.com/macshome/NoMADLogin-AD/issues).
