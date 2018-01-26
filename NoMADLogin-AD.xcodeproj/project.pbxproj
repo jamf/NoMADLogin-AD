@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
-		9C14650D1FF2E440003DB304 /* NoMAD_ADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA61FC4CEEF00CF73F4 /* NoMAD_ADAuth.framework */; };
+		9C14650D1FF2E440003DB304 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
@@ -45,8 +45,7 @@
 		9C709EED1FE07D91006C74D1 /* loadAD.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = loadAD.bash; sourceTree = "<group>"; };
 		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		9C97401E1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
-		9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad-usercreate"; sourceTree = "<group>"; };
+		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -80,8 +79,7 @@
 			children = (
 				9C709EED1FE07D91006C74D1 /* loadAD.bash */,
 				9C709EEE1FE07D91006C74D1 /* resetDB.bash */,
-				9C97401E1FC5DE4500D9EAE6 /* console-ad */,
-				9C97401F1FC5DE4500D9EAE6 /* console-ad-usercreate */,
+				9C97401F1FC5DE4500D9EAE6 /* console-ad */,
 				9C9740201FC5DE4500D9EAE6 /* console.bak */,
 			);
 			path = "evaluate-mechanisms";
