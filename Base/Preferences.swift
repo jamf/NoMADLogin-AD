@@ -11,4 +11,5 @@ import Foundation
 enum Preferences: String {
     case ADDomain
     case createAdminUser
+    case DemobilizeUsers
 }
