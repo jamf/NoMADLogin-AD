@@ -6,20 +6,18 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-import Foundation
 import Security
 import OpenDirectory
 import os.log
-
-
-// lots of constants for working with hints and contexts
-
 
 /// Base class for authorization plugin mechanisms.
 class NoLoMechanism: NSObject {
 
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
     let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
+
+    /// If there is an AD domain set via preferences it will be here in a `String`
+    var managedDomain: String?
 
     /// A pointer to the MechanismRecord `struct`
     let mech: MechanismRecord?
@@ -41,7 +39,26 @@ class NoLoMechanism: NSObject {
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
+        self.managedDomain = getManagedDomain()
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
+    }
+
+    /// Looks in both the `com.trusourcelabs.NoMAD` and `menu.nomad.NoMADLoginAD` Defaults domains for the ADDomain key.
+    /// This domain will override anything the user enters in the username field.
+    ///
+    /// - Returns: The `String` for the ADDomain key if it exists.
+    func getManagedDomain() -> String? {
+        guard let adDomain = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
+            os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
+            guard let adDomain = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
+                os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
+                return nil
+            }
+            os_log("Found managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
+            return adDomain
+        }
+        os_log("Found shared managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
+        return adDomain
     }
 
     var nomadUser: String? {
@@ -152,6 +169,11 @@ class NoLoMechanism: NSObject {
         return error
     }
 
+    /// A simple method to send an OSStatus Error to the os.log error log with the name of the calling function.
+    ///
+    /// - Parameters:
+    ///   - error: The `OSStatus` error to log.
+    ///   - sender: A `String` to register as the sender of the error.
     func logOSStatusErr(_ error: OSStatus, sender: String) {
         os_log("Error setting %{public}@ context hint: %{public}@", log: noLoMechlog, type: .error, sender, error)
     }

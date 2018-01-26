@@ -13,11 +13,12 @@ import NoMAD_ADAuth
 
 class SignIn: NSWindowController {
     
-    //MARK: - setup variables
+    //MARK: - setup properties
     var mech: MechanismRecord?
     var session: NoMADSession?
     var shortName = ""
     var domainName = ""
+    var isDomainManaged = false
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
@@ -40,6 +41,10 @@ class SignIn: NSWindowController {
         os_log("Tweaking appearance", log: uiLog, type: .debug)
         self.window?.titlebarAppearsTransparent = true
         self.window?.backgroundColor = NSColor.white
+        if !self.domainName.isEmpty {
+            username.placeholderString = "Username"
+            self.isDomainManaged = true
+        }
         os_log("Become first responder", log: uiLog, type: .debug)
         username.becomeFirstResponder()
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
@@ -89,17 +94,28 @@ class SignIn: NSWindowController {
 
     /// Format the user and domain from the login window depending on the mode the window is in.
     ///
-    /// I.e. are we picking a domain from a list or putting it on the user name with '@'.
+    /// I.e. are we picking a domain from a list, using a managed domain, or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
-        if !domain.isHidden {
-            os_log("Using domain list", log: uiLog, type: .default)
-            shortName = username.stringValue
-            domainName = (domain.selectedItem?.title.uppercased())!
-        } else {
-            os_log("Using domain from text field", log: uiLog, type: .default)
-            shortName = (username.stringValue.components(separatedBy: "@").first)!
-            domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        os_log("Format user and domain strings", log: uiLog, type: .debug)
+        guard isDomainManaged else {
+            if !domain.isHidden {
+                os_log("Using domain list", log: uiLog, type: .default)
+                shortName = username.stringValue
+                domainName = (domain.selectedItem?.title.uppercased())!
+            } else {
+                os_log("Using domain from text field", log: uiLog, type: .default)
+                shortName = (username.stringValue.components(separatedBy: "@").first)!
+                domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+            }
+            return
         }
+        os_log("Using managed domain", log: uiLog, type: .default)
+        if username.stringValue.contains("@")  {
+            os_log("Removing domain from username", log: uiLog, type: .default)
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            return
+        }
+        shortName = username.stringValue
     }
 
     //MARK: - Login Context Functions
@@ -132,8 +148,9 @@ class SignIn: NSWindowController {
 
 //MARK: - NoMADUserSessionDelegate
 extension SignIn: NoMADUserSessionDelegate {
+    
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
-        NSLog("NoMAD Login Authentication failed with: %@", error.localizedDescription)
+        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .default, error.localizedDescription)
         completeLogin(authResult: .deny)
     }
 
