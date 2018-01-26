@@ -89,6 +89,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fCheckAD = (strcmp(mechanismId, "CheckAD") == 0);
     mechanism->fCreateUser = (strcmp(mechanismId, "CreateUser") == 0);
     mechanism->fLogOnly = (strcmp(mechanismId, "LogOnly") == 0);
+    mechanism->fDeMobilize = (strcmp(mechanismId, "DeMobilize") == 0);
     *outMechanism = mechanism;
     return errSecSuccess;
 }
@@ -127,6 +128,14 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         
         err = mechanism->fPlugin->fCallbacks->SetResult(mechanism->fEngine, kAuthorizationResultAllow);
         return kAuthorizationResultAllow;
+        
+    } else if (mechanism->fDeMobilize) {
+        NSLog(@"Calling DeMobilze");
+
+        DeMobilize *deMobilize = [[DeMobilize alloc] initWithMechanism:mechanism];
+        [deMobilize run];
+        NSLog(@"DeMobilze done");
+        
     }
 
     return noErr;
@@ -359,7 +368,7 @@ static void PrintPlist(const char *scope, const char *key, const void *buf, size
     CFDataRef           textData;
     CFMutableDataRef    mutableTextData;
     char *              dataBuf;
-    CFIndex             dataSize;
+    CFIndex             dataSize = 0;
     CFIndex             i;
     
     assert(scope != NULL);
