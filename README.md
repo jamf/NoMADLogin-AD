@@ -9,6 +9,7 @@ This is an early release of NoLoAD and is suitable for testing. It is not the fe
 
 * You can login to a Mac using AD without being bound
 * Just-in-time provisioning user provisioning to create a local account
+* "Demobilization" of previously cached AD accounts
 * Local accounts can always login
 
 Please file any issues, or requested features, in the [project issue tracker](https://gitlab.com/macshome/NoMADLogin-AD/issues).
@@ -17,7 +18,7 @@ Please file any issues, or requested features, in the [project issue tracker](ht
 Getting started with NoLoAD is easy, but currently it takes a few steps. Be sure to have ssh enabled on your test Mac or VM so that you can still connect and revert to the Apple login window in case you run in to any issues.
 
 ### To install:
-1. Download the Preview 4 archive [NoMAD_Login_AD_Preview_3.zip](https://gitlab.com/macshome/NoMADLogin-AD/uploads/472edf5370df1318776f55ae09751a7c/NoMAD_Login_AD_Preview_3.zip)
+1. Download the Preview 4 archive [NoMAD_Login_AD_Preview_4.zip](https://gitlab.com/macshome/NoMADLogin-AD/uploads/8a2ac393435db01af1151ae1d7b35c8d/NoMAD_Login_AD_Preview_4.zip)
 2. Make sure that you have SSH enabled on your test Mac.
 3. Make sure that you can login to your test Mac with SSH.
 4. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
@@ -41,6 +42,7 @@ When you decide that you've had enough it's easy to go back to the standard logi
 3. If you've had to do this from a SSH session (Remember setting that up before?) you can them simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
 
 ## What's new
+* Ability to demobilize a cached AD account
 * [Defaults domain settings for account demobilization](https://gitlab.com/macshome/NoMADLogin-AD/wikis/preferences).
 
 ## Known issues
