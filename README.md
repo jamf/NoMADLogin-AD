@@ -42,6 +42,7 @@ When you decide that you've had enough it's easy to go back to the standard logi
 3. If you've had to do this from a SSH session (Remember setting that up before?) you can them simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
 
 ## What's new
+* Ability to demobilize a cached AD account
 * [Defaults domain settings for account demobilization](https://gitlab.com/macshome/NoMADLogin-AD/wikis/preferences).
 
 ## Known issues
