@@ -46,6 +46,13 @@ class DeMobilize : NoLoMechanism {
     ]
 
     @objc func run() {
+        // Check to see if demobilize is requested
+        if UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.DemobilizeUsers.rawValue) == false {
+                os_log("Preference set to not demobilize, skipping.", log: createUserLog, type: .debug)
+                _ = allowLogin()
+                return
+        }
+
         os_log("DeMobilize mech starting", log: demobilizeLog, type: .debug)
         guard let shortName = nomadUser else {
             os_log("Something went wrong, there is no user here at all", log: demobilizeLog, type: .error)
