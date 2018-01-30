@@ -83,8 +83,13 @@ class SignIn: NSWindowController {
         }
     }
 
+    func resetPassword() {
+        // Show the password alert and fields
+        // change password
+    }
+
     /// Simple toggle to change the state of the NoLo window UI between active and inactive.
-    func animateUI() {
+    fileprivate func animateUI() {
         signIn.isEnabled = !signIn.isEnabled
         signIn.isHidden = !signIn.isHidden
         
@@ -150,7 +155,15 @@ class SignIn: NSWindowController {
 extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
-        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .default, error.localizedDescription)
+
+        switch error {
+        case .PasswordExpired:
+            // prompt for a password change
+            return
+        default:
+            os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
+        }
+
         completeLogin(authResult: .deny)
     }
 
