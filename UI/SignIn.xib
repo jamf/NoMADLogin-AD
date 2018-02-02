@@ -11,7 +11,13 @@
             <connections>
                 <outlet property="domain" destination="ktB-bz-Qqt" id="Nsn-IH-wYf"/>
                 <outlet property="imageView" destination="C6d-sv-yXM" id="h6w-xM-lUP"/>
+                <outlet property="loginStack" destination="gGp-dd-t9H" id="OVU-WY-L3G"/>
+                <outlet property="newPassword" destination="oSe-dI-fep" id="SEH-66-qCR"/>
+                <outlet property="newPasswordConfirmation" destination="czU-dA-foI" id="tmr-OM-1N8"/>
+                <outlet property="oldPassword" destination="dYF-nq-lV9" id="eF6-IC-GU7"/>
                 <outlet property="password" destination="k7j-rX-Mra" id="FD9-ZH-5GK"/>
+                <outlet property="passwordChangeButton" destination="BKh-qb-RHS" id="ulU-Al-ADx"/>
+                <outlet property="passwordChangeStack" destination="RLo-4d-Xte" id="fRB-o1-ghd"/>
                 <outlet property="signIn" destination="7fI-fi-xA6" id="Vek-BT-qmg"/>
                 <outlet property="username" destination="bz7-9V-hj9" id="SmY-n9-wt5"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="NDA-Gg-a3e"/>
@@ -25,19 +31,19 @@
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="maxSize" type="size" width="539" height="438"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="539" height="438"/>
+                <rect key="frame" x="0.0" y="0.0" width="521" height="438"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="C6d-sv-yXM">
-                        <rect key="frame" x="130" y="166" width="279" height="272"/>
+                        <rect key="frame" x="121" y="166" width="279" height="272"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="279" id="2pB-Pe-VuL"/>
                             <constraint firstAttribute="height" constant="272" id="c1H-mE-DNN"/>
                         </constraints>
                         <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NoLoAD Logo Alpha Channel" id="2vJ-kZ-7Fn"/>
                     </imageView>
-                    <popUpButton hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-bz-Qqt">
-                        <rect key="frame" x="195" y="122" width="149" height="26"/>
+                    <popUpButton hidden="YES" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-bz-Qqt">
+                        <rect key="frame" x="186" y="122" width="149" height="26"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="144" id="L99-tU-WSP"/>
                         </constraints>
@@ -53,64 +59,29 @@
                             </menu>
                         </popUpButtonCell>
                     </popUpButton>
-                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gGp-dd-t9H">
-                        <rect key="frame" x="130" y="65" width="329" height="52"/>
+                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gGp-dd-t9H" userLabel="login stack">
+                        <rect key="frame" x="121" y="65" width="279" height="52"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bz7-9V-hj9">
                                 <rect key="frame" x="0.0" y="30" width="279" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="Username@domain" drawsBackground="YES" id="uli-8f-B8b">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Username@domain" drawsBackground="YES" id="uli-8f-B8b">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <stackView distribution="fill" orientation="horizontal" alignment="bottom" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalClippingResistancePriority="100" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAE-gj-tK6">
-                                <rect key="frame" x="0.0" y="0.0" width="329" height="22"/>
-                                <subviews>
-                                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k7j-rX-Mra">
-                                        <rect key="frame" x="0.0" y="0.0" width="279" height="22"/>
-                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="Enter Password" drawsBackground="YES" usesSingleLineMode="YES" id="XCS-go-S1Y">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <allowedInputSourceLocales>
-                                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                                            </allowedInputSourceLocales>
-                                        </secureTextFieldCell>
-                                    </secureTextField>
-                                    <button verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="7fI-fi-xA6">
-                                        <rect key="frame" x="279" y="0.0" width="50" height="22"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="zOG-FT-1sA"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSFollowLinkFreestandingTemplate" imagePosition="overlaps" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="PeO-I4-aad">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                            <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="signInClick:" target="-2" id="Rwb-Lk-ohk"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="k7j-rX-Mra" firstAttribute="top" secondItem="jAE-gj-tK6" secondAttribute="top" id="WJ7-gX-joC"/>
-                                </constraints>
-                                <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <real value="1000"/>
-                                </visibilityPriorities>
-                                <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                </customSpacing>
-                            </stackView>
+                            <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k7j-rX-Mra">
+                                <rect key="frame" x="0.0" y="0.0" width="279" height="22"/>
+                                <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Enter Password" drawsBackground="YES" usesSingleLineMode="YES" id="XCS-go-S1Y">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <allowedInputSourceLocales>
+                                        <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                    </allowedInputSourceLocales>
+                                </secureTextFieldCell>
+                            </secureTextField>
                         </subviews>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="bz7-9V-hj9" secondAttribute="trailing" constant="50" id="Jpa-gc-exv"/>
-                        </constraints>
                         <visibilityPriorities>
                             <integer value="1000"/>
                             <integer value="1000"/>
@@ -120,16 +91,109 @@ DQ
                             <real value="3.4028234663852886e+38"/>
                         </customSpacing>
                     </stackView>
+                    <button verticalHuggingPriority="750" verticalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="7fI-fi-xA6">
+                        <rect key="frame" x="408" y="65" width="13" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="13" id="9Vf-Z4-07c"/>
+                            <constraint firstAttribute="height" constant="21" id="P2m-l8-Wzh"/>
+                        </constraints>
+                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSFollowLinkFreestandingTemplate" imagePosition="overlaps" alignment="center" imageScaling="proportionallyDown" inset="2" id="PeO-I4-aad">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="signInClick:" target="-2" id="Rwb-Lk-ohk"/>
+                        </connections>
+                    </button>
+                    <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLo-4d-Xte" userLabel="Password change stack">
+                        <rect key="frame" x="121" y="35" width="279" height="82"/>
+                        <subviews>
+                            <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dYF-nq-lV9">
+                                <rect key="frame" x="0.0" y="60" width="279" height="22"/>
+                                <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="Current Password" drawsBackground="YES" usesSingleLineMode="YES" id="vE6-6e-Cdj">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <allowedInputSourceLocales>
+                                        <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                    </allowedInputSourceLocales>
+                                </secureTextFieldCell>
+                            </secureTextField>
+                            <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oSe-dI-fep">
+                                <rect key="frame" x="0.0" y="30" width="279" height="22"/>
+                                <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="New Password" drawsBackground="YES" usesSingleLineMode="YES" id="pBL-Ls-adB">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <allowedInputSourceLocales>
+                                        <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                    </allowedInputSourceLocales>
+                                </secureTextFieldCell>
+                            </secureTextField>
+                            <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="czU-dA-foI">
+                                <rect key="frame" x="0.0" y="0.0" width="279" height="22"/>
+                                <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Repeat New Password" drawsBackground="YES" usesSingleLineMode="YES" id="cFI-9b-rPj">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <allowedInputSourceLocales>
+                                        <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                    </allowedInputSourceLocales>
+                                </secureTextFieldCell>
+                            </secureTextField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="czU-dA-foI" firstAttribute="trailing" secondItem="oSe-dI-fep" secondAttribute="trailing" id="guq-yx-RC5"/>
+                            <constraint firstItem="czU-dA-foI" firstAttribute="trailing" secondItem="dYF-nq-lV9" secondAttribute="trailing" id="mVu-BX-euB"/>
+                        </constraints>
+                        <visibilityPriorities>
+                            <integer value="1000"/>
+                            <integer value="1000"/>
+                            <integer value="1000"/>
+                        </visibilityPriorities>
+                        <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
+                            <real value="3.4028234663852886e+38"/>
+                            <real value="3.4028234663852886e+38"/>
+                        </customSpacing>
+                    </stackView>
+                    <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BKh-qb-RHS">
+                        <rect key="frame" x="408" y="36" width="13" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="Myh-sb-Hz8"/>
+                        </constraints>
+                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSFollowLinkFreestandingTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" enabled="NO" state="on" imageScaling="proportionallyDown" inset="2" id="3vC-cf-Dl3">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changePassowrd:" target="-2" id="Dep-hk-DUa"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="gGp-dd-t9H" secondAttribute="trailing" constant="80" id="30D-ym-zfq"/>
-                    <constraint firstItem="gGp-dd-t9H" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="4Jv-RI-mac"/>
-                    <constraint firstItem="C6d-sv-yXM" firstAttribute="leading" secondItem="gGp-dd-t9H" secondAttribute="leading" id="5Cb-kH-G8G"/>
+                    <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="F2L-Xq-DaN"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="Jlu-Kj-M83"/>
+                    <constraint firstItem="RLo-4d-Xte" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="OBe-rZ-XCM"/>
+                    <constraint firstItem="gGp-dd-t9H" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="OQr-MW-kU5"/>
                     <constraint firstItem="C6d-sv-yXM" firstAttribute="centerX" secondItem="ktB-bz-Qqt" secondAttribute="centerX" id="Tgf-4A-kM1"/>
+                    <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="121" id="WHs-C6-bzE"/>
+                    <constraint firstItem="BKh-qb-RHS" firstAttribute="leading" secondItem="7fI-fi-xA6" secondAttribute="leading" id="XNM-Zx-ya9"/>
+                    <constraint firstItem="gGp-dd-t9H" firstAttribute="trailing" secondItem="C6d-sv-yXM" secondAttribute="trailing" id="dBy-Zl-syq"/>
+                    <constraint firstItem="BKh-qb-RHS" firstAttribute="trailing" secondItem="7fI-fi-xA6" secondAttribute="trailing" id="erE-iq-6rZ"/>
+                    <constraint firstItem="7fI-fi-xA6" firstAttribute="bottom" secondItem="gGp-dd-t9H" secondAttribute="bottom" id="gjq-Sz-Rtc"/>
+                    <constraint firstItem="RLo-4d-Xte" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="hYj-hr-scX"/>
                     <constraint firstItem="C6d-sv-yXM" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="j3Q-9t-XRh"/>
+                    <constraint firstItem="gGp-dd-t9H" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="npS-hu-l0d"/>
+                    <constraint firstItem="7fI-fi-xA6" firstAttribute="leading" secondItem="gGp-dd-t9H" secondAttribute="trailing" constant="8" symbolic="YES" id="oez-tZ-PnI"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="top" secondItem="C6d-sv-yXM" secondAttribute="bottom" constant="20" id="rwk-6G-eYg"/>
-                    <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="gGp-dd-t9H" secondAttribute="bottom" constant="65" id="wpt-2o-xp1"/>
+                    <constraint firstItem="BKh-qb-RHS" firstAttribute="top" secondItem="7fI-fi-xA6" secondAttribute="bottom" constant="8" symbolic="YES" id="xkX-uc-Y1g"/>
                 </constraints>
             </view>
             <connections>
