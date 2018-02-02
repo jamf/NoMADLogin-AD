@@ -26,7 +26,13 @@ class SignIn: NSWindowController {
     @IBOutlet weak var domain: NSPopUpButton!
     @IBOutlet weak var signIn: NSButton!
     @IBOutlet weak var imageView: NSImageView!
-
+    @IBOutlet weak var loginStack: NSStackView!
+    @IBOutlet weak var passwordChangeStack: NSStackView!
+    @IBOutlet weak var passwordChangeButton: NSButton!
+    @IBOutlet weak var oldPassword: NSSecureTextField!
+    @IBOutlet weak var newPassword: NSSecureTextField!
+    @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
+    
     //MARK: - UI Methods
     override func windowDidLoad() {
         os_log("Calling super.windowDidLoad", log: uiLog, type: .debug)
@@ -39,7 +45,6 @@ class SignIn: NSWindowController {
         
         // make things look better
         os_log("Tweaking appearance", log: uiLog, type: .debug)
-        self.window?.titlebarAppearsTransparent = true
         self.window?.backgroundColor = NSColor.white
         if !self.domainName.isEmpty {
             username.placeholderString = "Username"
@@ -63,7 +68,7 @@ class SignIn: NSWindowController {
             os_log("No username entered", log: uiLog, type: .default)
             return
         }
-        animateUI()
+        loginStartedUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
             os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
@@ -83,8 +88,38 @@ class SignIn: NSWindowController {
         }
     }
 
+
+    @IBAction func changePassowrd(_ sender: Any) {
+
+        guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
+            os_log("New passwords didn't match", log: uiLog, type: .debug)
+            return
+        }
+
+        os_log("UI old pass: %{public}@", log: uiLog, type: .debug, oldPassword.stringValue)
+        os_log("UI new pass: %{public}@", log: uiLog, type: .debug, newPassword.stringValue)
+        //TODO: Terrible hack to be fixed once AD Framework is refactored
+        password.stringValue = newPassword.stringValue
+
+        session?.oldPass = oldPassword.stringValue
+        session?.newPass = newPassword.stringValue
+
+        os_log("Attempting password change for %{public}@", log: uiLog, type: .debug, shortName)
+        session?.changePassword()
+    }
+
+    func showResetUI() {
+        os_log("Adjusting UI for change controls", log: uiLog, type: .debug)
+        loginStack.isHidden = true
+        signIn.isHidden = true
+        signIn.isEnabled = false
+        passwordChangeStack.isHidden = false
+        passwordChangeButton.isHidden = false
+        passwordChangeButton.isEnabled = true
+    }
+
     /// Simple toggle to change the state of the NoLo window UI between active and inactive.
-    func animateUI() {
+    fileprivate func loginStartedUI() {
         signIn.isEnabled = !signIn.isEnabled
         signIn.isHidden = !signIn.isHidden
         
@@ -140,7 +175,7 @@ class SignIn: NSWindowController {
         if error != noErr {
             os_log("Got error setting authentication result", log: uiLog, type: .error)
         }
-        animateUI()
+        loginStartedUI()
         NSApp.abortModal()
         self.window?.close()
     }
@@ -150,8 +185,22 @@ class SignIn: NSWindowController {
 extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
-        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .default, error.localizedDescription)
+
+        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
         completeLogin(authResult: .deny)
+
+        //TODO: Password change functionality
+//        switch error {
+//        case .PasswordExpired:
+//            os_log("Password is expired or requires change.", log: uiLog, type: .default)
+//            showResetUI()
+//            return
+//        default:
+//            os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
+//            completeLogin(authResult: .deny)
+//        }
+
+
     }
 
     func NoMADAuthenticationSucceded() {
