@@ -22,6 +22,10 @@ class CheckAD: NoLoMechanism {
             os_log("Set managed domain for loginwindow", log: checkADLog, type: .debug)
             signIn.domainName = domain.uppercased()
         }
+        if let isSSLRequired = self.isSSLRequired {
+            os_log("Set SSL required", log: checkADLog, type: .debug)
+            signIn.isSSLRequired = isSSLRequired
+        }
         let windowTest = signIn.window
         if windowTest == nil {
             os_log("Could not create login window UI", log: checkADLog, type: .default)
