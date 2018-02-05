@@ -19,6 +19,7 @@ class SignIn: NSWindowController {
     var shortName = ""
     var domainName = ""
     var isDomainManaged = false
+    var isSSLRequired = false
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
@@ -81,6 +82,7 @@ class SignIn: NSWindowController {
                 os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
                 return
             }
+            session.useSSL = isSSLRequired
             session.userPass = password.stringValue
             session.delegate = self
             os_log("Attempt to authenticate user", log: uiLog, type: .debug)
