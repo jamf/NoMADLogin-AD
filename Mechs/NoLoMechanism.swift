@@ -18,6 +18,9 @@ class NoLoMechanism: NSObject {
 
     /// If there is an AD domain set via preferences it will be here in a `String`
     var managedDomain: String?
+    
+    /// If there is a SSL requirement set via preferences it will be here in a `Bool`. Defaults to `false`
+    var isSSLRequired: Bool?
 
     /// A pointer to the MechanismRecord `struct`
     let mech: MechanismRecord?
@@ -39,7 +42,8 @@ class NoLoMechanism: NSObject {
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
         super.init()
-        self.managedDomain = getManagedDomain()
+        self.managedDomain = getManagedPreference(key: .ADDomain) as? String
+        self.isSSLRequired = getManagedPreference(key: .LDAPOverSSL) as? Bool
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
     }
 
@@ -47,18 +51,18 @@ class NoLoMechanism: NSObject {
     /// This domain will override anything the user enters in the username field.
     ///
     /// - Returns: The `String` for the ADDomain key if it exists.
-    func getManagedDomain() -> String? {
-        guard let adDomain = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
+    func getManagedPreference(key: Preferences) -> Any? {
+        guard let preference = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.value(forKey: key.rawValue) else {
             os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
-            guard let adDomain = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.string(forKey: Preferences.ADDomain.rawValue) else {
+            guard let preference = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.value(forKey: key.rawValue) else {
                 os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
                 return nil
             }
-            os_log("Found managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
-            return adDomain
+            os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
+            return preference
         }
-        os_log("Found shared managed domain: %{public}@", log: noLoMechlog, type: .debug, adDomain)
-        return adDomain
+        os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
+        return preference
     }
 
     var nomadUser: String? {
