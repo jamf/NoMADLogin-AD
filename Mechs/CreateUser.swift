@@ -88,10 +88,10 @@ class CreateUser: NoLoMechanism {
 
         if canChangePass {
             do {
-                os_log("Setting writers_passwd for new local user", log: createUserLog, type: .debug)
-                try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:writers_passwd")
+                os_log("Setting _writers_passwd for new local user", log: createUserLog, type: .debug)
+                try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:_writers_passwd")
             } catch {
-                os_log("Unable to set writers_passwd", log: createUserLog, type: .error)
+                os_log("Unable to set _writers_passwd", log: createUserLog, type: .error)
             }
         }
 
