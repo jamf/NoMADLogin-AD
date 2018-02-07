@@ -201,7 +201,9 @@ class NoLoMechanism: NSObject {
             os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
             return false
         }
-        return records.count > 0 ? true : false
+        let isLocal = records.isEmpty ? false : true
+        os_log("Results of local user check %{public}@", log: noLoMechlog, type: .debug, isLocal.description)
+        return isLocal
     }
 }
 
