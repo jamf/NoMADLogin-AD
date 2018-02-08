@@ -10,7 +10,7 @@ import Foundation
 
 enum Preferences: String {
     case ADDomain
-    case createAdminUser
+    case CreateAdminUser
     case DemobilizeUsers
     case LDAPOverSSL
 }
