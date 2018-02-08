@@ -165,7 +165,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9CBDCFA11FC4CEE300CF73F4 /* Build configuration list for PBXNativeTarget "NoMADLoginAD" */;
 			buildPhases = (
-				9CF4443F2028F53400F6AE60 /* ShellScript */,
 				9CBDCF971FC4CEE300CF73F4 /* Sources */,
 				9CBDCF981FC4CEE300CF73F4 /* Frameworks */,
 				9CBDCF991FC4CEE300CF73F4 /* Resources */,
@@ -226,22 +225,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		9CF4443F2028F53400F6AE60 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "status=$(git status --porcelain)\nplist=${INFOPLIST_FILE}\nif [[ \"${#status}\" != 0 ]] && [[ $status != *\"M ${plist}\"* ]]; then\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${plist}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${plist}\"\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9CBDCF971FC4CEE300CF73F4 /* Sources */ = {
