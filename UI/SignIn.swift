@@ -94,12 +94,10 @@ class SignIn: NSWindowController {
     @IBAction func changePassowrd(_ sender: Any) {
 
         guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
-            os_log("New passwords didn't match", log: uiLog, type: .debug)
+            os_log("New passwords didn't match", log: uiLog, type: .error)
             return
         }
 
-        os_log("UI old pass: %{public}@", log: uiLog, type: .debug, oldPassword.stringValue)
-        os_log("UI new pass: %{public}@", log: uiLog, type: .debug, newPassword.stringValue)
         //TODO: Terrible hack to be fixed once AD Framework is refactored
         password.stringValue = newPassword.stringValue
 
@@ -118,6 +116,7 @@ class SignIn: NSWindowController {
         passwordChangeStack.isHidden = false
         passwordChangeButton.isHidden = false
         passwordChangeButton.isEnabled = true
+        oldPassword.becomeFirstResponder()
     }
 
     /// Simple toggle to change the state of the NoLo window UI between active and inactive.
@@ -189,18 +188,17 @@ extension SignIn: NoMADUserSessionDelegate {
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
 
         os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
-        completeLogin(authResult: .deny)
 
         //TODO: Password change functionality
-//        switch error {
-//        case .PasswordExpired:
-//            os_log("Password is expired or requires change.", log: uiLog, type: .default)
-//            showResetUI()
-//            return
-//        default:
-//            os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
-//            completeLogin(authResult: .deny)
-//        }
+        switch error {
+        case .PasswordExpired:
+            os_log("Password is expired or requires change.", log: uiLog, type: .default)
+            showResetUI()
+            return
+        default:
+            os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
+            completeLogin(authResult: .deny)
+        }
 
 
     }
