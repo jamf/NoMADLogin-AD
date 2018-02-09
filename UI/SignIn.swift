@@ -180,6 +180,24 @@ class SignIn: NSWindowController {
         NSApp.abortModal()
         self.window?.close()
     }
+
+    //MARK: - Sleep, Restart, and Shut Down Actions
+
+    @IBAction func sleepClick(_ sender: Any) {
+        os_log("Sleeping system isn't supported yet", log: uiLog, type: .error)
+    }
+
+    @IBAction func restartClick(_ sender: Any) {
+        os_log("Setting restart user", log: uiLog, type: .debug)
+        setHint(type: .noMADUser, hint: SpecialUsers.noloRestart.rawValue)
+        completeLogin(authResult: .allow)
+    }
+
+    @IBAction func shutdownClick(_ sender: Any) {
+        os_log("Setting shutdown user", log: uiLog, type: .debug)
+        setHint(type: .noMADUser, hint: SpecialUsers.noloShutdown.rawValue)
+        completeLogin(authResult: .allow)
+    }
 }
 
 //MARK: - NoMADUserSessionDelegate

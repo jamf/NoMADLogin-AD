@@ -90,6 +90,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fCreateUser = (strcmp(mechanismId, "CreateUser") == 0);
     mechanism->fLogOnly = (strcmp(mechanismId, "LogOnly") == 0);
     mechanism->fDeMobilize = (strcmp(mechanismId, "DeMobilize") == 0);
+    mechanism->fPowerControl = (strcmp(mechanismId, "PowerControl") == 0);
     *outMechanism = mechanism;
     return errSecSuccess;
 }
@@ -136,6 +137,12 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         [deMobilize run];
         NSLog(@"DeMobilze done");
         
+    } else if (mechanism->fPowerControl){
+        NSLog(@"Calling PowerControl");
+
+        PowerControl *powerControl = [[PowerControl alloc] initWithMechanism:mechanism];
+        [powerControl run];
+        NSLog(@"PowerControl done");
     }
 
     return noErr;
