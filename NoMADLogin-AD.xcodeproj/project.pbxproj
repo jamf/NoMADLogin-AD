@@ -12,6 +12,7 @@
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
+		9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FB202E491E00EA1FE6 /* PowerControl.swift */; };
 		9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */; };
 		9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */; };
 		9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */; };
@@ -47,6 +48,7 @@
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
+		9CA733FB202E491E00EA1FE6 /* PowerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerControl.swift; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoMADLoginAD-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			children = (
 				9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */,
 				9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */,
+				9CA733FB202E491E00EA1FE6 /* PowerControl.swift */,
 				9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */,
 				9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */,
 				9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */,
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
+				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
@@ -362,6 +366,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
@@ -390,6 +395,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;

@@ -27,15 +27,14 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES"/>
-            <rect key="contentRect" x="276" y="219" width="539" height="438"/>
+            <rect key="contentRect" x="276" y="219" width="520" height="504"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-            <value key="maxSize" type="size" width="539" height="438"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="521" height="438"/>
+                <rect key="frame" x="0.0" y="0.0" width="520" height="504"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="C6d-sv-yXM">
-                        <rect key="frame" x="121" y="166" width="279" height="272"/>
+                        <rect key="frame" x="121" y="232" width="279" height="272"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="279" id="2pB-Pe-VuL"/>
                             <constraint firstAttribute="height" constant="272" id="c1H-mE-DNN"/>
@@ -43,7 +42,7 @@
                         <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NoLoAD Logo Alpha Channel" id="2vJ-kZ-7Fn"/>
                     </imageView>
                     <popUpButton hidden="YES" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-bz-Qqt">
-                        <rect key="frame" x="186" y="122" width="149" height="26"/>
+                        <rect key="frame" x="186" y="188" width="149" height="26"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="144" id="L99-tU-WSP"/>
                         </constraints>
@@ -60,7 +59,7 @@
                         </popUpButtonCell>
                     </popUpButton>
                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gGp-dd-t9H" userLabel="login stack">
-                        <rect key="frame" x="121" y="65" width="279" height="52"/>
+                        <rect key="frame" x="121" y="131" width="279" height="52"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bz7-9V-hj9">
                                 <rect key="frame" x="0.0" y="30" width="279" height="22"/>
@@ -92,7 +91,7 @@
                         </customSpacing>
                     </stackView>
                     <button verticalHuggingPriority="750" verticalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="7fI-fi-xA6">
-                        <rect key="frame" x="408" y="65" width="13" height="21"/>
+                        <rect key="frame" x="408" y="131" width="13" height="21"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="13" id="9Vf-Z4-07c"/>
                             <constraint firstAttribute="height" constant="21" id="P2m-l8-Wzh"/>
@@ -109,7 +108,7 @@ DQ
                         </connections>
                     </button>
                     <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLo-4d-Xte" userLabel="Password change stack">
-                        <rect key="frame" x="121" y="35" width="279" height="82"/>
+                        <rect key="frame" x="121" y="101" width="279" height="82"/>
                         <subviews>
                             <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dYF-nq-lV9">
                                 <rect key="frame" x="0.0" y="60" width="279" height="22"/>
@@ -161,7 +160,7 @@ DQ
                         </customSpacing>
                     </stackView>
                     <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BKh-qb-RHS">
-                        <rect key="frame" x="408" y="36" width="13" height="21"/>
+                        <rect key="frame" x="408" y="102" width="13" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Myh-sb-Hz8"/>
                         </constraints>
@@ -176,9 +175,145 @@ DQ
                             <action selector="changePassowrd:" target="-2" id="Dep-hk-DUa"/>
                         </connections>
                     </button>
+                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="54" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UUS-jL-biV">
+                        <rect key="frame" x="121" y="32" width="279" height="61"/>
+                        <subviews>
+                            <stackView autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LF9-Yw-kgb" userLabel="Sleep Stack View">
+                                <rect key="frame" x="0.0" y="6" width="61" height="49"/>
+                                <subviews>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="fU9-Oo-l9U">
+                                        <rect key="frame" x="15" y="17" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="czM-VU-aXL"/>
+                                            <constraint firstAttribute="width" constant="32" id="taE-Bn-yQV"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Sleep" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="cme-ei-vaG">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="sleepClick:" target="-2" id="RSM-Vy-IPl"/>
+                                        </connections>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nOe-Yg-MBi">
+                                        <rect key="frame" x="12" y="0.0" width="38" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Sleep" id="Syu-m0-PfS">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="nOe-Yg-MBi" secondAttribute="centerX" id="AzH-9T-4Bo"/>
+                                    <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="LF9-Yw-kgb" secondAttribute="centerX" id="S5x-rp-5i6"/>
+                                </constraints>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YYe-nG-18q" userLabel="Restart Stack View">
+                                <rect key="frame" x="115" y="6" width="44" height="49"/>
+                                <subviews>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="KQE-va-A2l" userLabel="Restart Button">
+                                        <rect key="frame" x="6" y="17" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="SNv-Xu-c0t"/>
+                                            <constraint firstAttribute="width" constant="32" id="bfD-p8-j3b"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Restart" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="DSM-jK-9j9">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="restartClick:" target="-2" id="cIB-yY-Ze8"/>
+                                        </connections>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5ws-sB-NFB">
+                                        <rect key="frame" x="-2" y="0.0" width="48" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Restart" id="gB0-sY-47z">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="5ws-sB-NFB" firstAttribute="leading" secondItem="YYe-nG-18q" secondAttribute="leading" id="fCk-VU-Xoj"/>
+                                </constraints>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Od8-0u-vv8" userLabel="Shut Down Stack View">
+                                <rect key="frame" x="213" y="6" width="66" height="55"/>
+                                <subviews>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="XWB-j3-Tsa" userLabel="Shutdown Button">
+                                        <rect key="frame" x="17" y="17" width="32" height="38"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="38" id="16S-3H-d8C"/>
+                                            <constraint firstAttribute="width" constant="32" id="JJU-2V-vl9"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Shutdown" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="3cQ-Bb-0ex">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="shutdownClick:" target="-2" id="Vgb-UL-Qgk"/>
+                                        </connections>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QCK-Fv-hy4">
+                                        <rect key="frame" x="-2" y="0.0" width="70" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Shut Down" id="pI0-rR-0JD">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="QCK-Fv-hy4" firstAttribute="leading" secondItem="Od8-0u-vv8" secondAttribute="leading" id="6jh-RS-Iil"/>
+                                </constraints>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="YYe-nG-18q" firstAttribute="bottom" secondItem="LF9-Yw-kgb" secondAttribute="bottom" id="Erh-uD-zbn"/>
+                            <constraint firstItem="Od8-0u-vv8" firstAttribute="bottom" secondItem="LF9-Yw-kgb" secondAttribute="bottom" id="W2l-fl-Cmo"/>
+                        </constraints>
+                        <visibilityPriorities>
+                            <integer value="1000"/>
+                            <integer value="1000"/>
+                            <integer value="1000"/>
+                        </visibilityPriorities>
+                        <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
+                            <real value="3.4028234663852886e+38"/>
+                            <real value="3.4028234663852886e+38"/>
+                        </customSpacing>
+                    </stackView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="UUS-jL-biV" firstAttribute="trailing" secondItem="RLo-4d-Xte" secondAttribute="trailing" id="8Se-CL-h1U"/>
                     <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="F2L-Xq-DaN"/>
+                    <constraint firstItem="UUS-jL-biV" firstAttribute="leading" secondItem="RLo-4d-Xte" secondAttribute="leading" id="Fck-3o-klE"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="Jlu-Kj-M83"/>
                     <constraint firstItem="RLo-4d-Xte" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="OBe-rZ-XCM"/>
                     <constraint firstItem="gGp-dd-t9H" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="OQr-MW-kU5"/>
@@ -193,17 +328,21 @@ DQ
                     <constraint firstItem="gGp-dd-t9H" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="npS-hu-l0d"/>
                     <constraint firstItem="7fI-fi-xA6" firstAttribute="leading" secondItem="gGp-dd-t9H" secondAttribute="trailing" constant="8" symbolic="YES" id="oez-tZ-PnI"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="top" secondItem="C6d-sv-yXM" secondAttribute="bottom" constant="20" id="rwk-6G-eYg"/>
+                    <constraint firstItem="UUS-jL-biV" firstAttribute="top" secondItem="RLo-4d-Xte" secondAttribute="bottom" constant="8" symbolic="YES" id="wCA-q7-WPK"/>
                     <constraint firstItem="BKh-qb-RHS" firstAttribute="top" secondItem="7fI-fi-xA6" secondAttribute="bottom" constant="8" symbolic="YES" id="xkX-uc-Y1g"/>
                 </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-667.5" y="65"/>
+            <point key="canvasLocation" x="-668" y="98"/>
         </window>
     </objects>
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>
         <image name="NoLoAD Logo Alpha Channel" width="247.19999694824219" height="394.32000732421875"/>
+        <image name="Restart" width="128" height="128"/>
+        <image name="Shutdown" width="128" height="150"/>
+        <image name="Sleep" width="128" height="128"/>
     </resources>
 </document>

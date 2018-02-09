@@ -13,6 +13,7 @@
 		<string>builtin:policy-banner</string>
 		<string>NoMADLoginAD:CheckAD</string>
 		<string>NoMADLoginAD:LogOnly</string>
+        <string>NoMADLoginAD:PowerControl,privileged</string>
         <string>NoMADLoginAD:CreateUser,privileged</string>
         <string>NoMADLoginAD:DeMobilize,privileged</string>
         <string>builtin:login-begin</string>
