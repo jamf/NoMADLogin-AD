@@ -16,3 +16,4 @@ let noLoBaseMechlog = OSLog(subsystem: "menu.nomad.noload", category: "NoLoBaseM
 let loggerMech = OSLog(subsystem: "menu.nomad.noload", category: "LoggerMech")
 let demobilizeLog = OSLog(subsystem: "menu.nomad.noload", category: "DemobilizeMech")
 let powerControlLog = OSLog(subsystem: "menu.nomad.noload", category: "PowerControlMech")
+let enableFDELog = OSLog(subsystem: "menu.nomad.noload", category: "EnableFDELog")
