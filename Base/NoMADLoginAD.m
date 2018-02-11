@@ -150,7 +150,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
 
         EnableFDE * enableFDE = [[EnableFDE alloc] initWithMechanism:mechanism];
         [enableFDE run];
-        NSLog(@"Enable FDE done");
+        NSLog(@"EnableFDE done");
     }
     return noErr;
 }

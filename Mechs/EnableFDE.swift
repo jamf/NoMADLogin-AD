@@ -78,18 +78,18 @@ class EnableFDE : NoLoMechanism {
             let errorMessage = String(data: errorData, encoding: .utf8)
             errorPipe.fileHandleForReading.closeFile()
             
-            var format = PropertyListSerialization.PropertyListFormat.xml
+            let output = NSString(data: outputData, encoding: String.Encoding.utf8.rawValue)! as String
+                    
+            // write out the PRK if asked to
             
-            do {
-                let outputPlist = try PropertyListSerialization.propertyList(from: outputData,
-                                                                             options: PropertyListSerialization.MutabilityOptions(),
-                                                                             format: &format)
-                if outputPlist is NSDictionary {
+            if (UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.EnableFDERecoveryKey.rawValue) ?? false ) {
+                do {
+                    
                     os_log("Attempting to write key to: %{public}@", log: enableFDELog, type: .debug, "/var/db/.NoMADFDESetup")
-                    _ = (outputPlist as! NSDictionary).write(toFile: "/var/db/.NoMADFDESetup", atomically: true)
+                    try output.write(toFile: "/var/db/.NoMADFDESetup", atomically: true, encoding: String.Encoding.ascii)
+                } catch {
+                    os_log("Unable to finish fdesetup: %{public}@", log: enableFDELog, type: .error, errorMessage ?? "Unkown error")
                 }
-            } catch {
-                os_log("Unable to finish fdesetup: %{public}@", log: enableFDELog, type: .error, errorMessage ?? "Unkown error")
             }
         } else {
             os_log("Boot volume is not APFS, skipping FDE.", log: enableFDELog, type: .debug)
@@ -113,8 +113,10 @@ class EnableFDE : NoLoMechanism {
         }
         
         if type == "apfs" {
+            os_log("Filesystem is APFS, enabling FileVault", log: enableFDELog)
             return true
         } else {
+            os_log("Filesystem is not APFS, skipping FileVault", log: enableFDELog, type: .error)
             return false
         }
     }

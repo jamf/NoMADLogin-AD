@@ -13,5 +13,6 @@ enum Preferences: String {
     case CreateAdminUser
     case DemobilizeUsers
     case EnableFDE
+    case EnableFDERecoveryKey
     case LDAPOverSSL
 }
