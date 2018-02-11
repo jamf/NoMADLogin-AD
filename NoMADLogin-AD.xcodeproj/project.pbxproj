@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84BB4F192030DB050054809F /* NoMAD_ADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 84BB4F182030DB040054809F /* NoMAD_ADAuth.framework */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C14650D1FF2E440003DB304 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
 		9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FB202E491E00EA1FE6 /* PowerControl.swift */; };
+		9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */; };
 		9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */; };
 		9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */; };
 		9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */; };
@@ -20,8 +22,6 @@
 		9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */; };
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
-		9CC74CC41FFED4B300EBCCD5 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CC74CC51FFED4B300EBCCD5 /* NoMAD_ADAuth.framework */; };
-		9CC74CC71FFED4C600EBCCD5 /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9CC74CC51FFED4B300EBCCD5 /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,13 +32,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9CC74CC71FFED4C600EBCCD5 /* NoMAD_ADAuth.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84BB4F182030DB040054809F /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -49,6 +49,7 @@
 		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
 		9CA733FB202E491E00EA1FE6 /* PowerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerControl.swift; sourceTree = "<group>"; };
+		9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnableFDE.swift; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoMADLoginAD-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMADLoginAD.h; sourceTree = "<group>"; };
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
-		9CC74CC51FFED4B300EBCCD5 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,7 +69,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CC74CC41FFED4B300EBCCD5 /* NoMAD_ADAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +120,7 @@
 		9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9CC74CC51FFED4B300EBCCD5 /* NoMAD_ADAuth.framework */,
+				84BB4F182030DB040054809F /* NoMAD_ADAuth.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -135,6 +134,7 @@
 				9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */,
 				9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */,
 				9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */,
+				9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */,
 			);
 			path = Mechs;
 			sourceTree = "<group>";
@@ -223,6 +223,7 @@
 			files = (
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
+				84BB4F192030DB050054809F /* NoMAD_ADAuth.framework in Resources */,
 				9C14650D1FF2E440003DB304 /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,6 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */,
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
 				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
