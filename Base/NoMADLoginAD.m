@@ -91,6 +91,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fLogOnly = (strcmp(mechanismId, "LogOnly") == 0);
     mechanism->fDeMobilize = (strcmp(mechanismId, "DeMobilize") == 0);
     mechanism->fPowerControl = (strcmp(mechanismId, "PowerControl") == 0);
+    mechanism->fEnableFDE = (strcmp(mechanismId, "EnableFDE") == 0);
     *outMechanism = mechanism;
     return errSecSuccess;
 }
@@ -143,8 +144,14 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         PowerControl *powerControl = [[PowerControl alloc] initWithMechanism:mechanism];
         [powerControl run];
         NSLog(@"PowerControl done");
-    }
 
+    } else if (mechanism->fEnableFDE) {
+        NSLog(@"Calling EnableFDE");
+
+        EnableFDE * enableFDE = [[EnableFDE alloc] initWithMechanism:mechanism];
+        [enableFDE run];
+        NSLog(@"Enable FDE done");
+    }
     return noErr;
 }
 

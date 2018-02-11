@@ -45,6 +45,7 @@ struct MechanismRecord {
     Boolean                         fLogOnly;
     Boolean                         fDeMobilize;
     Boolean                         fPowerControl;
+    Boolean                         fEnableFDE;
 };
 
 typedef struct MechanismRecord MechanismRecord;

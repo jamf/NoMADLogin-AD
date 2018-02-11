@@ -39,7 +39,7 @@ class EnableFDE : NoLoMechanism {
             
             os_log("Enabling FileVault", log: enableFDELog, type: .default)
             
-            let userArgs : [ String: String] = [
+            let userArgs = [
                 "Username" : nomadUser ?? "",
                 "Password" : nomadPass ?? "",
                 ]
@@ -48,7 +48,8 @@ class EnableFDE : NoLoMechanism {
             
             do {
                 userInfo = try PropertyListSerialization.data(fromPropertyList: userArgs,
-                                                              format: PropertyListSerialization.PropertyListFormat.xml, options: 0)
+                                                              format: PropertyListSerialization.PropertyListFormat.xml,
+                                                              options: 0)
             } catch {
                 os_log("Unable to create fdesetup arguments.", log: enableFDELog, type: .error)
                 return
@@ -77,7 +78,7 @@ class EnableFDE : NoLoMechanism {
             let errorMessage = String(data: errorData, encoding: .utf8)
             errorPipe.fileHandleForReading.closeFile()
             
-            var format : PropertyListSerialization.PropertyListFormat = PropertyListSerialization.PropertyListFormat.xml
+            var format = PropertyListSerialization.PropertyListFormat.xml
             
             do {
                 let outputPlist = try PropertyListSerialization.propertyList(from: outputData,
@@ -100,8 +101,8 @@ class EnableFDE : NoLoMechanism {
         
         let ws = NSWorkspace.shared
         
-        var description : NSString? = nil
-        var type : NSString? = nil
+        var description: NSString?
+        var type: NSString?
         
         let err = ws.getFileSystemInfo(forPath: "/", isRemovable: nil, isWritable: nil, isUnmountable: nil, description: &description, type: &type)
         
@@ -115,9 +116,5 @@ class EnableFDE : NoLoMechanism {
         } else {
             return false
         }
-    }
-    
-    fileprivate func keychainTest() {
-        
     }
 }
