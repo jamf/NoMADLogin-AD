@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84BB4F162030DAE50054809F /* NoMADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BB4F152030DAD70054809F /* NoMADAuth.framework */; };
-		84BB4F172030DAEE0054809F /* NoMADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 84BB4F152030DAD70054809F /* NoMADAuth.framework */; };
 		84BB4F192030DB050054809F /* NoMAD_ADAuth.framework in Resources */ = {isa = PBXBuildFile; fileRef = 84BB4F182030DB040054809F /* NoMAD_ADAuth.framework */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C14650D1FF2E440003DB304 /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -40,7 +38,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		84BB4F152030DAD70054809F /* NoMADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMADAuth.framework; sourceTree = "<group>"; };
 		84BB4F182030DB040054809F /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -72,7 +69,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84BB4F162030DAE50054809F /* NoMADAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,7 +121,6 @@
 		9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				84BB4F152030DAD70054809F /* NoMADAuth.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -228,7 +223,6 @@
 			files = (
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
-				84BB4F172030DAEE0054809F /* NoMADAuth.framework in Resources */,
 				84BB4F192030DB050054809F /* NoMAD_ADAuth.framework in Resources */,
 				9C14650D1FF2E440003DB304 /* (null) in Resources */,
 			);
