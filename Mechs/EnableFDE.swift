@@ -82,10 +82,11 @@ class EnableFDE : NoLoMechanism {
             
             do {
                 let outputPlist = try PropertyListSerialization.propertyList(from: outputData,
-                                                                             options: PropertyListSerialization.MutabilityOptions(), format: &format)
+                                                                             options: PropertyListSerialization.MutabilityOptions(),
+                                                                             format: &format)
                 if outputPlist is NSDictionary {
-                    os_log("Attempting to write key to: %{public}@", log: enableFDELog, type: .debug, "/var/db?.NoMADFDESetup")
-                    _ = (outputPlist as! NSDictionary).write(toFile: "/var/db?.NoMADFDESetup", atomically: true)
+                    os_log("Attempting to write key to: %{public}@", log: enableFDELog, type: .debug, "/var/db/.NoMADFDESetup")
+                    _ = (outputPlist as! NSDictionary).write(toFile: "/var/db/.NoMADFDESetup", atomically: true)
                 }
             } catch {
                 os_log("Unable to finish fdesetup: %{public}@", log: enableFDELog, type: .error, errorMessage ?? "Unkown error")
