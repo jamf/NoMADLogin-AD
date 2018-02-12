@@ -45,7 +45,7 @@ When you decide that you've had enough it's easy to go back to the standard logi
 
 ## What's new
 * Moved AD Framework into project for easy building.
-* Added EnableFDE mech for VileVault on APFS.
+* Added EnableFDE mech for FileVault on APFS.
 * Added PowerControl mech for Sleep, Restart, and Shut down.
 * Fixed user home creation and added home localization.
 * Added require SSL preference.
