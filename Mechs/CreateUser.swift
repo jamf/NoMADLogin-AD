@@ -194,9 +194,14 @@ class CreateUser: NoLoMechanism {
         os_log("System language is: %{public}@", log: createUserLog, type: .debug, currentLanguage)
         let templateName = templateForLang(currentLanguage)
         let sourceURL = URL(fileURLWithPath: "/System/Library/User Template/" + templateName)
+        let downloadsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
+        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
         do {
             os_log("Copying template to /Users", log: createUserLog, type: .debug)
             try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
+            os_log("Copying non-localized folders to new home", log: createUserLog, type: .debug)
+            try FileManager.default.copyItem(at: downloadsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Downloads"))
+            try FileManager.default.copyItem(at: documentsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Documents"))
         } catch {
             os_log("Home template copy failed with: %{public}@", log: createUserLog, type: .error, error.localizedDescription)
         }
