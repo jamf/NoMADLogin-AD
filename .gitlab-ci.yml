@@ -5,6 +5,6 @@ stages:
 build_project:
   stage: build
   script:
-    - xcodebuild clean -project NoLo-AD.xcworkspace -scheme SchemeName | xcpretty
-    - xcodebuild test -project NoLo-AD.xcworkspace -scheme SchemeName | xcpretty -s
+    - xcodebuild clean -workspace NoLo-AD.xcworkspace -scheme SchemeName | xcpretty
+    - xcodebuild test -workspace NoLo-AD.xcworkspace -scheme SchemeName | xcpretty -s
  
