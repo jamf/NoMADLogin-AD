@@ -1,17 +1,27 @@
-Preview Release 1 (12/20/2017)
-Login with AD account
-Login with local account
-Create new local account on successful AD authentication
+Beta 1.0 (02/12/2018)
+Moved AD Framework into project for easy building.
+Added EnableFDE mech for VileVault on APFS.
+Added PowerControl mech for Sleep, Restart, and Shut down.
+Fixed user home creation and added home localization.
+Added require SSL preference.
+Adoped autolayout.
+Support for forced password change at login added.
+Fixed typo in naming of _writers_passwd attribute.
 
-Preview Relase 2 (01/08/2018)
-Debug logging
+Preview Release 4 (01/26/2018)
+Convert existing AD Mobile account into a regular local account
 
 Preview Release 3 (01/17/2018)
 Create new account as an admin user
 Preference domain with suitable settings
 Managed AD domain
 
-Preview Release 4 (01/26/2018)
-Convert existing AD Mobile account into a regular local account
+Preview Relase 2 (01/08/2018)
+Debug logging
+
+Preview Release 1 (12/20/2017)
+Login with AD account
+Login with local account
+Create new local account on successful AD authentication
 
 Relevant tags are always avaliable at: https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/tags
