@@ -30,6 +30,7 @@
 		<string>MCXMechanism:login</string>
 		<string>CryptoTokenKit:login</string>
 		<string>loginwindow:done</string>
+        <string>NoMADLoginAD:EnableFDE,privileged</string>
 	</array>
 	<key>modified</key>
 	<real>520882179.73855001</real>
