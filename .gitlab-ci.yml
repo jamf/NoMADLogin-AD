@@ -1,10 +1,10 @@
+# Basic build and test support, even though we really done have tests.
 stages:
   - build
-
 
 build_project:
   stage: build
   script:
-    - xcodebuild clean -workspace NoLo-AD.xcworkspace -scheme NoLo-AD | xcpretty
-    - xcodebuild test -workspace NoLo-AD.xcworkspace -scheme NoLo-AD | xcpretty -s
+    - xcodebuild clean -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty
+    - xcodebuild test -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty -s
  
