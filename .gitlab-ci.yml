@@ -1,10 +1,10 @@
 # Basic build support.
-stages:
-  - build
+#stages:
+#  - build
 
-build_project:
-  stage: build
-  script:
-    - xcodebuild clean -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty
-    - xcodebuild -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty -s
+#build_project:
+#  stage: build
+#  script:
+#    - xcodebuild clean -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty
+#    - xcodebuild -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty -s
  
