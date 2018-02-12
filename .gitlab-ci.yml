@@ -1,0 +1,10 @@
+stages:
+  - build
+
+
+build_project:
+  stage: build
+  script:
+    - xcodebuild clean -workspace NoLo-AD.xcworkspace -scheme NoLo-AD | xcpretty
+    - xcodebuild test -workspace NoLo-AD.xcworkspace -scheme NoLo-AD | xcpretty -s
+ 
