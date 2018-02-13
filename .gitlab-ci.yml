@@ -7,5 +7,5 @@ stages:
 build_project:
   stage: build
   script:
-    - xcodebuild clean -project ProjectName.xcodeproj -scheme SchemeName | xcpretty
-    - xcodebuild  -project ProjectName.xcodeproj -scheme SchemeName  | xcpretty -s
+    - xcodebuild clean -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty
+    - xcodebuild  -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty -s
