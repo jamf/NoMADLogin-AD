@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9C078DF32031E071006E6307 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C078DF22031E071006E6307 /* NoMAD_ADAuth.framework */; };
-		9C078DF42031E07C006E6307 /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C078DF22031E071006E6307 /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
+		9C7FA0B7203369DA00E7D67B /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
+		9C7FA0B8203369EB00E7D67B /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9C7FA0BB20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
 		9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FB202E491E00EA1FE6 /* PowerControl.swift */; };
 		9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */; };
@@ -26,26 +27,37 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9C7FA0B9203369FF00E7D67B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				9C7FA0BB20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9CC74CC61FFED4BF00EBCCD5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9C078DF42031E07C006E6307 /* NoMAD_ADAuth.framework in CopyFiles */,
+				9C7FA0B8203369EB00E7D67B /* NoMAD_ADAuth.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9C078DF22031E071006E6307 /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NoMAD_ADAuth.framework; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAndHintHandling.swift; sourceTree = "<group>"; };
 		9C709EED1FE07D91006C74D1 /* loadAD.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = loadAD.bash; sourceTree = "<group>"; };
 		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
+		9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = Carthage/Build/Mac/NoMAD_ADAuth.framework; sourceTree = "<group>"; };
+		9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = NoMAD_ADAuth.framework.dSYM; path = Carthage/Build/Mac/NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
@@ -70,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C078DF32031E071006E6307 /* NoMAD_ADAuth.framework in Frameworks */,
+				9C7FA0B7203369DA00E7D67B /* NoMAD_ADAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +103,7 @@
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
+				9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */,
 				9C2F03601FEB0B9A0036C08C /* README.md */,
 				9CBDCFB61FC5CE2900CF73F4 /* Base */,
 				9CBDCFB21FC5CE0000CF73F4 /* Mechs */,
@@ -122,7 +135,7 @@
 		9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C078DF22031E071006E6307 /* NoMAD_ADAuth.framework */,
+				9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,6 +187,7 @@
 				9CBDCF981FC4CEE300CF73F4 /* Frameworks */,
 				9CBDCF991FC4CEE300CF73F4 /* Resources */,
 				9CC74CC61FFED4BF00EBCCD5 /* CopyFiles */,
+				9C7FA0B9203369FF00E7D67B /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -375,6 +389,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
@@ -404,6 +419,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = "NoMADLogin-AD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
