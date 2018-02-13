@@ -31,6 +31,10 @@ Now we need to configure the AuthorizationDB so that the NoLoAD bundle will load
 2. Run `sudo ./loadAD.bash` to load in the code bundle. All this script does is run the security command to load in the `console-ad` file to AuthorizationDB.
 
 Now you should be able to logout and find yourself staring at the majesty of NoMAD Login.
+
+### Building from source:
+Take a look in our Wiki to see how to [get started with Carthage and Xcode](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/wikis/Building-From-Source).
+
 ## Using NoLoAD
 Using NoMAD Login AD is easy. Just enter your AD username and password in `username@domain` format and your password. If the domain is visible on the network, NoMAD Login AD will discover the domain details and then authenticate your account. Once that is done it will create a local account that matches the AD one and complete the login. You can then use NoMAD as you normally would from the menu bar to keep the accounts synchronized.
 
