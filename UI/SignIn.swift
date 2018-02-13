@@ -18,6 +18,7 @@ class SignIn: NSWindowController {
     var session: NoMADSession?
     var shortName = ""
     var domainName = ""
+    var passString = ""
     var isDomainManaged = false
     var isSSLRequired = false
     
@@ -47,6 +48,7 @@ class SignIn: NSWindowController {
         // make things look better
         os_log("Tweaking appearance", log: uiLog, type: .debug)
         self.window?.backgroundColor = NSColor.white
+        self.window?.titlebarAppearsTransparent = true
         if !self.domainName.isEmpty {
             username.placeholderString = "Username"
             self.isDomainManaged = true
@@ -83,7 +85,7 @@ class SignIn: NSWindowController {
                 return
             }
             session.useSSL = isSSLRequired
-            session.userPass = password.stringValue
+            session.userPass = passString
             session.delegate = self
             os_log("Attempt to authenticate user", log: uiLog, type: .debug)
             session.authenticate()
@@ -232,6 +234,15 @@ extension SignIn: NoMADUserSessionDelegate {
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
         completeLogin(authResult: .allow)
+    }
+}
+
+//MARK: - NSTextField Delegate
+extension SignIn: NSTextFieldDelegate {
+    public override func controlTextDidChange(_ obj: Notification) {
+        os_log("Passtext updated", log: uiLog, type: .debug)
+        let passField = obj.object as! NSTextField
+        passString = passField.stringValue
     }
 }
 
