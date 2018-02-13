@@ -1,0 +1,11 @@
+before_script
+  - carthage bootstrap
+
+stages:
+  - build
+ 
+build_project:
+  stage: build
+  script:
+    - xcodebuild clean -project ProjectName.xcodeproj -scheme SchemeName | xcpretty
+    - xcodebuild  -project ProjectName.xcodeproj -scheme SchemeName  | xcpretty -s
