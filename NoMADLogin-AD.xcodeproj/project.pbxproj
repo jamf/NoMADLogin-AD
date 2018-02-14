@@ -206,7 +206,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
-				ORGANIZATIONNAME = NoMAD;
+				ORGANIZATIONNAME = "Orchard & Grove";
 				TargetAttributes = {
 					9CBDCF9A1FC4CEE300CF73F4 = {
 						CreatedOnToolsVersion = 9.1;
