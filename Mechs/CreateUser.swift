@@ -10,11 +10,20 @@ import OpenDirectory
 import os.log
 import NoMAD_ADAuth
 
+
+
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
 
     //MARK: - Properties
     let session = ODSession.default()
+    var nativeAttrs = ["dsAttrTypeNative:_writers_AvatarRepresentation",
+                       "dsAttrTypeNative:_writers_hint",
+                       "dsAttrTypeNative:_writers_jpegphoto",
+                       "dsAttrTypeNative:_writers_picture",
+                       "dsAttrTypeNative:_writers_unlockOptions",
+                       "dsAttrTypeNative:_writers_UserCertificate",
+                       "dsAttrTypeNative:_writers_realname"]
 
     @objc func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
@@ -40,7 +49,7 @@ class CreateUser: NoLoMechanism {
                        guid: UUID().uuidString,
                        canChangePass: true,
                        isAdmin: isAdmin,
-                       attributes: nil)
+                       customAttributes: nil)
 
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
@@ -57,7 +66,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, isAdmin: Bool, attributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:Any]?) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
         os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, guid, isAdmin.description)
@@ -88,6 +97,21 @@ class CreateUser: NoLoMechanism {
         }
         os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
 
+        os_log("Setting native attributes", log: createUserLog, type: .debug)
+        if #available(macOS 10.13, *) {
+            os_log("We are on 10.13 so drop the _writers_realname", log: createUserLog, type: .debug)
+            nativeAttrs.removeLast()
+        }
+
+        for item in nativeAttrs {
+            do {
+                os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item)
+                try newRecord?.addValue(shortName, toAttribute: item)
+            } catch {
+                os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item)
+            }
+        }
+
         if canChangePass {
             do {
                 os_log("Setting _writers_passwd for new local user", log: createUserLog, type: .debug)
@@ -106,7 +130,7 @@ class CreateUser: NoLoMechanism {
             }
         }
 
-        if let attributes = attributes {
+        if let attributes = customAttributes {
             os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
             for item in attributes {
                 do {
