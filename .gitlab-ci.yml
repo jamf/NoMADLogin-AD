@@ -9,3 +9,5 @@ build_project:
   script:
     - xcodebuild clean -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty
     - xcodebuild  -project NoMADLogin-AD.xcodeproj -scheme NoMADLoginAD | xcpretty -s
+  artifacts:
+    untracked: true
