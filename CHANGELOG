@@ -1,3 +1,10 @@
+1.0.0 Release (02/15/2018)
+Initial Prod Release
+Removed Sleep button from Loginwindow (#45)
+Fixed login "arrow button" so that you can login with it. (#47)
+Added missing dsNative attributes when creating accounts.
+Adopted sementic versioning. (#49)
+
 Beta 1.0 (02/12/2018)
 Moved AD Framework into project for easy building.
 Added EnableFDE mech for VileVault on APFS.
