@@ -7,6 +7,8 @@
 //
 
 import NoMAD_ADAuth
+import IOKit
+import IOKit.pwr_mgt
 
 enum SpecialUsers: String {
     case noloSleep
@@ -27,7 +29,10 @@ class PowerControl: NoLoMechanism {
 
         switch userName {
         case SpecialUsers.noloSleep.rawValue:
-            os_log("Sleeping system isn't supported yet", log: powerControlLog, type: .error)
+            os_log("Sleeping system.", log: powerControlLog, type: .debug)
+            let port = IOPMFindPowerManagement(mach_port_t(MACH_PORT_NULL))
+            IOPMSleepSystem(port)
+            IOServiceClose(port)
         case SpecialUsers.noloShutdown.rawValue:
             os_log("Shutting system down system", log: powerControlLog, type: .default)
             let _ = cliTask("/sbin/shutdown -h now")

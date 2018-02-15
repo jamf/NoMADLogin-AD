@@ -178,53 +178,14 @@ DQ
                             <action selector="changePassowrd:" target="-2" id="Dep-hk-DUa"/>
                         </connections>
                     </button>
-                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="54" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UUS-jL-biV">
-                        <rect key="frame" x="121" y="32" width="279" height="61"/>
+                    <stackView distribution="fillEqually" orientation="horizontal" alignment="bottom" spacing="19" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UUS-jL-biV">
+                        <rect key="frame" x="121" y="38" width="279" height="55"/>
                         <subviews>
-                            <stackView autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LF9-Yw-kgb" userLabel="Sleep Stack View">
-                                <rect key="frame" x="0.0" y="6" width="61" height="49"/>
-                                <subviews>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="fU9-Oo-l9U">
-                                        <rect key="frame" x="15" y="17" width="32" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="32" id="czM-VU-aXL"/>
-                                            <constraint firstAttribute="width" constant="32" id="taE-Bn-yQV"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Sleep" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="cme-ei-vaG">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="sleepClick:" target="-2" id="RSM-Vy-IPl"/>
-                                        </connections>
-                                    </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nOe-Yg-MBi">
-                                        <rect key="frame" x="12" y="0.0" width="38" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Sleep" id="Syu-m0-PfS">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="nOe-Yg-MBi" secondAttribute="centerX" id="AzH-9T-4Bo"/>
-                                    <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="LF9-Yw-kgb" secondAttribute="centerX" id="S5x-rp-5i6"/>
-                                </constraints>
-                                <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                </visibilityPriorities>
-                                <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                </customSpacing>
-                            </stackView>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YYe-nG-18q" userLabel="Restart Stack View">
-                                <rect key="frame" x="115" y="6" width="44" height="49"/>
+                                <rect key="frame" x="0.0" y="0.0" width="130" height="49"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="KQE-va-A2l" userLabel="Restart Button">
-                                        <rect key="frame" x="6" y="17" width="32" height="32"/>
+                                        <rect key="frame" x="49" y="17" width="32" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="SNv-Xu-c0t"/>
                                             <constraint firstAttribute="width" constant="32" id="bfD-p8-j3b"/>
@@ -238,7 +199,7 @@ DQ
                                         </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5ws-sB-NFB">
-                                        <rect key="frame" x="-2" y="0.0" width="48" height="17"/>
+                                        <rect key="frame" x="41" y="0.0" width="48" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Restart" id="gB0-sY-47z">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -247,7 +208,7 @@ DQ
                                     </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="5ws-sB-NFB" firstAttribute="leading" secondItem="YYe-nG-18q" secondAttribute="leading" id="fCk-VU-Xoj"/>
+                                    <constraint firstItem="5ws-sB-NFB" firstAttribute="centerX" secondItem="KQE-va-A2l" secondAttribute="centerX" id="fDc-Ea-wpp"/>
                                 </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
@@ -259,10 +220,10 @@ DQ
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Od8-0u-vv8" userLabel="Shut Down Stack View">
-                                <rect key="frame" x="213" y="6" width="66" height="55"/>
+                                <rect key="frame" x="149" y="0.0" width="130" height="55"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="XWB-j3-Tsa" userLabel="Shutdown Button">
-                                        <rect key="frame" x="17" y="17" width="32" height="38"/>
+                                        <rect key="frame" x="49" y="17" width="32" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="16S-3H-d8C"/>
                                             <constraint firstAttribute="width" constant="32" id="JJU-2V-vl9"/>
@@ -276,7 +237,7 @@ DQ
                                         </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QCK-Fv-hy4">
-                                        <rect key="frame" x="-2" y="0.0" width="70" height="17"/>
+                                        <rect key="frame" x="30" y="0.0" width="70" height="17"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Shut Down" id="pI0-rR-0JD">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -285,7 +246,7 @@ DQ
                                     </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="QCK-Fv-hy4" firstAttribute="leading" secondItem="Od8-0u-vv8" secondAttribute="leading" id="6jh-RS-Iil"/>
+                                    <constraint firstItem="QCK-Fv-hy4" firstAttribute="centerX" secondItem="XWB-j3-Tsa" secondAttribute="centerX" id="A5A-e6-Wx7"/>
                                 </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
@@ -297,17 +258,11 @@ DQ
                                 </customSpacing>
                             </stackView>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="YYe-nG-18q" firstAttribute="bottom" secondItem="LF9-Yw-kgb" secondAttribute="bottom" id="Erh-uD-zbn"/>
-                            <constraint firstItem="Od8-0u-vv8" firstAttribute="bottom" secondItem="LF9-Yw-kgb" secondAttribute="bottom" id="W2l-fl-Cmo"/>
-                        </constraints>
                         <visibilityPriorities>
-                            <integer value="1000"/>
                             <integer value="1000"/>
                             <integer value="1000"/>
                         </visibilityPriorities>
                         <customSpacing>
-                            <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                         </customSpacing>
@@ -340,6 +295,46 @@ DQ
             </connections>
             <point key="canvasLocation" x="-668" y="98"/>
         </window>
+        <stackView hidden="YES" autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="LF9-Yw-kgb" userLabel="Sleep Stack View">
+            <rect key="frame" x="0.0" y="0.0" width="61" height="49"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="fU9-Oo-l9U">
+                    <rect key="frame" x="15" y="17" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="czM-VU-aXL"/>
+                        <constraint firstAttribute="width" constant="32" id="taE-Bn-yQV"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Sleep" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="cme-ei-vaG">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="sleepClick:" target="-2" id="RSM-Vy-IPl"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nOe-Yg-MBi">
+                    <rect key="frame" x="12" y="0.0" width="38" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Sleep" id="Syu-m0-PfS">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="nOe-Yg-MBi" secondAttribute="centerX" id="AzH-9T-4Bo"/>
+                <constraint firstItem="fU9-Oo-l9U" firstAttribute="centerX" secondItem="LF9-Yw-kgb" secondAttribute="centerX" id="S5x-rp-5i6"/>
+            </constraints>
+            <visibilityPriorities>
+                <integer value="1000"/>
+                <integer value="1000"/>
+            </visibilityPriorities>
+            <customSpacing>
+                <real value="3.4028234663852886e+38"/>
+                <real value="3.4028234663852886e+38"/>
+            </customSpacing>
+        </stackView>
     </objects>
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>

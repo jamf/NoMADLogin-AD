@@ -187,6 +187,9 @@ class SignIn: NSWindowController {
 
     @IBAction func sleepClick(_ sender: Any) {
         os_log("Sleeping system isn't supported yet", log: uiLog, type: .error)
+//        os_log("Setting sleep user", log: uiLog, type: .debug)
+//        setHint(type: .noMADUser, hint: SpecialUsers.noloSleep.rawValue)
+//        completeLogin(authResult: .allow)
     }
 
     @IBAction func restartClick(_ sender: Any) {
