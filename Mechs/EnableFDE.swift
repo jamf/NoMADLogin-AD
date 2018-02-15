@@ -6,7 +6,6 @@
 //  Copyright © 2018 NoMAD. All rights reserved.
 //
 
-import Foundation
 import Cocoa
 
 class EnableFDE : NoLoMechanism {
