@@ -76,8 +76,6 @@ class CreateUser: NoLoMechanism {
         // regardless of if there's more than one value or not
         
         let attrs: [AnyHashable:Any] = [
-            kODAttributeTypeFirstName: [first],
-            kODAttributeTypeLastName: [last],
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
             kODAttributeTypeUserShell: ["/bin/bash"],
