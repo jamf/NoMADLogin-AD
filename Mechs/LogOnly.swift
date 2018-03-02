@@ -63,7 +63,7 @@ class LogOnly : NoLoMechanism {
 
         os_log("Printing all context values:", log: loggerMech, type: .debug)
         for item in contextKeys {
-            if let result = getContext(type: item) {
+            if let result = getContextString(type: item) {
                 os_log("Context item %{public}@: %{public}@", log: loggerMech, type: .default, item, result)
             }
         }
