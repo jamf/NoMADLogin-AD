@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0920"
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "# Set the build number to the count of Git commits&#10;cd ${PROJECT_DIR}&#10;buildNumber=$(git rev-list HEAD | wc -l | tr -d &apos; &apos;)&#10;versionNumber=$(/usr/libexec/PlistBuddy -c &quot;Print :CFBundleShortVersionString&quot; &quot;${PROJECT_DIR}/${INFOPLIST_FILE}&quot; | sed s/-Beta//)&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion $buildNumber&quot; &quot;${PROJECT_DIR}/${INFOPLIST_FILE}&quot;&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleShortVersionString $versionNumber-Beta&quot; &quot;${PROJECT_DIR}/${INFOPLIST_FILE}&quot;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "9CBDCF9A1FC4CEE300CF73F4"
+                     BuildableName = "NoMADLoginAD.bundle"
+                     BlueprintName = "NoMADLoginAD"
+                     ReferencedContainer = "container:NoMADLogin-AD.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9CBDCF9A1FC4CEE300CF73F4"
+               BuildableName = "NoMADLoginAD.bundle"
+               BlueprintName = "NoMADLoginAD"
+               ReferencedContainer = "container:NoMADLogin-AD.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+      </Testables>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "9CBDCF9A1FC4CEE300CF73F4"
+            BuildableName = "NoMADLoginAD.bundle"
+            BlueprintName = "NoMADLoginAD"
+            ReferencedContainer = "container:NoMADLogin-AD.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "9CBDCF9A1FC4CEE300CF73F4"
+            BuildableName = "NoMADLoginAD.bundle"
+            BlueprintName = "NoMADLoginAD"
+            ReferencedContainer = "container:NoMADLogin-AD.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Debug"
+      customArchiveName = "NoLoAD-Beta"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

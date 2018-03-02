@@ -19,9 +19,9 @@ enum HintType: String {
 
 protocol ContextAndHintHandling {
     var mech: MechanismRecord? {get}
-    func setContext(type: String, value: String)
+    func setContextString(type: String, value: String)
     func setHint(type: HintType, hint: String)
-    func getContext(type: String) -> String?
+    func getContextString(type: String) -> String?
     func getHint(type: HintType) -> String?
 }
 
@@ -63,7 +63,7 @@ extension ContextAndHintHandling {
     /// - Parameters:
     ///   - type: A `String` constant from AuthorizationTags.h representing the value to set.
     ///   - value: A `String` value of the context value to set.
-    func setContext(type: String, value: String) {
+    func setContextString(type: String, value: String) {
         let tempdata = value + "\0"
         let data = tempdata.data(using: .utf8)
         var value = AuthorizationValue(length: (data?.count)!, data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
@@ -74,7 +74,7 @@ extension ContextAndHintHandling {
         }
     }
 
-    func getContext(type: String) -> String? {
+    func getContextString(type: String) -> String? {
         var value: UnsafePointer<AuthorizationValue>?
         var flags = AuthorizationContextFlags()
         let err = mech?.fPlugin.pointee.fCallbacks.pointee.GetContextValue((mech?.fEngine)!, type, &flags, &value)
