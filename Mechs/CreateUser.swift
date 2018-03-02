@@ -11,20 +11,27 @@ import os.log
 import NoMAD_ADAuth
 
 
-
 /// Mechanism to create a local user and homefolder.
 class CreateUser: NoLoMechanism {
-
+    
     //MARK: - Properties
     let session = ODSession.default()
-    var nativeAttrs = ["dsAttrTypeNative:_writers_AvatarRepresentation",
-                       "dsAttrTypeNative:_writers_hint",
-                       "dsAttrTypeNative:_writers_jpegphoto",
-                       "dsAttrTypeNative:_writers_picture",
-                       "dsAttrTypeNative:_writers_unlockOptions",
-                       "dsAttrTypeNative:_writers_UserCertificate",
-                       "dsAttrTypeNative:_writers_realname"]
-
+    
+    
+    /// Native attributes that are all set to the user's shortname on account creation to give them
+    /// the ability to update the items later.
+    var nativeAttrsWriters = ["dsAttrTypeNative:_writers_AvatarRepresentation",
+                              "dsAttrTypeNative:_writers_hint",
+                              "dsAttrTypeNative:_writers_jpegphoto",
+                              "dsAttrTypeNative:_writers_picture",
+                              "dsAttrTypeNative:_writers_unlockOptions",
+                              "dsAttrTypeNative:_writers_UserCertificate",
+                              "dsAttrTypeNative:_writers_realname"]
+    
+    /// Native attributes that are simply set to OS defaults on account creation.
+    let nativeAttrsDetails = ["dsAttrTypeNative:AvatarRepresentation": "",
+                              "dsAttrTypeNative:unlockOptions": "0"]
+    
     @objc func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
@@ -32,25 +39,24 @@ class CreateUser: NoLoMechanism {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return
             }
-
+            
             os_log("Checking for createLocalAdmin key", log: createUserLog, type: .debug)
             var isAdmin = false
             if let createAdmin = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.CreateAdminUser.rawValue) {
                 isAdmin = createAdmin
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }
-
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
                        pass: nomadPass!,
                        uid: uid,
                        gid: "20",
-                       guid: UUID().uuidString,
                        canChangePass: true,
                        isAdmin: isAdmin,
                        customAttributes: nil)
-
+            
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
             os_log("Fixup home permissions for: %{public}@", log: createUserLog, type: .debug, nomadUser!)
@@ -66,11 +72,11 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, guid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:Any]?) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
-        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, guid, isAdmin.description)
-
+        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, isAdmin.description)
+        
         // note for anyone following behind me
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
@@ -81,9 +87,10 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypeUserShell: ["/bin/bash"],
             kODAttributeTypeUniqueID: [uid],
             kODAttributeTypePrimaryGroupID: [gid],
-            kODAttributeTypeGUID: [guid]
+            kODAttributeTypeAuthenticationHint: [""],
+            kODAttributeTypePicture: [randomUserPic()]
         ]
-
+        
         do {
             os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
             let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
@@ -94,22 +101,31 @@ class CreateUser: NoLoMechanism {
             return
         }
         os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
-
+        
         os_log("Setting native attributes", log: createUserLog, type: .debug)
         if #available(macOS 10.13, *) {
             os_log("We are on 10.13 so drop the _writers_realname", log: createUserLog, type: .debug)
-            nativeAttrs.removeLast()
+            nativeAttrsWriters.removeLast()
         }
-
-        for item in nativeAttrs {
+        
+        for item in nativeAttrsWriters {
             do {
                 os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item)
                 try newRecord?.addValue(shortName, toAttribute: item)
             } catch {
-                os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item)
+                os_log("Failed to set attribute: %{public}@", log: createUserLog, type: .error, item)
             }
         }
-
+        
+        for item in nativeAttrsDetails {
+            do {
+                os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
+                try newRecord?.addValue(item.value, toAttribute: item.key)
+            } catch {
+                os_log("Failed to set attribute: %{public}@", log: createUserLog, type: .error, item.key)
+            }
+        }
+        
         if canChangePass {
             do {
                 os_log("Setting _writers_passwd for new local user", log: createUserLog, type: .debug)
@@ -118,7 +134,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Unable to set _writers_passwd", log: createUserLog, type: .error)
             }
         }
-
+        
         if let password = pass {
             do {
                 os_log("Setting password for new local user", log: createUserLog, type: .debug)
@@ -127,7 +143,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Error setting password for new local user", log: createUserLog, type: .error)
             }
         }
-
+        
         if let attributes = customAttributes {
             os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
             for item in attributes {
@@ -139,7 +155,7 @@ class CreateUser: NoLoMechanism {
                 }
             }
         }
-
+        
         if isAdmin {
             do {
                 os_log("Find the administrators group", log: createUserLog, type: .debug)
@@ -153,7 +169,7 @@ class CreateUser: NoLoMechanism {
                                              maximumResults: 1)
                 let results = try query.resultsAllowingPartial(false) as! [ODRecord]
                 let adminGroup = results.first
-
+                
                 os_log("Adding user to administrators group", log: createUserLog, type: .debug)
                 try adminGroup?.addMemberRecord(newRecord)
             } catch {
@@ -161,7 +177,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
             }
         }
-
+        
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
     }
     
@@ -182,6 +198,7 @@ class CreateUser: NoLoMechanism {
         return randomString
     }
 
+    //TODO: Change to throws instead of optional.
     /// Finds the first avaliable UID in the DSLocal domain above 500 and returns it as a `String`
     ///
     /// - Returns: `String` representing the UID
@@ -207,6 +224,7 @@ class CreateUser: NoLoMechanism {
         return newUID
     }
 
+    //TODO: Convert to throws
     /// Finds the local homefolder template that corresponds to the locale of the system and copies it into place.
     ///
     /// - Parameter user: The shortname of the user to create a home for as a `String`.
@@ -217,7 +235,7 @@ class CreateUser: NoLoMechanism {
         let templateName = templateForLang(currentLanguage)
         let sourceURL = URL(fileURLWithPath: "/System/Library/User Template/" + templateName)
         let downloadsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
-        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
+        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Documents")
         do {
             os_log("Copying template to /Users", log: createUserLog, type: .debug)
             try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
@@ -228,8 +246,21 @@ class CreateUser: NoLoMechanism {
             os_log("Home template copy failed with: %{public}@", log: createUserLog, type: .error, error.localizedDescription)
         }
     }
-
-
+    
+    /// Looks at the Apple provided User Pictures directory, recurses it, and delivers a random picture path.
+    ///
+    /// - Returns: A `String` path to a random user picture. If there is a failure it returns an empty `String`.
+    func randomUserPic() -> String {
+        let libraryDir = FileManager.default.urls(for: .libraryDirectory, in: .localDomainMask)
+        guard let library = libraryDir.first else {
+            return ""
+        }
+        let picturePath = library.appendingPathComponent("User Pictures", isDirectory: true)
+        let picDirs = try! FileManager.default.contentsOfDirectory(at: picturePath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+        let pics = picDirs.flatMap {try! FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) }
+        return pics[Int(arc4random_uniform(UInt32(pics.count)))].path
+    }
+    
     /// Given an connonical ISO language code, find and return the macOS home folder template name that is appropriate.
     ///
     /// - Parameter code: The `languageCode` of the current user `Locale`.

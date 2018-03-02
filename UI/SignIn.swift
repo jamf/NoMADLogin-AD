@@ -75,7 +75,7 @@ class SignIn: NSWindowController {
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
             os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
-            setPassthroughHints()
+            setRequiredHintsAndContext()
             completeLogin(authResult: .allow)
         } else {
             session = NoMADSession.init(domain: domainName, user: shortName)
@@ -159,14 +159,14 @@ class SignIn: NSWindowController {
     //MARK: - Login Context Functions
 
     /// Set the authorization and context hints. These are the basics we need to passthrough to the next mechanism.
-    fileprivate func setPassthroughHints() {
+    fileprivate func setRequiredHintsAndContext() {
         os_log("Setting hints for user: %{public}@", log: uiLog, type: .debug, shortName)
         setHint(type: .noMADUser, hint: shortName)
-        setHint(type: .noMADPass, hint: password.stringValue)
+        setHint(type: .noMADPass, hint: passString)
 
         os_log("Setting context values for user: %{public}@", log: uiLog, type: .debug, shortName)
-        setContext(type: kAuthorizationEnvironmentUsername, value: shortName)
-        setContext(type: kAuthorizationEnvironmentPassword, value: password.stringValue)
+        setContextString(type: kAuthorizationEnvironmentUsername, value: shortName)
+        setContextString(type: kAuthorizationEnvironmentPassword, value: passString)
     }
 
     /// Complete the NoLo process and either continue to the next Authorization Plugin or reset the NoLo window.
@@ -233,7 +233,7 @@ extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADUserInformation(user: ADUserRecord) {
         os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
-        setPassthroughHints()
+        setRequiredHintsAndContext()
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
         completeLogin(authResult: .allow)
