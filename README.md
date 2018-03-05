@@ -24,7 +24,7 @@ Getting started with NoLoAD is easy, but currently it takes a few steps.  It's a
 Currently NoLoAD is a simple manual install, but we will have a pkg install available soon if you aren't packaging it on your own.
 
 Installing is easy!
-1. Download the [NoMAD Login AD 1.0.1 archive](https://drive.google.com/a/orchardandgrove.com/file/d/12dO1FNL7XTTBUUXQr6Fi93WzmCTwVJ85/view?usp=sharing).
+1. Download the [NoMAD Login AD 1.0.1 archive](https://drive.google.com/open?id=12dO1FNL7XTTBUUXQr6Fi93WzmCTwVJ85).
 2. If you've never installed NoLoAD on the Mac before, you can run the installer package that includes the `authchanger` tool and be done with it.
 
 -or-
