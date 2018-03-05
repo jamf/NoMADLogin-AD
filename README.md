@@ -2,10 +2,10 @@
 
 Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLoAD for short. This project can be seen as a companion to our other AD authentication product for macOS, [NoMAD](https://nomad.menu). You can use either one independently from each other, and both contain all the bits and pieces you need to talk to AD.
 
-NoLoAD is a replacement login window for macOS 10.12 and higher. **(Currently there are known performance issues with 10.12)** It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
+NoLoAD is a replacement login window for macOS 10.12 and higher. **(See our [macOS Sierra page](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/wikis/Support/macOS-Sierra) for solutions to the known performance issues with 10.12)** It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.0.0. There are several enhancements we are working on for the 1.1 release and you can see those in the [1.1 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/5).
+The current production version of NoLoAD is 1.0.1. There are several enhancements we are working on for the 1.1 release and you can see those in the [1.1 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/5).
 
 For those of you that are new here the basic features are:
 
@@ -24,8 +24,12 @@ Getting started with NoLoAD is easy, but currently it takes a few steps.  It's a
 Currently NoLoAD is a simple manual install, but we will have a pkg install available soon if you aren't packaging it on your own.
 
 Installing is easy!
-1. Download the NoMAD Login AD 1.0 archive [NoMAD_Login_AD_1.0.zip](/uploads/6a495bcce1231161b512de9a445e5feb/NoMAD_Login_AD_1.0.zip)
-2. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
+1. Download the [NoMAD Login AD 1.0.1 archive](https://drive.google.com/a/orchardandgrove.com/file/d/12dO1FNL7XTTBUUXQr6Fi93WzmCTwVJ85/view?usp=sharing).
+2. If you've never installed NoLoAD on the Mac before, you can run the installer package that includes the `authchanger` tool and be done with it.
+
+-or-
+
+3. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
 
 Now we need to configure the AuthorizationDB so that the NoLoAD bundle will load at the login window. We've provided some scripts and templates to make this easy to do and easy to undo.
 
@@ -49,14 +53,8 @@ When you decide that you've had enough it's easy to go back to the standard logi
 2. Run `sudo ./resetDB.bash` to reload the default `system.login.console` mechanisms into the AuthorizationDB.
 3. If you've had to do this from a SSH session behind the NoLoAD login window you can simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
 
-## What's new in 1.0.0
-* Removed Sleep button from Loginwindow (#45)
-* Fixed login "arrow button" so that you can login with it. (#47)
-* Added missing dsNative attributes when creating accounts. (#48)
-* Adopted semantic versioning. (#49)
-
-## Known issues
-When logging in on 10.12, the first login for a newly created user may take a long time. Like several minutes long. We are working with Apple to understand why as it happens with users created with NoLoAD or System Preferences and it does not occur on 10.13.
+## What's new in 1.0.1
+* Added workarounds and advice for users on macOS Sierra (#21)
 
 # Thanks
 Thanks to all of you for trying NoMAD Login AD! Please let us know about issues and features in the issue tracker. You can also find us on Slack in [nomad](https://macadmins.slack.com/messages/C1Y2Y14QG) and [nomad-login](https://macadmins.slack.com/messages/C88MFDLV8).
