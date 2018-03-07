@@ -42,7 +42,7 @@ class CreateUser: NoLoMechanism {
             
             os_log("Checking for createLocalAdmin key", log: createUserLog, type: .debug)
             var isAdmin = false
-            if let createAdmin = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.CreateAdminUser.rawValue) {
+            if let createAdmin = getManagedPreference(key: .CreateAdminUser) as? Bool {
                 isAdmin = createAdmin
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }

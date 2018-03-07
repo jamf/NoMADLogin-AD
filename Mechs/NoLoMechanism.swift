@@ -14,7 +14,7 @@ import os.log
 class NoLoMechanism: NSObject {
 
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
-    let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
+    let contextDomain: NSString = "menu.nomad.login"
 
     /// If there is an AD domain set via preferences it will be here in a `String`
     var managedDomain: String?
@@ -45,24 +45,6 @@ class NoLoMechanism: NSObject {
         self.managedDomain = getManagedPreference(key: .ADDomain) as? String
         self.isSSLRequired = getManagedPreference(key: .LDAPOverSSL) as? Bool
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
-    }
-
-    /// Looks in both the `com.trusourcelabs.NoMAD` and `menu.nomad.NoMADLoginAD` Defaults domains for the ADDomain key.
-    /// This domain will override anything the user enters in the username field.
-    ///
-    /// - Returns: The `String` for the ADDomain key if it exists.
-    func getManagedPreference(key: Preferences) -> Any? {
-        guard let preference = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.value(forKey: key.rawValue) else {
-            os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
-            guard let preference = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.value(forKey: key.rawValue) else {
-                os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
-                return nil
-            }
-            os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
-            return preference
-        }
-        os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
-        return preference
     }
 
     var nomadUser: String? {
