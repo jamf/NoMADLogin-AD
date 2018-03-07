@@ -401,7 +401,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Resources @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
+				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
@@ -433,7 +433,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Security/SecurityAgentPlugins";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Resources @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/../Resources";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.NoMADLoginAD;
+				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
