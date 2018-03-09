@@ -16,7 +16,7 @@
 
 ### Relevant logs and/or screenshots
 
-(Attach logs and screenshots when reproducing the issue. See [Debug Logging](wikis/Support/Debug-Logging) for details on capturing logs.)
+(Attach logs and screenshots when reproducing the issue. See Debug Logging in the Wiki for details on capturing logs.)
 
 
 ### Possible fixes
