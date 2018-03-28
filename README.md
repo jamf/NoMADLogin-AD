@@ -27,7 +27,7 @@ Currently NoLoAD is a simple manual install, but we will have a pkg install avai
 
 Installing is easy!
 
-1. Download [NoMAD Login AD](https://files.nomad.com/NoMAD-Login-AD.zip).
+1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.zip).
 2. If you've never installed NoLoAD on the Mac before, you can run the installer package that includes the `authchanger` tool and be done with it.
 
 -or-
