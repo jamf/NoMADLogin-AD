@@ -11,7 +11,7 @@ import NoMAD_ADAuth
 
 class SierraFixes: NoLoMechanism {
 
-    @objc func run() {
+    @objc  func run() {
         os_log("Running SierraFixes mech.", log: sierraFixes, type: .debug)
         if #available(macOS 10.13, *) {
             _ = allowLogin()

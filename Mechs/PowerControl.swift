@@ -18,7 +18,7 @@ enum SpecialUsers: String {
 
 class PowerControl: NoLoMechanism {
 
-    @objc func run() {
+    @objc   func run() {
         os_log("PowerControl mech starting", log: powerControlLog, type: .debug)
 
         guard let userName = nomadUser else {

@@ -45,10 +45,11 @@ class DeMobilize : NoLoMechanism {
         "dsAttrTypeNative:accountPolicyData"
     ]
 
-    @objc func run() {
+    @objc  func run() {
         // Check to see if demobilize is requested
+
         guard getManagedPreference(key: .DemobilizeUsers) as? Bool == true else {
-                os_log("Preference set to not demobilize, skipping.", log: createUserLog, type: .debug)
+                os_log("Preference set to not demobilize, skipping.", log: demobilizeLog, type: .debug)
                 _ = allowLogin()
                 return
         }
