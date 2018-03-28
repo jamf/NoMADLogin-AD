@@ -47,6 +47,7 @@ class NoLoMechanism: NSObject {
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
     }
 
+    
     var nomadUser: String? {
         get {
             guard let userName = getHint(type: .noMADUser) else {
@@ -187,7 +188,26 @@ class NoLoMechanism: NSObject {
         os_log("Results of local user check %{public}@", log: noLoMechlog, type: .debug, isLocal.description)
         return isLocal
     }
+
+    class func verifyUser(name: String, auth: String) -> Bool {
+        os_log("Finding user record", log: noLoMechlog, type: .debug)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        var isValid = false
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+            isValid = ((try records.first?.verifyPassword(auth)) != nil)
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return false
+        }
+        return isValid
+    }
 }
+
 
 //MARK: - ContextAndHintHandling Protocol
 extension NoLoMechanism: ContextAndHintHandling {}

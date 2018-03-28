@@ -32,7 +32,7 @@ class CreateUser: NoLoMechanism {
     let nativeAttrsDetails = ["dsAttrTypeNative:AvatarRepresentation": "",
                               "dsAttrTypeNative:unlockOptions": "0"]
     
-    @objc func run() {
+    @objc   func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
             guard let uid = findFirstAvaliableUID() else {

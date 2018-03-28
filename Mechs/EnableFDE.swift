@@ -13,7 +13,7 @@ class EnableFDE : NoLoMechanism {
     // basic mech to enable FileVault
     // needs to be a separate mech b/c it needs to run after loginwindow:done
     
-    @objc func run() {
+    @objc  func run() {
         
         os_log("Running EnableFDE mech.", log: enableFDELog, type: .debug)
         

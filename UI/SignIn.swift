@@ -11,6 +11,7 @@ import Security.AuthorizationPlugin
 import os.log
 import NoMAD_ADAuth
 
+
 class SignIn: NSWindowController {
     
     //MARK: - setup properties
@@ -21,6 +22,9 @@ class SignIn: NSWindowController {
     var passString = ""
     var isDomainManaged = false
     var isSSLRequired = false
+    var backgroundWindow: NSWindow!
+    var effectWindow: NSWindow!
+    @objc var visible = true
     
     //MARK: - IB outlets
     @IBOutlet weak var username: NSTextField!
@@ -39,24 +43,169 @@ class SignIn: NSWindowController {
     override func windowDidLoad() {
         os_log("Calling super.windowDidLoad", log: uiLog, type: .debug)
         super.windowDidLoad()
-        self.window?.isMovable = false
-        self.window?.canBecomeVisibleWithoutLogin = true
-        os_log("Setting window level", log: uiLog, type: .debug)
-        self.window?.level = NSWindow.Level(rawValue: NSWindow.Level.screenSaver.rawValue + 1)
-        self.window?.orderFrontRegardless()
         
+        os_log("Configure login window", log: uiLog, type: .debug)
+        loginApperance()
+        
+        os_log("create background windows", log: uiLog, type: .debug)
+        createBackgroundWindow()
+
+        os_log("Become first responder", log: uiLog, type: .debug)
+        username.becomeFirstResponder()
+        os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
+    }
+
+
+    fileprivate func createBackgroundWindow() {
+        var image: NSImage?
+        // Is a background image path set? If not just use gray.
+        if let backgroundImage = getManagedPreference(key: .BackgroundImage) as? String  {
+            os_log("BackgroundImage preferences found.", log: uiLog, type: .debug)
+            image = NSImage(contentsOf: URL(fileURLWithPath: backgroundImage))
+        }
+        for screen in NSScreen.screens {
+            let view = NSView()
+            view.wantsLayer = true
+            view.layer!.contents = image
+            
+            backgroundWindow = NSWindow(contentRect: screen.frame,
+                                        styleMask: .fullSizeContentView,
+                                        backing: .buffered,
+                                        defer: true)
+            
+            backgroundWindow.backgroundColor = .gray
+            backgroundWindow.contentView = view
+            backgroundWindow.makeKeyAndOrderFront(self)
+            backgroundWindow.canBecomeVisibleWithoutLogin = true
+
+            let effectView = NSVisualEffectView()
+            effectView.wantsLayer = true
+            effectView.blendingMode = .behindWindow
+            effectView.frame = screen.frame
+            
+            effectWindow = NSWindow(contentRect: screen.frame,
+                                    styleMask: .fullSizeContentView,
+                                    backing: .buffered,
+                                    defer: true)
+            
+            effectWindow.contentView = effectView
+            effectWindow.alphaValue = 0.8
+            effectWindow.orderFrontRegardless()
+            effectWindow.canBecomeVisibleWithoutLogin = true
+        }
+    }
+
+
+    func loginTransition() {
+        os_log("Transitioning... fade our UI away", log: uiLog, type: .debug)
+
+        NSAnimationContext.runAnimationGroup({ (context) in
+            context.duration = 1.0
+            context.allowsImplicitAnimation = true
+            self.window?.alphaValue = 0.0
+            self.backgroundWindow.alphaValue = 0.0
+            self.effectWindow.alphaValue = 0.0
+        }, completionHandler: {
+            os_log("Close all the windows", log: uiLog, type: .debug)
+            self.window?.close()
+            self.backgroundWindow.close()
+            self.effectWindow.close()
+            self.visible = false
+        })
+    }
+    
+    fileprivate func shakeOff() {
+        let origin = NSMakePoint((window?.frame.origin.x)!, (window?.frame.origin.y)!)
+        let left = NSMakePoint(origin.x - 10, origin.y)
+        let right = NSMakePoint(origin.x + 10, origin.y)
+        
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.04
+            context.allowsImplicitAnimation = true
+            self.window?.setFrameOrigin(left)
+        }, completionHandler: {
+            NSAnimationContext.runAnimationGroup({ (context) in
+                context.duration = 0.04
+                context.allowsImplicitAnimation = true
+                self.window?.setFrameOrigin(right)
+            }, completionHandler: {
+                NSAnimationContext.runAnimationGroup({ (context) in
+                    context.duration = 0.04
+                    context.allowsImplicitAnimation = true
+                    self.window?.setFrameOrigin(left)
+                }, completionHandler: {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.04
+                        context.allowsImplicitAnimation = true
+                        self.window?.setFrameOrigin(right)
+                    }, completionHandler: {
+                        NSAnimationContext.runAnimationGroup({ context in
+                            context.duration = 0.04
+                            context.allowsImplicitAnimation = true
+                            self.window?.setFrameOrigin(origin)
+                            self.window?.close()
+                        })
+                    })
+                })
+            })
+        })
+    }
+
+    fileprivate func loginApperance() {
+        os_log("Setting window level", log: uiLog, type: .debug)
+        self.window?.level = .screenSaver
+        self.window?.orderFrontRegardless()
+
         // make things look better
         os_log("Tweaking appearance", log: uiLog, type: .debug)
-        self.window?.backgroundColor = NSColor.white
+        if getManagedPreference(key: .LoginScreen) as? Bool == true {
+            os_log("Present as login screen", log: uiLog, type: .debug)
+            self.window?.isOpaque = false
+            self.window?.hasShadow = false
+            self.window?.backgroundColor = .clear
+        } else {
+            os_log("Present as login window", log: uiLog, type: .debug)
+            self.window?.backgroundColor = NSColor.white
+        }
         self.window?.titlebarAppearsTransparent = true
         if !self.domainName.isEmpty {
             username.placeholderString = "Username"
             self.isDomainManaged = true
         }
-        os_log("Become first responder", log: uiLog, type: .debug)
-        username.becomeFirstResponder()
-        os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
+        self.window?.isMovable = false
+        self.window?.canBecomeVisibleWithoutLogin = true
+
+        if let logoPath = getManagedPreference(key: .LoginLogo) as? String {
+            os_log("Found logoPath: %{public}@", log: uiLog, type: .debug, logoPath)
+            if logoPath == "NONE" {
+                imageView.image = nil
+            } else {
+                imageView.image = NSImage(contentsOf: URL(fileURLWithPath: logoPath))
+            }
+        }
     }
+
+   fileprivate func showResetUI() {
+        os_log("Adjusting UI for change controls", log: uiLog, type: .debug)
+        loginStack.isHidden = true
+        signIn.isHidden = true
+        signIn.isEnabled = false
+        passwordChangeStack.isHidden = false
+        passwordChangeButton.isHidden = false
+        passwordChangeButton.isEnabled = true
+        oldPassword.becomeFirstResponder()
+    }
+
+
+    /// Simple toggle to change the state of the NoLo window UI between active and inactive.
+    fileprivate func loginStartedUI() {
+        signIn.isEnabled = !signIn.isEnabled
+        signIn.isHidden = !signIn.isHidden
+
+        username.isEnabled = !username.isEnabled
+        password.isEnabled = !password.isEnabled
+    }
+
 
     /// When the sign in button is clicked we check a few things.
     ///
@@ -74,9 +223,15 @@ class SignIn: NSWindowController {
         loginStartedUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
-            os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
-            setRequiredHintsAndContext()
-            completeLogin(authResult: .allow)
+            os_log("Verify local user login for %{public}@", log: uiLog, type: .default, shortName)
+            if NoLoMechanism.verifyUser(name: shortName, auth: passString) {
+                os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
+                setRequiredHintsAndContext()
+                completeLogin(authResult: .allow)
+            } else {
+                os_log("Could not verify %{public}@", log: uiLog, type: .default, shortName)
+                completeLogin(authResult: .deny)
+            }
         } else {
             session = NoMADSession.init(domain: domainName, user: shortName)
             os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
@@ -94,7 +249,6 @@ class SignIn: NSWindowController {
 
 
     @IBAction func changePassowrd(_ sender: Any) {
-
         guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
             os_log("New passwords didn't match", log: uiLog, type: .error)
             return
@@ -110,25 +264,6 @@ class SignIn: NSWindowController {
         session?.changePassword()
     }
 
-    func showResetUI() {
-        os_log("Adjusting UI for change controls", log: uiLog, type: .debug)
-        loginStack.isHidden = true
-        signIn.isHidden = true
-        signIn.isEnabled = false
-        passwordChangeStack.isHidden = false
-        passwordChangeButton.isHidden = false
-        passwordChangeButton.isEnabled = true
-        oldPassword.becomeFirstResponder()
-    }
-
-    /// Simple toggle to change the state of the NoLo window UI between active and inactive.
-    fileprivate func loginStartedUI() {
-        signIn.isEnabled = !signIn.isEnabled
-        signIn.isHidden = !signIn.isHidden
-        
-        username.isEnabled = !username.isEnabled
-        password.isEnabled = !password.isEnabled
-    }
 
     /// Format the user and domain from the login window depending on the mode the window is in.
     ///
@@ -156,6 +291,7 @@ class SignIn: NSWindowController {
         shortName = username.stringValue
     }
 
+
     //MARK: - Login Context Functions
 
     /// Set the authorization and context hints. These are the basics we need to passthrough to the next mechanism.
@@ -169,27 +305,37 @@ class SignIn: NSWindowController {
         setContextString(type: kAuthorizationEnvironmentPassword, value: passString)
     }
 
+
     /// Complete the NoLo process and either continue to the next Authorization Plugin or reset the NoLo window.
     ///
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
+        switch authResult {
+        case .allow:
+            os_log("Complete login process with allow", log: uiLog, type: .debug)
+        case .deny:
+            os_log("Complete login process with deny", log: uiLog, type: .debug)
+            window?.close()
+        default:
+            os_log("Complete login process with unknown", log: uiLog, type: .debug)
+            window?.close()
+        }
         os_log("Complete login process", log: uiLog, type: .debug)
         let error = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
         if error != noErr {
             os_log("Got error setting authentication result", log: uiLog, type: .error)
         }
-        loginStartedUI()
-        NSApp.abortModal()
-        self.window?.close()
+        NSApp.stopModal()
     }
+
 
     //MARK: - Sleep, Restart, and Shut Down Actions
 
     @IBAction func sleepClick(_ sender: Any) {
         os_log("Sleeping system isn't supported yet", log: uiLog, type: .error)
-//        os_log("Setting sleep user", log: uiLog, type: .debug)
-//        setHint(type: .noMADUser, hint: SpecialUsers.noloSleep.rawValue)
-//        completeLogin(authResult: .allow)
+        //        os_log("Setting sleep user", log: uiLog, type: .debug)
+        //        setHint(type: .noMADUser, hint: SpecialUsers.noloSleep.rawValue)
+        //        completeLogin(authResult: .allow)
     }
 
     @IBAction func restartClick(_ sender: Any) {
@@ -205,14 +351,11 @@ class SignIn: NSWindowController {
     }
 }
 
+
 //MARK: - NoMADUserSessionDelegate
 extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
-
-        os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
-
-        //TODO: Password change functionality
         switch error {
         case .PasswordExpired:
             os_log("Password is expired or requires change.", log: uiLog, type: .default)
@@ -222,15 +365,15 @@ extension SignIn: NoMADUserSessionDelegate {
             os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
             completeLogin(authResult: .deny)
         }
-
-
     }
+
 
     func NoMADAuthenticationSucceded() {
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
     }
-    
+
+
     func NoMADUserInformation(user: ADUserRecord) {
         os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
         setRequiredHintsAndContext()
@@ -240,14 +383,45 @@ extension SignIn: NoMADUserSessionDelegate {
     }
 }
 
+
 //MARK: - NSTextField Delegate
 extension SignIn: NSTextFieldDelegate {
     public override func controlTextDidChange(_ obj: Notification) {
-        os_log("Passtext updated", log: uiLog, type: .debug)
         let passField = obj.object as! NSTextField
         passString = passField.stringValue
     }
 }
 
+
 //MARK: - ContextAndHintHandling Protocol
 extension SignIn: ContextAndHintHandling {}
+
+extension NSWindow {
+
+    func shakeWindow(){
+        let numberOfShakes      = 3
+        let durationOfShake     = 0.25
+        let vigourOfShake : CGFloat = 0.015
+
+        let frame : CGRect = self.frame
+        let shakeAnimation :CAKeyframeAnimation  = CAKeyframeAnimation()
+
+        let shakePath = CGMutablePath()
+        shakePath.move(to: CGPoint(x: frame.minX, y: frame.minY))
+
+        for _ in 0...numberOfShakes-1 {
+            shakePath.addLine(to: CGPoint(x: frame.minX - frame.size.width * vigourOfShake, y: frame.minY))
+            shakePath.addLine(to: CGPoint(x: frame.minX + frame.size.width * vigourOfShake, y: frame.minY))
+        }
+
+        shakePath.closeSubpath()
+
+        shakeAnimation.path = shakePath;
+        shakeAnimation.duration = durationOfShake;
+
+        self.animations = [NSAnimatablePropertyKey(rawValue: "frameOrigin"):shakeAnimation]
+        self.animator().setFrameOrigin(self.frame.origin)
+    }
+
+}
+
