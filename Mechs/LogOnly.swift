@@ -53,7 +53,7 @@ class LogOnly : NoLoMechanism {
     // class to iterate anything in the context and hits and print them out
     // heavily influenced by the Apple NullAuth sample code
     
-    @objc func run() {
+    @objc  func run() {
         os_log("LogOnly mech starting", log: loggerMech, type: .debug)
 
         os_log("Printing security context arguments", log: loggerMech, type: .debug)

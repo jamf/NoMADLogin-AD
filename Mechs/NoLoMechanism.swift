@@ -14,7 +14,7 @@ import os.log
 class NoLoMechanism: NSObject {
 
     ///  `string` is used to identify the authorization plugin context uniquely to this plugin
-    let contextDomain: NSString = "menu.nomad.NoMADLoginAD"
+    let contextDomain: NSString = "menu.nomad.login"
 
     /// If there is an AD domain set via preferences it will be here in a `String`
     var managedDomain: String?
@@ -47,24 +47,7 @@ class NoLoMechanism: NSObject {
         os_log("Initialization of NoLoSwiftMech complete", log: noLoMechlog, type: .debug)
     }
 
-    /// Looks in both the `com.trusourcelabs.NoMAD` and `menu.nomad.NoMADLoginAD` Defaults domains for the ADDomain key.
-    /// This domain will override anything the user enters in the username field.
-    ///
-    /// - Returns: The `String` for the ADDomain key if it exists.
-    func getManagedPreference(key: Preferences) -> Any? {
-        guard let preference = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.value(forKey: key.rawValue) else {
-            os_log("No NoMAD preferences found. Checking standard NoLoAD domain", log: noLoMechlog, type: .debug)
-            guard let preference = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.value(forKey: key.rawValue) else {
-                os_log("No NoLoAD preferences found.", log: noLoMechlog, type: .debug)
-                return nil
-            }
-            os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
-            return preference
-        }
-        os_log("Found managed preference: %{public}@", log: noLoMechlog, type: .debug, key.rawValue)
-        return preference
-    }
-
+    
     var nomadUser: String? {
         get {
             guard let userName = getHint(type: .noMADUser) else {
@@ -205,7 +188,26 @@ class NoLoMechanism: NSObject {
         os_log("Results of local user check %{public}@", log: noLoMechlog, type: .debug, isLocal.description)
         return isLocal
     }
+
+    class func verifyUser(name: String, auth: String) -> Bool {
+        os_log("Finding user record", log: noLoMechlog, type: .debug)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        var isValid = false
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+            isValid = ((try records.first?.verifyPassword(auth)) != nil)
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return false
+        }
+        return isValid
+    }
 }
+
 
 //MARK: - ContextAndHintHandling Protocol
 extension NoLoMechanism: ContextAndHintHandling {}

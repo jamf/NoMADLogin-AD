@@ -6,10 +6,6 @@
 //  Copyright © 2017 Joel Rennich. All rights reserved.
 //
 
-#ifndef NoMADLoginAD_h
-#define NoMADLoginAD_h
-
-#endif /* NoMADLoginAD_h */
 
 @import Foundation;
 @import Security.AuthorizationPlugin;
@@ -40,6 +36,7 @@ struct MechanismRecord {
     OSType                          fMagic;
     AuthorizationEngineRef          fEngine;
     const PluginRecord *            fPlugin;
+    AuthorizationString             fMechID;
     Boolean                         fCheckAD;
     Boolean                         fCreateUser;
     Boolean                         fLogOnly;

@@ -13,13 +13,13 @@ class EnableFDE : NoLoMechanism {
     // basic mech to enable FileVault
     // needs to be a separate mech b/c it needs to run after loginwindow:done
     
-    @objc func run() {
+    @objc  func run() {
         
         os_log("Running EnableFDE mech.", log: enableFDELog, type: .debug)
         
         // FileVault
         
-        if (UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.EnableFDE.rawValue) ?? false ) {
+        if getManagedPreference(key: .EnableFDE) as? Bool == true {
             enableFDE()
         }
         
@@ -81,9 +81,8 @@ class EnableFDE : NoLoMechanism {
                     
             // write out the PRK if asked to
             
-            if (UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.bool(forKey: Preferences.EnableFDERecoveryKey.rawValue) ?? false ) {
+            if getManagedPreference(key: .EnableFDERecoveryKey) as? Bool == true {
                 do {
-                    
                     os_log("Attempting to write key to: %{public}@", log: enableFDELog, type: .debug, "/var/db/.NoMADFDESetup")
                     try output.write(toFile: "/var/db/.NoMADFDESetup", atomically: true, encoding: String.Encoding.ascii)
                 } catch {
