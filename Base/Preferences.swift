@@ -21,6 +21,8 @@ enum Preferences: String {
     case EnableFDE
     /// Should the PRK be saved to disk for the MDM Escrow Service to collect? Set as a `Bool`.
     case EnableFDERecoveryKey
+    /// Ignore sites in AD. This is a compatibility measure for AD installs that have issues with sites. Set as a `Bool`.
+    case IgnoreSites
     /// Force LDAP lookups to use SSL connections. Requires certificate trust be established. Set as a `Bool`.
     case LDAPOverSSL
     /// A filesystem path to an image to display on the login screen as a `String`.

@@ -242,6 +242,9 @@ class SignIn: NSWindowController {
             session.useSSL = isSSLRequired
             session.userPass = passString
             session.delegate = self
+            if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
+                session.siteIgnore = ignoreSites
+            }
             os_log("Attempt to authenticate user", log: uiLog, type: .debug)
             session.authenticate()
         }
