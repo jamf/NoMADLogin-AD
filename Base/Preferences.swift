@@ -13,6 +13,8 @@ enum Preferences: String {
     case ADDomain
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
+    /// The alpha value of the background image as an Int.
+    case BackgroundImageAlpha
     /// Should new users be created as local administrators? Set as a `Bool`.
     case CreateAdminUser
     /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.

@@ -6,6 +6,7 @@
 
 ### Links / references
 
-/label ~"feature proposal"
+/label ~Screen
+/label ~"Feature Request"
 
 /todo
