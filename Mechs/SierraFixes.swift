@@ -12,19 +12,19 @@ import NoMAD_ADAuth
 class SierraFixes: NoLoMechanism {
 
     @objc  func run() {
-        os_log("Running SierraFixes mech.", log: sierraFixes, type: .debug)
+        os_log("Running SierraFixes mech.", log: sierraFixesLog, type: .debug)
         if #available(macOS 10.13, *) {
             _ = allowLogin()
             return
         }
         killMiniBuddy()
-        os_log("MiniBuddy kill attempted, allow login", log: sierraFixes, type: .debug)
+        os_log("MiniBuddy kill attempted, allow login", log: sierraFixesLog, type: .debug)
         _ = allowLogin()
-        os_log("Completed SierraFixes mech.", log: sierraFixes, type: .debug)
+        os_log("Completed SierraFixes mech.", log: sierraFixesLog, type: .debug)
     }
 
     fileprivate func killMiniBuddy() {
-        os_log("OS version is less than 10.13 so we need to kill SetupAssistantSpringboard and MiniLauncher", log: sierraFixes, type: .debug)
+        os_log("OS version is less than 10.13 so we need to kill SetupAssistantSpringboard and MiniLauncher", log: sierraFixesLog, type: .debug)
         DispatchQueue.main.async {
             sleep(5)
             _ = cliTask("/usr/bin/killall SetupAssistantSpringboard")

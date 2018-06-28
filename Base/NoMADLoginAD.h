@@ -42,11 +42,19 @@ struct MechanismRecord {
     Boolean                         fLogOnly;
     Boolean                         fDeMobilize;
     Boolean                         fPowerControl;
+    Boolean                         fKeychainAdd;
     Boolean                         fEnableFDE;
     Boolean                         fSierraFixes;
 };
 
 typedef struct MechanismRecord MechanismRecord;
+
+// From Security.framework
+extern OSStatus SecKeychainResetLogin(UInt32 passwordLength,
+                                      const void* password,
+                                      Boolean resetSearchList);
+
+extern OSStatus SecKeychainItemSetAccessWithPassword(SecKeychainItemRef item, SecAccessRef access, UInt32 passLength, const void* password);
 
 #pragma mark
 #pragma mark ObjC AuthPlugin Wrapper

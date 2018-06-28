@@ -29,8 +29,19 @@ enum Preferences: String {
     case LDAPOverSSL
     /// A filesystem path to an image to display on the login screen as a `String`.
     case LoginLogo
-    /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
+    /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`.
     case LoginScreen
+
+    // keychainAdd mechanism preferences
+
+    /// Adds a NoMAD entry into the keychain. `Bool` value.
+    case KeychainAddNoMAD
+    /// Adds a NoMAD Pro entry into the keychain. `Bool` value.
+    case KeychainAddNoMADPro
+    /// Should NoLo create a Keychain if none exists. `Bool` value.
+    case KeychainCreate
+    /// Should NoLo reset the Keychain if the login pass doesn't match. `Bool` value.
+    case KeychainReset
 }
 
 
