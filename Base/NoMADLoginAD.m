@@ -96,6 +96,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fLogOnly = (strcmp(mechanismId, "LogOnly") == 0);
     mechanism->fDeMobilize = (strcmp(mechanismId, "DeMobilize") == 0);
     mechanism->fPowerControl = (strcmp(mechanismId, "PowerControl") == 0);
+    mechanism->fKeychainAdd = (strcmp(mechanismId, "KeychainAdd") == 0);
     mechanism->fEnableFDE = (strcmp(mechanismId, "EnableFDE") == 0);
     mechanism->fSierraFixes = (strcmp(mechanismId, "SierraFixes") == 0);
     *outMechanism = mechanism;
@@ -145,6 +146,12 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         NSLog(@"Calling SierraFixes");
         SierraFixes *sierraFixes = [[SierraFixes alloc] initWithMechanism:mechanism];
         [sierraFixes run];
+    }  else if (mechanism->fKeychainAdd) {
+        NSLog(@"Calling KeychainAdd");
+
+        KeychainAdd *keychainAdd = [[KeychainAdd alloc] initWithMechanism:mechanism];
+        [keychainAdd run];
+        NSLog(@"KeychainAdd done");
     }
     return noErr;
 }
