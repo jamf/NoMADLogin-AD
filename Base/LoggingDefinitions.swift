@@ -18,5 +18,5 @@ let demobilizeLog = OSLog(subsystem: "menu.nomad.noload", category: "DemobilizeM
 let powerControlLog = OSLog(subsystem: "menu.nomad.noload", category: "PowerControlMech")
 let enableFDELog = OSLog(subsystem: "menu.nomad.noload", category: "EnableFDELog")
 let sierraFixesLog = OSLog(subsystem: "menu.nomad.noload", category: "SierraFixesLog")
-let keychainAddLog = OSLog(subsystem: "menu.nomad.login", category: "KeychainAdd")
-
+let keychainAddLog = OSLog(subsystem: "menu.nomad.noload", category: "KeychainAdd")
+let eulaLog = OSLog(subsystem: "menu.nomad.noload", category: "EULA")

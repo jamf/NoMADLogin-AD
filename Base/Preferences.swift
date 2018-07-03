@@ -23,17 +23,16 @@ enum Preferences: String {
     case EnableFDE
     /// Should the PRK be saved to disk for the MDM Escrow Service to collect? Set as a `Bool`.
     case EnableFDERecoveryKey
+    /// Path for where the EULA acceptance info goes
+    case EULAPath
+    /// Text for EULA
+    case EULAText
+    /// Headline for EULA
+    case EULATitle
+    /// Subhead for EULA
+    case EULASubTitle
     /// Ignore sites in AD. This is a compatibility measure for AD installs that have issues with sites. Set as a `Bool`.
     case IgnoreSites
-    /// Force LDAP lookups to use SSL connections. Requires certificate trust be established. Set as a `Bool`.
-    case LDAPOverSSL
-    /// A filesystem path to an image to display on the login screen as a `String`.
-    case LoginLogo
-    /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`.
-    case LoginScreen
-
-    // keychainAdd mechanism preferences
-
     /// Adds a NoMAD entry into the keychain. `Bool` value.
     case KeychainAddNoMAD
     /// Adds a NoMAD Pro entry into the keychain. `Bool` value.
@@ -42,6 +41,12 @@ enum Preferences: String {
     case KeychainCreate
     /// Should NoLo reset the Keychain if the login pass doesn't match. `Bool` value.
     case KeychainReset
+    /// Force LDAP lookups to use SSL connections. Requires certificate trust be established. Set as a `Bool`.
+    case LDAPOverSSL
+    /// A filesystem path to an image to display on the login screen as a `String`.
+    case LoginLogo
+    /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`.
+    case LoginScreen
 }
 
 
