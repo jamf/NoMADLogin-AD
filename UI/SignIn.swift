@@ -24,7 +24,6 @@ class SignIn: NSWindowController {
     var isSSLRequired = false
     var backgroundWindow: NSWindow!
     var effectWindow: NSWindow!
-    var passChanged = false
     @objc var visible = true
     
     //MARK: - IB outlets
@@ -64,7 +63,6 @@ class SignIn: NSWindowController {
             os_log("BackgroundImage preferences found.", log: uiLog, type: .debug)
             image = NSImage(contentsOf: URL(fileURLWithPath: backgroundImage))
         }
-
         for screen in NSScreen.screens {
             let view = NSView()
             view.wantsLayer = true
@@ -91,13 +89,7 @@ class SignIn: NSWindowController {
                                     defer: true)
             
             effectWindow.contentView = effectView
-            
-            if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
-                effectWindow.alphaValue = CGFloat.init((backgroundImageAlpha / 100))
-            } else {
-                effectWindow.alphaValue = 0.8
-            }
-            
+            effectWindow.alphaValue = 0.8
             effectWindow.orderFrontRegardless()
             effectWindow.canBecomeVisibleWithoutLogin = true
         }
@@ -250,9 +242,6 @@ class SignIn: NSWindowController {
             session.useSSL = isSSLRequired
             session.userPass = passString
             session.delegate = self
-            if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
-                session.siteIgnore = ignoreSites
-            }
             os_log("Attempt to authenticate user", log: uiLog, type: .debug)
             session.authenticate()
         }
@@ -264,10 +253,6 @@ class SignIn: NSWindowController {
             os_log("New passwords didn't match", log: uiLog, type: .error)
             return
         }
-        
-        // set the passChanged flag
-        
-        passChanged = true
 
         //TODO: Terrible hack to be fixed once AD Framework is refactored
         password.stringValue = newPassword.stringValue
@@ -384,13 +369,6 @@ extension SignIn: NoMADUserSessionDelegate {
 
 
     func NoMADAuthenticationSucceded() {
-        
-        if passChanged {
-            // need to ensure the right password is stashed
-            passString = newPassword.stringValue
-            passChanged = false
-        }
-        
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
     }

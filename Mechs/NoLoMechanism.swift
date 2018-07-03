@@ -88,50 +88,6 @@ class NoLoMechanism: NSObject {
         }
     }
 
-
-    var usernameContext: String? {
-        get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var flags = AuthorizationContextFlags()
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetContextValue(
-                mechEngine, kAuthorizationEnvironmentUsername, &flags, &value)
-
-            if err != errSecSuccess {
-                return nil
-            }
-
-            guard let username = NSString.init(bytes: value!.pointee.data!,
-                                               length: value!.pointee.length,
-                                               encoding: String.Encoding.utf8.rawValue)
-                else { return nil }
-
-            return username.replacingOccurrences(of: "\0", with: "") as String
-        }
-    }
-
-    var passwordContext: String? {
-        get {
-            var value : UnsafePointer<AuthorizationValue>? = nil
-            var flags = AuthorizationContextFlags()
-            var err: OSStatus = noErr
-            err = mechCallbacks.GetContextValue(
-                mechEngine, kAuthorizationEnvironmentPassword, &flags, &value)
-
-            if err != errSecSuccess {
-                return nil
-            }
-            guard let pass = NSString.init(bytes: value!.pointee.data!,
-                                           length: value!.pointee.length,
-                                           encoding: String.Encoding.utf8.rawValue)
-                else { return nil }
-
-            return pass.replacingOccurrences(of: "\0", with: "") as String
-        }
-    }
-
-
-    
     //context value - create user
     func setUID(uid: Int) {
         os_log("Setting context hint for UID: %{public}@", log: noLoMechlog, type: .debug, uid)

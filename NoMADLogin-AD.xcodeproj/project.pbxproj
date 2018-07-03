@@ -14,9 +14,7 @@
 		9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C63B74A203DE22300516AF7 /* SierraFixes.swift */; };
 		9C7FA0B7203369DA00E7D67B /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
 		9C7FA0B8203369EB00E7D67B /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9C8A2609207D917900204336 /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8A2608207D917900204336 /* DataExtension.swift */; };
 		9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */; };
-		9C9E3F5B207D8BDD001C7BB8 /* KeychainAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9E3F5A207D8BDC001C7BB8 /* KeychainAdd.swift */; };
 		9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FB202E491E00EA1FE6 /* PowerControl.swift */; };
 		9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */; };
 		9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */; };
@@ -27,9 +25,6 @@
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */; };
-		9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3320EBEE4000D69F43 /* EULA.swift */; };
-		9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3620EBEED100D69F43 /* EULAUI.swift */; };
-		9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3720EBEED100D69F43 /* EULAUI.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,11 +61,9 @@
 		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
 		9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = Carthage/Build/Mac/NoMAD_ADAuth.framework; sourceTree = "<group>"; };
 		9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = NoMAD_ADAuth.framework.dSYM; path = Carthage/Build/Mac/NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
-		9C8A2608207D917900204336 /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
 		9C9740201FC5DE4500D9EAE6 /* console.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = console.bak; sourceTree = "<group>"; };
-		9C9E3F5A207D8BDC001C7BB8 /* KeychainAdd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainAdd.swift; sourceTree = "<group>"; };
 		9CA733FB202E491E00EA1FE6 /* PowerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerControl.swift; sourceTree = "<group>"; };
 		9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnableFDE.swift; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,9 +78,6 @@
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
-		9CDF3A3320EBEE4000D69F43 /* EULA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULA.swift; sourceTree = "<group>"; };
-		9CDF3A3620EBEED100D69F43 /* EULAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULAUI.swift; sourceTree = "<group>"; };
-		9CDF3A3720EBEED100D69F43 /* EULAUI.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EULAUI.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,8 +154,6 @@
 				9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */,
 				9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */,
 				9C63B74A203DE22300516AF7 /* SierraFixes.swift */,
-				9C9E3F5A207D8BDC001C7BB8 /* KeychainAdd.swift */,
-				9CDF3A3320EBEE4000D69F43 /* EULA.swift */,
 			);
 			path = Mechs;
 			sourceTree = "<group>";
@@ -178,7 +166,6 @@
 				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
 				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
 				9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */,
-				9C8A2608207D917900204336 /* DataExtension.swift */,
 				9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */,
 				9C468F802006A95400A475FC /* Preferences.swift */,
 			);
@@ -188,20 +175,10 @@
 		9CBDCFBB1FC5CE6400CF73F4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				9CDF3A3520EBEED100D69F43 /* EULA */,
 				9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */,
 				9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		9CDF3A3520EBEED100D69F43 /* EULA */ = {
-			isa = PBXGroup;
-			children = (
-				9CDF3A3620EBEED100D69F43 /* EULAUI.swift */,
-				9CDF3A3720EBEED100D69F43 /* EULAUI.xib */,
-			);
-			path = EULA;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,7 +244,6 @@
 			files = (
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
-				9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,16 +258,12 @@
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
 				9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */,
 				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
-				9C8A2609207D917900204336 /* DataExtension.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
-				9C9E3F5B207D8BDD001C7BB8 /* KeychainAdd.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
-				9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */,
-				9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */,
 				9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */,
 				9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */,
 				9C468F812006A95400A475FC /* Preferences.swift in Sources */,
