@@ -30,7 +30,6 @@
 		<string>CryptoTokenKit:login</string>
 		<string>loginwindow:done</string>
         <string>NoMADLoginAD:EnableFDE,privileged</string>
-        <string>NoMADLoginAD:KeychainAdd,privileged</string>
         <string>NoMADLoginAD:SierraFixes,privileged</string>
 	</array>
 	<key>modified</key>
