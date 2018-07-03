@@ -27,6 +27,9 @@
 		9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */; };
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */; };
+		9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3320EBEE4000D69F43 /* EULA.swift */; };
+		9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3620EBEED100D69F43 /* EULAUI.swift */; };
+		9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3720EBEED100D69F43 /* EULAUI.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -82,6 +85,9 @@
 		9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
+		9CDF3A3320EBEE4000D69F43 /* EULA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULA.swift; sourceTree = "<group>"; };
+		9CDF3A3620EBEED100D69F43 /* EULAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULAUI.swift; sourceTree = "<group>"; };
+		9CDF3A3720EBEED100D69F43 /* EULAUI.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EULAUI.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +165,7 @@
 				9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */,
 				9C63B74A203DE22300516AF7 /* SierraFixes.swift */,
 				9C9E3F5A207D8BDC001C7BB8 /* KeychainAdd.swift */,
+				9CDF3A3320EBEE4000D69F43 /* EULA.swift */,
 			);
 			path = Mechs;
 			sourceTree = "<group>";
@@ -181,10 +188,20 @@
 		9CBDCFBB1FC5CE6400CF73F4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				9CDF3A3520EBEED100D69F43 /* EULA */,
 				9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */,
 				9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		9CDF3A3520EBEED100D69F43 /* EULA */ = {
+			isa = PBXGroup;
+			children = (
+				9CDF3A3620EBEED100D69F43 /* EULAUI.swift */,
+				9CDF3A3720EBEED100D69F43 /* EULAUI.xib */,
+			);
+			path = EULA;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,6 +267,7 @@
 			files = (
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
+				9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +290,8 @@
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9C9E3F5B207D8BDD001C7BB8 /* KeychainAdd.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
+				9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */,
+				9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */,
 				9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */,
 				9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */,
 				9C468F812006A95400A475FC /* Preferences.swift in Sources */,

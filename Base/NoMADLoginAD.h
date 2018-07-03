@@ -45,6 +45,7 @@ struct MechanismRecord {
     Boolean                         fKeychainAdd;
     Boolean                         fEnableFDE;
     Boolean                         fSierraFixes;
+    Boolean                         fEULA;
 };
 
 typedef struct MechanismRecord MechanismRecord;
