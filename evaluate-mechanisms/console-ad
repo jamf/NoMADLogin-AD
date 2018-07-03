@@ -12,6 +12,7 @@
 	<array>
 		<string>builtin:policy-banner</string>
 		<string>NoMADLoginAD:CheckAD</string>
+        <string>NoMADLoginAD:EULA</string>
         <string>builtin:login-begin</string>
         <string>NoMADLoginAD:PowerControl,privileged</string>
         <string>NoMADLoginAD:CreateUser,privileged</string>

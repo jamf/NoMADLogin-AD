@@ -16,6 +16,13 @@ class EULA : NoLoMechanism {
     @objc func run() {
         
         os_log("EULA mech starting", log: eulaLog, type: .debug)
+        guard getManagedPreference(key: .EULAText) != nil else {
+            os_log("No EULA text was set", log: eulaLog, type: .debug)
+            os_log("EULA mech complete", log: eulaLog, type: .debug)
+            _ = allowLogin()
+            return
+        }
+        
         os_log("Activating app", log: eulaLog, type: .debug)
         NSApp.activate(ignoringOtherApps: true)
         os_log("Loading XIB", log: eulaLog, type: .debug)
@@ -43,5 +50,4 @@ class EULA : NoLoMechanism {
         
         os_log("EULA mech complete", log: eulaLog, type: .debug)
     }
-
 }

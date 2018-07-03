@@ -13,7 +13,7 @@ enum Preferences: String {
     case ADDomain
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
-    /// The alpha value of the background image as an Int.
+    /// The alpha value of the background image as an `Int`.
     case BackgroundImageAlpha
     /// Should new users be created as local administrators? Set as a `Bool`.
     case CreateAdminUser
@@ -25,19 +25,17 @@ enum Preferences: String {
     case EnableFDERecoveryKey
     /// Path for where the EULA acceptance info goes
     case EULAPath
-    /// Text for EULA
+    /// Text for EULA as a `String`.
     case EULAText
-    /// Headline for EULA
+    /// Headline for EULA as a `String`.
     case EULATitle
-    /// Subhead for EULA
+    /// Subhead for EULA as a `String`.
     case EULASubTitle
     /// Ignore sites in AD. This is a compatibility measure for AD installs that have issues with sites. Set as a `Bool`.
     case IgnoreSites
     /// Adds a NoMAD entry into the keychain. `Bool` value.
     case KeychainAddNoMAD
-    /// Adds a NoMAD Pro entry into the keychain. `Bool` value.
-    case KeychainAddNoMADPro
-    /// Should NoLo create a Keychain if none exists. `Bool` value.
+    /// Should NoLo create a Keychain if it doesn't exist. `Bool` value.
     case KeychainCreate
     /// Should NoLo reset the Keychain if the login pass doesn't match. `Bool` value.
     case KeychainReset
