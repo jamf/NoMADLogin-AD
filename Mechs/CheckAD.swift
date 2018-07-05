@@ -14,6 +14,11 @@ class CheckAD: NoLoMechanism {
     
     @objc func run() {
         os_log("CheckAD mech starting", log: checkADLog, type: .debug)
+        os_log("Checking for autologin.", log: checkADLog, type: .default)
+        if useAutologin() {
+            os_log("CheckAD mech complete", log: checkADLog, type: .debug)
+            _ = allowLogin()
+        }
         os_log("Activating app", log: checkADLog, type: .debug)
         NSApp.activate(ignoringOtherApps: true)
         os_log("Loading XIB", log: checkADLog, type: .debug)
@@ -40,5 +45,37 @@ class CheckAD: NoLoMechanism {
     @objc func tearDown() {
         os_log("Got teardown request", log: checkADLog, type: .debug)
         signIn.loginTransition()
+    }
+
+    func useAutologin() -> Bool {
+        if FileManager.default.fileExists(atPath: "/tmp/nolorun") {
+            os_log("NoLo has run once already. Load regular window as this isn't a reboot", log: checkADLog, type: .debug)
+            return false
+        }
+
+        os_log("NoLo hasn't run, trying autologin", log: checkADLog, type: .debug)
+        try? "Run Once".write(to: URL.init(fileURLWithPath: "/tmp/nolorun"), atomically: true, encoding: String.Encoding.utf8)
+
+        if let uuid = getEFIUUID() {
+            if let name = NoLoMechanism.getShortname(uuid: uuid) {
+                setContextString(type: kAuthorizationEnvironmentUsername, value: name)
+            }
+        }
+        return true
+    }
+    
+    fileprivate func getEFIUUID() -> String? {
+
+        let chosen = IORegistryEntryFromPath(kIOMasterPortDefault, "IODeviceTree:/chosen")
+        var properties : Unmanaged<CFMutableDictionary>?
+        let err = IORegistryEntryCreateCFProperties(chosen, &properties, kCFAllocatorDefault, IOOptionBits.init(bitPattern: 0))
+
+        if err != 0 {
+            return nil
+        }
+
+        guard let props = properties!.takeRetainedValue() as? [ String : AnyHashable ] else { return nil }
+        guard let uuid = props["efilogin-unlock-ident"] as? Data else { return nil }
+        return String.init(data: uuid, encoding: String.Encoding.utf8)
     }
 }
