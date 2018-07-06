@@ -14,7 +14,7 @@ class CheckAD: NoLoMechanism {
     
     @objc func run() {
         os_log("CheckAD mech starting", log: checkADLog, type: .debug)
-        os_log("Checking for autologin.", log: checkADLog, type: .default)
+
         if useAutologin() {
             os_log("CheckAD mech complete", log: checkADLog, type: .debug)
             _ = allowLogin()
@@ -48,6 +48,7 @@ class CheckAD: NoLoMechanism {
     }
 
     func useAutologin() -> Bool {
+        os_log("Checking for autologin.", log: checkADLog, type: .default)
         if FileManager.default.fileExists(atPath: "/tmp/nolorun") {
             os_log("NoLo has run once already. Load regular window as this isn't a reboot", log: checkADLog, type: .debug)
             return false
