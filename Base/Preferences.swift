@@ -11,6 +11,8 @@ import Foundation
 enum Preferences: String {
     /// The desired AD domain as a `String`.
     case ADDomain
+    /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
+    case ADDomainOptional
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
     /// Should new users be created as local administrators? Set as a `Bool`.

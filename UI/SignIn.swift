@@ -270,25 +270,41 @@ class SignIn: NSWindowController {
     /// I.e. are we picking a domain from a list, using a managed domain, or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
         os_log("Format user and domain strings", log: uiLog, type: .debug)
-        guard isDomainManaged else {
-            if !domain.isHidden {
-                os_log("Using domain list", log: uiLog, type: .default)
-                shortName = username.stringValue
-                domainName = (domain.selectedItem?.title.uppercased())!
-            } else {
-                os_log("Using domain from text field", log: uiLog, type: .default)
-                shortName = (username.stringValue.components(separatedBy: "@").first)!
-                domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
-            }
-            return
-        }
-        os_log("Using managed domain", log: uiLog, type: .default)
-        if username.stringValue.contains("@")  {
-            os_log("Removing domain from username", log: uiLog, type: .default)
-            shortName = (username.stringValue.components(separatedBy: "@").first)!
-            return
-        }
+        
+        var providedDomainName = ""
+        
         shortName = username.stringValue
+        if username.stringValue.range(of:"@") != nil {
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            providedDomainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        }
+        
+        if !domain.isHidden {
+            os_log("Using domain from picker", log: uiLog, type: .default)
+            domainName = (domain.selectedItem?.title.uppercased())!
+            return
+        }
+        
+        if !providedDomainName.isEmpty {
+            os_log("Optional domain provided in text field: %{public}@", log: uiLog, type: .default, providedDomainName)
+            if getManagedPreference(key: .ADDomainOptional) as? Bool == true {
+                os_log("Optional domain name allowed by ADDomainOptional allow-all policy", log: uiLog, type: .default)
+                domainName = providedDomainName
+                return
+            }
+            if let optionalDomains = getManagedPreference(key: .ADDomainOptional) as? [String] {
+                guard optionalDomains.contains(providedDomainName) else {
+                    os_log("Optional domain name not allowed by ADDomainOptional whitelist policy", log: uiLog, type: .default)
+                    return
+                }
+                os_log("Optional domain name allowed by ADDomainOptional whitelist policy", log: uiLog, type: .default)
+                domainName = providedDomainName
+                return
+            }
+            os_log("Optional domain not name allowed by ADDomainOptional policy (false or not defined)", log: uiLog, type: .default)
+        }
+        os_log("Using domain from managed domain", log: uiLog, type: .default)
+        return
     }
 
 
