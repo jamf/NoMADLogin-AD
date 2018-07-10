@@ -49,6 +49,10 @@ class CreateUser: NoLoMechanism {
             
             var customAttributes = [String: String]()
             
+            let nomadMetaPrefix = "_nomad"
+            
+            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_didCreateUser"] = "1"
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
