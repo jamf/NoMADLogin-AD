@@ -12,6 +12,7 @@ enum HintType: String {
     case noMADFirst
     case noMADLast
     case noMADFull
+    case noMADGroups
     case uid
     case gid
     case kerberos_principal

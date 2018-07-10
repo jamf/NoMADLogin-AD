@@ -87,6 +87,17 @@ class NoLoMechanism: NSObject {
             return lastName
         }
     }
+    
+    var nomadGroups: [String]? {
+        get {
+            guard let userGroups = getHint(type: .noMADGroups) as? [String] else {
+                os_log("noMADGroups value is empty", log: noLoMechlog, type: .debug)
+                return nil
+            }
+            os_log("Computed nomadgroups accessed: %{public}@", log: noLoMechlog, type: .debug, userGroups)
+            return userGroups
+        }
+    }
 
     //context value - create user
     func setUID(uid: Int) {
