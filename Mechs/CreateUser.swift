@@ -53,6 +53,9 @@ class CreateUser: NoLoMechanism {
             
             customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_didCreateUser"] = "1"
             
+            let currentDate = ISO8601DateFormatter().string(from: Date())
+            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_creationDate"] = currentDate
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
