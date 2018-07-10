@@ -183,6 +183,13 @@ class SignIn: NSWindowController {
                 imageView.image = NSImage(contentsOf: URL(fileURLWithPath: logoPath))
             }
         }
+        
+        if let logoData = getManagedPreference(key: .LoginLogoData) as? Data {
+            os_log("Found LoginLogoData key has a value", log: uiLog, type: .debug)
+            if let image = NSImage(data: logoData) as NSImage? {
+                imageView.image = image
+            }
+        }
     }
 
    fileprivate func showResetUI() {
