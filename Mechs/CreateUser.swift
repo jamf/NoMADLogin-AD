@@ -47,6 +47,8 @@ class CreateUser: NoLoMechanism {
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }
             
+            var customAttributes = [String: String]()
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
@@ -55,7 +57,7 @@ class CreateUser: NoLoMechanism {
                        gid: "20",
                        canChangePass: true,
                        isAdmin: isAdmin,
-                       customAttributes: nil)
+                       customAttributes: customAttributes)
             
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
@@ -72,7 +74,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]?) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
         os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, isAdmin.description)
@@ -144,11 +146,11 @@ class CreateUser: NoLoMechanism {
             }
         }
         
-        if let attributes = customAttributes {
+        if customAttributes?.isEmpty == false {
             os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
-            for item in attributes {
+            for item in customAttributes! {
                 do {
-                    os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
+                    os_log("Setting %{public}@ attribute for new local user, value: %{public}@", log: createUserLog, type: .debug, item.key, item.value)
                     try newRecord?.addValue(item.value, toAttribute: item.key)
                 } catch {
                     os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item.key)
