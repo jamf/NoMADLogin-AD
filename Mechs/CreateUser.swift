@@ -256,8 +256,8 @@ class CreateUser: NoLoMechanism {
             return ""
         }
         let picturePath = library.appendingPathComponent("User Pictures", isDirectory: true)
-        let picDirs = try! FileManager.default.contentsOfDirectory(at: picturePath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-        let pics = picDirs.flatMap {try! FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) }
+        let picDirs = (try? FileManager.default.contentsOfDirectory(at: picturePath, includingPropertiesForKeys: [URLResourceKey.isDirectoryKey], options: .skipsHiddenFiles)) ?? []
+        let pics = picDirs.flatMap {(try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: [URLResourceKey.isRegularFileKey], options: .skipsHiddenFiles)) ?? []}
         return pics[Int(arc4random_uniform(UInt32(pics.count)))].path
     }
     
