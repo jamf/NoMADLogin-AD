@@ -81,6 +81,8 @@ class CreateUser: NoLoMechanism {
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
         
+        let userPicture = randomUserPic()
+        
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
@@ -88,7 +90,7 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypeUniqueID: [uid],
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
-            kODAttributeTypePicture: [randomUserPic()]
+            kODAttributeTypePicture: [userPicture],
         ]
         
         do {
