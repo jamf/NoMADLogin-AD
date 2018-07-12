@@ -83,7 +83,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
         os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, isAdmin.description)
@@ -155,9 +155,9 @@ class CreateUser: NoLoMechanism {
             }
         }
         
-        if customAttributes?.isEmpty == false {
+        if customAttributes.isEmpty == false {
             os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
-            for item in customAttributes! {
+            for item in customAttributes {
                 do {
                     os_log("Setting %{public}@ attribute for new local user, value: %{public}@", log: createUserLog, type: .debug, item.key, item.value)
                     try newRecord?.addValue(item.value, toAttribute: item.key)
