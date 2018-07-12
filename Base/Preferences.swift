@@ -45,6 +45,8 @@ enum Preferences: String {
     case LoginLogo
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`.
     case LoginScreen
+    /// A filesystem path to an image to set the user profile image to as a `String`
+    case UserProfileImage
 }
 
 

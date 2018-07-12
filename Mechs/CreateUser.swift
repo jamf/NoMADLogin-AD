@@ -81,7 +81,14 @@ class CreateUser: NoLoMechanism {
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
         
-        let userPicture = randomUserPic()
+        os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
+        var userPicture = getManagedPreference(key: .UserProfileImage) as? String
+        
+        if userPicture != nil && !FileManager.default.fileExists(atPath: userPicture!) {
+            os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
+            userPicture = randomUserPic()
+        }
+        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture!)
         
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
