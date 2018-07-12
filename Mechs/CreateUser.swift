@@ -87,7 +87,7 @@ class CreateUser: NoLoMechanism {
         // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
         // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
 
-        let picData = NSData(contentsOfFile: userPicture)
+        let picData = NSData(contentsOfFile: userPicture!)
         
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
