@@ -11,6 +11,8 @@ import Foundation
 enum Preferences: String {
     /// The desired AD domain as a `String`.
     case ADDomain
+    /// A string to show as the placeholder in the Username textfield
+    case UsernameFieldPlaceholder
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
     /// The alpha value of the background image as an `Int`.
