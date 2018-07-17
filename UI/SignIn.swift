@@ -180,6 +180,11 @@ class SignIn: NSWindowController {
             username.placeholderString = "Username"
             self.isDomainManaged = true
         }
+        if let usernamePlaceholder = getManagedPreference(key: .UsernameFieldPlaceholder) as? String {
+            os_log("Username Field Placeholder preferences found.", log: uiLog, type: .debug)
+            username.placeholderString = usernamePlaceholder
+        }
+        
         self.window?.isMovable = false
         self.window?.canBecomeVisibleWithoutLogin = true
 
