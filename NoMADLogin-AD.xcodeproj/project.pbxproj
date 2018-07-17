@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
+		9C573A8920FE6EA20013E141 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
 		9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C63B74A203DE22300516AF7 /* SierraFixes.swift */; };
 		9C7FA0B7203369DA00E7D67B /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
@@ -36,8 +37,9 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 16;
 			files = (
+				9C573A8920FE6EA20013E141 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
