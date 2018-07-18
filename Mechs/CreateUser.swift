@@ -47,6 +47,17 @@ class CreateUser: NoLoMechanism {
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }
             
+            os_log("Checking for CreateAdminIfGroupMember groups", log: uiLog, type: .debug)
+            if let adminGroups = getManagedPreference(key: .CreateAdminIfGroupMember) as? [String] {
+                os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+                nomadGroups?.forEach { group in
+                    if adminGroups.contains(group) {
+                        isAdmin = true
+                        os_log("User is a member of %{public}@ group. Setting isAdmin = true ", log: uiLog, type: .debug, group)
+                    }
+                }
+            }
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
