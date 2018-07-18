@@ -57,6 +57,16 @@ class NoLoMechanism: NSObject {
             return userName
         }
     }
+    
+    var nomadDomain: String? {
+        get {
+            guard let domainName = getHint(type: .noMADDomain) as? String else {
+                return nil
+            }
+            os_log("Computed nomadDomain accessed: %{public}@", log: noLoMechlog, type: .debug, domainName)
+            return domainName
+        }
+    }
 
     var nomadPass: String? {
         get {

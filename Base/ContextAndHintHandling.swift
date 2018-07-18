@@ -8,6 +8,7 @@
 
 enum HintType: String {
     case noMADUser
+    case noMADDomain
     case noMADPass
     case noMADFirst
     case noMADLast
