@@ -19,6 +19,8 @@ enum Preferences: String {
     case BackgroundImageAlpha
     /// Should new users be created as local administrators? Set as a `Bool`.
     case CreateAdminUser
+    /// List of groups that should have its members created as local administrators. Set as an Array of Strings of the group name.
+    case CreateAdminIfGroupMember
     /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
     case DemobilizeUsers
     /// Should FDE be enabled at first login on APFS disks? Set as a `Bool`.
@@ -47,6 +49,8 @@ enum Preferences: String {
     case LoginLogo
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`.
     case LoginScreen
+    /// A filesystem path to an image to set the user profile image to as a `String`
+    case UserProfileImage
 }
 
 

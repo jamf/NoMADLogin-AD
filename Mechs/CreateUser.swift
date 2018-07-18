@@ -47,6 +47,17 @@ class CreateUser: NoLoMechanism {
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }
             
+            os_log("Checking for CreateAdminIfGroupMember groups", log: uiLog, type: .debug)
+            if let adminGroups = getManagedPreference(key: .CreateAdminIfGroupMember) as? [String] {
+                os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+                nomadGroups?.forEach { group in
+                    if adminGroups.contains(group) {
+                        isAdmin = true
+                        os_log("User is a member of %{public}@ group. Setting isAdmin = true ", log: uiLog, type: .debug, group)
+                    }
+                }
+            }
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
@@ -81,6 +92,21 @@ class CreateUser: NoLoMechanism {
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
         
+        os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
+        var userPicture = getManagedPreference(key: .UserProfileImage) as? String
+        
+        if userPicture != nil && !FileManager.default.fileExists(atPath: userPicture!) {
+            os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
+            userPicture = randomUserPic()
+        }
+        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture!)
+        
+        // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
+        // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
+        // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
+
+        let picData = NSData(contentsOfFile: userPicture!)
+        
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
@@ -88,7 +114,8 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypeUniqueID: [uid],
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
-            kODAttributeTypePicture: [randomUserPic()]
+            kODAttributeTypePicture: [userPicture],
+            kODAttributeTypeJPEGPhoto: [picData]
         ]
         
         do {

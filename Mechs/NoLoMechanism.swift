@@ -50,7 +50,7 @@ class NoLoMechanism: NSObject {
     
     var nomadUser: String? {
         get {
-            guard let userName = getHint(type: .noMADUser) else {
+            guard let userName = getHint(type: .noMADUser) as? String else {
                 return nil
             }
             os_log("Computed nomadUser accessed: %{public}@", log: noLoMechlog, type: .debug, userName)
@@ -60,7 +60,7 @@ class NoLoMechanism: NSObject {
 
     var nomadPass: String? {
         get {
-            guard let userPass = getHint(type: .noMADPass) else {
+            guard let userPass = getHint(type: .noMADPass) as? String else {
                 return nil
             }
             os_log("Computed nomadPass accessed: %@", log: noLoMechlog, type: .debug, userPass)
@@ -70,7 +70,7 @@ class NoLoMechanism: NSObject {
 
     var nomadFirst: String? {
         get {
-            guard let firstName = getHint(type: .noMADFirst) else {
+            guard let firstName = getHint(type: .noMADFirst) as? String else {
                 return nil
             }
             os_log("Computed nomadFirst accessed: %{public}@", log: noLoMechlog, type: .debug, firstName)
@@ -80,11 +80,22 @@ class NoLoMechanism: NSObject {
 
     var nomadLast: String? {
         get {
-            guard let lastName = getHint(type: .noMADLast) else {
+            guard let lastName = getHint(type: .noMADLast) as? String else {
                 return nil
             }
             os_log("Computed nomadLast accessed: %{public}@", log: noLoMechlog, type: .debug, lastName)
             return lastName
+        }
+    }
+    
+    var nomadGroups: [String]? {
+        get {
+            guard let userGroups = getHint(type: .noMADGroups) as? [String] else {
+                os_log("noMADGroups value is empty", log: noLoMechlog, type: .debug)
+                return nil
+            }
+            os_log("Computed nomadgroups accessed: %{public}@", log: noLoMechlog, type: .debug, userGroups)
+            return userGroups
         }
     }
 

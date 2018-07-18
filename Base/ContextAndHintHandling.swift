@@ -12,6 +12,7 @@ enum HintType: String {
     case noMADFirst
     case noMADLast
     case noMADFull
+    case noMADGroups
     case uid
     case gid
     case kerberos_principal
@@ -20,9 +21,9 @@ enum HintType: String {
 protocol ContextAndHintHandling {
     var mech: MechanismRecord? {get}
     func setContextString(type: String, value: String)
-    func setHint(type: HintType, hint: String)
+    func setHint(type: HintType, hint: Any)
     func getContextString(type: String) -> String?
-    func getHint(type: HintType) -> String?
+    func getHint(type: HintType) -> Any?
 }
 
 extension ContextAndHintHandling {
@@ -30,8 +31,12 @@ extension ContextAndHintHandling {
     ///
     /// - Parameters:
     ///   - type: A value from `HintType` representing the NoMad Login value to set.
-    ///   - hint: A `String` of the hint value to set.
-    func setHint(type: HintType, hint: String) {
+    ///   - hint: The hint value to set. Can be `String` or `[String]`
+    func setHint(type: HintType, hint: Any) {
+        guard (hint is String || hint is [String]) else {
+            NSLog("NoMAD Login Set hint failed: data type of hint is not supported")
+            return
+        }
         let data = NSKeyedArchiver.archivedData(withRootObject: hint)
         var value = AuthorizationValue(length: data.count, data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetHintValue((mech?.fEngine)!, type.rawValue, &value))!
@@ -41,7 +46,7 @@ extension ContextAndHintHandling {
         }
     }
 
-    func getHint(type: HintType) -> String? {
+    func getHint(type: HintType) -> Any? {
         var value : UnsafePointer<AuthorizationValue>? = nil
         var err: OSStatus = noErr
         err = (mech?.fPlugin.pointee.fCallbacks.pointee.GetHintValue((mech?.fEngine)!, type.rawValue, &value))!
@@ -55,7 +60,7 @@ extension ContextAndHintHandling {
                 NSLog("NoMADLogin: couldn't unpack hint value \(type)")
                 return nil
         }
-            return (result as! String)
+        return result
     }
 
     /// Set one of the known `AuthorizationTags` values to be used during mechanism evaluation.
