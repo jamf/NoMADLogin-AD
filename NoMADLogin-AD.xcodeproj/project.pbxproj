@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
+		9C573A8920FE6EA20013E141 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0BA20336A1500E7D67B /* NoMAD_ADAuth.framework.dSYM */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
-		9C63B748203DC1C800516AF7 /* com.apple.loginwindow.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C63B747203DC19F00516AF7 /* com.apple.loginwindow.plist */; };
 		9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C63B74A203DE22300516AF7 /* SierraFixes.swift */; };
 		9C7FA0B7203369DA00E7D67B /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
 		9C7FA0B8203369EB00E7D67B /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -37,9 +37,9 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 16;
 			files = (
-				9C63B748203DC1C800516AF7 /* com.apple.loginwindow.plist in CopyFiles */,
+				9C573A8920FE6EA20013E141 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +60,6 @@
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextAndHintHandling.swift; sourceTree = "<group>"; };
-		9C63B747203DC19F00516AF7 /* com.apple.loginwindow.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.apple.loginwindow.plist; sourceTree = "<group>"; };
 		9C63B74A203DE22300516AF7 /* SierraFixes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SierraFixes.swift; sourceTree = "<group>"; };
 		9C709EED1FE07D91006C74D1 /* loadAD.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = loadAD.bash; sourceTree = "<group>"; };
 		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
@@ -173,7 +172,6 @@
 		9CBDCFB61FC5CE2900CF73F4 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				9C63B747203DC19F00516AF7 /* com.apple.loginwindow.plist */,
 				9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */,
 				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
 				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
