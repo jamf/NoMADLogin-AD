@@ -70,7 +70,7 @@ class LogOnly : NoLoMechanism {
 
         os_log("Printing all hint values:", log: loggerMech, type: .debug)
         for item in hintKeys {
-            if let result = getHint(type: HintType(rawValue: item)!) {
+            if let result = getHint(type: HintType(rawValue: item)!) as? String {
                 os_log("Hint item %{public}@: %{public}@", log: loggerMech, type: .default, item, result)
             }
         }

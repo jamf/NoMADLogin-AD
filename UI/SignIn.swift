@@ -180,6 +180,11 @@ class SignIn: NSWindowController {
             username.placeholderString = "Username"
             self.isDomainManaged = true
         }
+        if let usernamePlaceholder = getManagedPreference(key: .UsernameFieldPlaceholder) as? String {
+            os_log("Username Field Placeholder preferences found.", log: uiLog, type: .debug)
+            username.placeholderString = usernamePlaceholder
+        }
+        
         self.window?.isMovable = false
         self.window?.canBecomeVisibleWithoutLogin = true
 
@@ -401,6 +406,7 @@ extension SignIn: NoMADUserSessionDelegate {
         setRequiredHintsAndContext()
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
+        setHint(type: .noMADGroups, hint: user.groups)
         completeLogin(authResult: .allow)
     }
 }

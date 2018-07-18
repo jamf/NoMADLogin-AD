@@ -50,7 +50,7 @@ class NoLoMechanism: NSObject {
     
     var nomadUser: String? {
         get {
-            guard let userName = getHint(type: .noMADUser) else {
+            guard let userName = getHint(type: .noMADUser) as? String else {
                 return nil
             }
             os_log("Computed nomadUser accessed: %{public}@", log: noLoMechlog, type: .debug, userName)
@@ -60,7 +60,7 @@ class NoLoMechanism: NSObject {
 
     var nomadPass: String? {
         get {
-            guard let userPass = getHint(type: .noMADPass) else {
+            guard let userPass = getHint(type: .noMADPass) as? String else {
                 return nil
             }
             os_log("Computed nomadPass accessed: %@", log: noLoMechlog, type: .debug, userPass)
@@ -70,7 +70,7 @@ class NoLoMechanism: NSObject {
 
     var nomadFirst: String? {
         get {
-            guard let firstName = getHint(type: .noMADFirst) else {
+            guard let firstName = getHint(type: .noMADFirst) as? String else {
                 return nil
             }
             os_log("Computed nomadFirst accessed: %{public}@", log: noLoMechlog, type: .debug, firstName)
@@ -80,11 +80,22 @@ class NoLoMechanism: NSObject {
 
     var nomadLast: String? {
         get {
-            guard let lastName = getHint(type: .noMADLast) else {
+            guard let lastName = getHint(type: .noMADLast) as? String else {
                 return nil
             }
             os_log("Computed nomadLast accessed: %{public}@", log: noLoMechlog, type: .debug, lastName)
             return lastName
+        }
+    }
+    
+    var nomadGroups: [String]? {
+        get {
+            guard let userGroups = getHint(type: .noMADGroups) as? [String] else {
+                os_log("noMADGroups value is empty", log: noLoMechlog, type: .debug)
+                return nil
+            }
+            os_log("Computed nomadgroups accessed: %{public}@", log: noLoMechlog, type: .debug, userGroups)
+            return userGroups
         }
     }
 
@@ -250,7 +261,36 @@ class NoLoMechanism: NSObject {
         }
         return isValid
     }
+
+    /// Gets shortname from a UUID
+    ///
+    /// - Parameters:
+    ///   - uuid: the uuid of the user to check as a `String`.
+    /// - Returns: shortname of the user or nil.
+    class func getShortname(uuid: String) -> String? {
+
+        os_log("Checking for username from UUID", log: noLoMechlog, type: .debug)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeGUID, matchType: ODMatchType(kODMatchEqualTo), queryValues: uuid, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return nil
+        }
+
+        if records.count != 1 {
+            return nil
+        } else {
+            return records.first?.recordName
+        }
+    }
 }
+
+
 
 
 //MARK: - ContextAndHintHandling Protocol
