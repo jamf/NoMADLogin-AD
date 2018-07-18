@@ -16,8 +16,10 @@ class CheckAD: NoLoMechanism {
         os_log("CheckAD mech starting", log: checkADLog, type: .debug)
 
         if useAutologin() {
+            os_log("Using autologin", log: checkADLog, type: .debug)
             os_log("CheckAD mech complete", log: checkADLog, type: .debug)
             _ = allowLogin()
+            return
         }
         os_log("Activating app", log: checkADLog, type: .debug)
         NSApp.activate(ignoringOtherApps: true)
@@ -66,7 +68,6 @@ class CheckAD: NoLoMechanism {
     }
     
     fileprivate func getEFIUUID() -> String? {
-
         let chosen = IORegistryEntryFromPath(kIOMasterPortDefault, "IODeviceTree:/chosen")
         var properties : Unmanaged<CFMutableDictionary>?
         let err = IORegistryEntryCreateCFProperties(chosen, &properties, kCFAllocatorDefault, IOOptionBits.init(bitPattern: 0))
