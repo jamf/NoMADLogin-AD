@@ -429,6 +429,7 @@ extension SignIn: NoMADUserSessionDelegate {
         setRequiredHintsAndContext()
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
+        setHint(type: .noMADDomain, hint: domainName)
         setHint(type: .noMADGroups, hint: user.groups)
         completeLogin(authResult: .allow)
     }
