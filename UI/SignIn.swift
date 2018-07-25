@@ -205,7 +205,7 @@ class SignIn: NSWindowController {
         }
     }
 
-   fileprivate func showResetUI() {
+    fileprivate func showResetUI() {
         os_log("Adjusting UI for change controls", log: uiLog, type: .debug)
         loginStack.isHidden = true
         signIn.isHidden = true
@@ -311,25 +311,33 @@ class SignIn: NSWindowController {
             domainName = (domain.selectedItem?.title.uppercased())!
             return
         }
-        
+
+        if providedDomainName == domainName {
+            os_log("Provided domain matches  managed domain", log: uiLog, type: .default)
+            return
+        }
+
         if !providedDomainName.isEmpty {
             os_log("Optional domain provided in text field: %{public}@", log: uiLog, type: .default, providedDomainName)
-            if getManagedPreference(key: .ADDomainOptional) as? Bool == true {
-                os_log("Optional domain name allowed by ADDomainOptional allow-all policy", log: uiLog, type: .default)
+            if getManagedPreference(key: .AdditionalADDomains) as? Bool == true {
+                os_log("Optional domain name allowed by AdditionalADDomains allow-all policy", log: uiLog, type: .default)
                 domainName = providedDomainName
                 return
             }
-            if let optionalDomains = getManagedPreference(key: .ADDomainOptional) as? [String] {
+
+            if let optionalDomains = getManagedPreference(key: .AdditionalADDomains) as? [String] {
                 guard optionalDomains.contains(providedDomainName) else {
-                    os_log("Optional domain name not allowed by ADDomainOptional whitelist policy", log: uiLog, type: .default)
+                    os_log("Optional domain name not allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
                     return
                 }
-                os_log("Optional domain name allowed by ADDomainOptional whitelist policy", log: uiLog, type: .default)
+                os_log("Optional domain name allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
                 domainName = providedDomainName
                 return
             }
-            os_log("Optional domain not name allowed by ADDomainOptional policy (false or not defined)", log: uiLog, type: .default)
+
+            os_log("Optional domain not name allowed by AdditionalADDomains policy (false or not defined)", log: uiLog, type: .default)
         }
+
         os_log("Using domain from managed domain", log: uiLog, type: .default)
         return
     }

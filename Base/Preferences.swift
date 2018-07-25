@@ -12,7 +12,7 @@ enum Preferences: String {
     /// The desired AD domain as a `String`.
     case ADDomain
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
-    case ADDomainOptional
+    case AdditionalADDomains
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
     /// The alpha value of the background image as an `Int`.
