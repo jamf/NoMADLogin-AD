@@ -103,20 +103,24 @@ class CreateUser: NoLoMechanism {
         // regardless of if there's more than one value or not
         
         os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
-        var userPicture = getManagedPreference(key: .UserProfileImage) as? String
+
+
+        var userPicture = getManagedPreference(key: .UserProfileImage) as? String ?? ""
         
-        if userPicture != nil && !FileManager.default.fileExists(atPath: userPicture!) {
+        if userPicture.isEmpty && !FileManager.default.fileExists(atPath: userPicture) {
             os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
             userPicture = randomUserPic()
         }
-        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture!)
+
+        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture)
         
         // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
         // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
         // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
+        let picURL = URL(fileURLWithPath: userPicture)
+        let picData = NSData(contentsOf: picURL)
+        let picString = picData?.description ?? ""
 
-        let picData = NSData(contentsOfFile: userPicture!)
-        
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
@@ -125,7 +129,7 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
             kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picData]
+            kODAttributeTypeJPEGPhoto: [picString]
         ]
         
         do {
