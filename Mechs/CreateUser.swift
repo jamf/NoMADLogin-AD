@@ -47,6 +47,27 @@ class CreateUser: NoLoMechanism {
                 os_log("Found a createLocalAdmin key value: %{public}@", log: createUserLog, type: .debug, isAdmin.description)
             }
             
+            os_log("Checking for CreateAdminIfGroupMember groups", log: uiLog, type: .debug)
+            if let adminGroups = getManagedPreference(key: .CreateAdminIfGroupMember) as? [String] {
+                os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+                nomadGroups?.forEach { group in
+                    if adminGroups.contains(group) {
+                        isAdmin = true
+                        os_log("User is a member of %{public}@ group. Setting isAdmin = true ", log: uiLog, type: .debug, group)
+                    }
+                }
+            }
+            var customAttributes = [String: String]()
+            
+            let nomadMetaPrefix = "_nomad"
+            
+            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_didCreateUser"] = "1"
+            
+            let currentDate = ISO8601DateFormatter().string(from: Date())
+            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_creationDate"] = currentDate
+            
+            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_domain"] = nomadDomain!
+            
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
@@ -55,7 +76,7 @@ class CreateUser: NoLoMechanism {
                        gid: "20",
                        canChangePass: true,
                        isAdmin: isAdmin,
-                       customAttributes: nil)
+                       customAttributes: customAttributes)
             
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
@@ -72,15 +93,34 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:Any]?) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
-        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, guid: %{public}@, isAdmin: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, isAdmin.description)
+        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, canChangePass: %{public}@, isAdmin: %{public}@, customAttributes: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, canChangePass.description, isAdmin.description, customAttributes)
         
         // note for anyone following behind me
         // you need to specify the attribute values in an array
         // regardless of if there's more than one value or not
         
+        os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
+
+
+        var userPicture = getManagedPreference(key: .UserProfileImage) as? String ?? ""
+        
+        if userPicture.isEmpty && !FileManager.default.fileExists(atPath: userPicture) {
+            os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
+            userPicture = randomUserPic()
+        }
+
+        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture)
+        
+        // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
+        // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
+        // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
+        let picURL = URL(fileURLWithPath: userPicture)
+        let picData = NSData(contentsOf: picURL)
+        let picString = picData?.description ?? ""
+
         let attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
@@ -88,7 +128,8 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypeUniqueID: [uid],
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
-            kODAttributeTypePicture: [randomUserPic()]
+            kODAttributeTypePicture: [userPicture],
+            kODAttributeTypeJPEGPhoto: [picString]
         ]
         
         do {
@@ -144,11 +185,11 @@ class CreateUser: NoLoMechanism {
             }
         }
         
-        if let attributes = customAttributes {
+        if customAttributes.isEmpty == false {
             os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
-            for item in attributes {
+            for item in customAttributes {
                 do {
-                    os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
+                    os_log("Setting %{public}@ attribute for new local user, value: %{public}@", log: createUserLog, type: .debug, item.key, item.value)
                     try newRecord?.addValue(item.value, toAttribute: item.key)
                 } catch {
                     os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item.key)
@@ -256,8 +297,8 @@ class CreateUser: NoLoMechanism {
             return ""
         }
         let picturePath = library.appendingPathComponent("User Pictures", isDirectory: true)
-        let picDirs = try! FileManager.default.contentsOfDirectory(at: picturePath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-        let pics = picDirs.flatMap {try! FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) }
+        let picDirs = (try? FileManager.default.contentsOfDirectory(at: picturePath, includingPropertiesForKeys: [URLResourceKey.isDirectoryKey], options: .skipsHiddenFiles)) ?? []
+        let pics = picDirs.flatMap {(try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: [URLResourceKey.isRegularFileKey], options: .skipsHiddenFiles)) ?? []}
         return pics[Int(arc4random_uniform(UInt32(pics.count)))].path
     }
     

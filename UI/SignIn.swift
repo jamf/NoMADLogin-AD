@@ -24,6 +24,7 @@ class SignIn: NSWindowController {
     var isSSLRequired = false
     var backgroundWindow: NSWindow!
     var effectWindow: NSWindow!
+    var passChanged = false
     @objc var visible = true
     
     //MARK: - IB outlets
@@ -63,6 +64,7 @@ class SignIn: NSWindowController {
             os_log("BackgroundImage preferences found.", log: uiLog, type: .debug)
             image = NSImage(contentsOf: URL(fileURLWithPath: backgroundImage))
         }
+
         for screen in NSScreen.screens {
             let view = NSView()
             view.wantsLayer = true
@@ -89,7 +91,13 @@ class SignIn: NSWindowController {
                                     defer: true)
             
             effectWindow.contentView = effectView
-            effectWindow.alphaValue = 0.8
+            
+            if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
+                effectWindow.alphaValue = CGFloat.init((backgroundImageAlpha / 100))
+            } else {
+                effectWindow.alphaValue = 0.8
+            }
+            
             effectWindow.orderFrontRegardless()
             effectWindow.canBecomeVisibleWithoutLogin = true
         }
@@ -172,6 +180,11 @@ class SignIn: NSWindowController {
             username.placeholderString = "Username"
             self.isDomainManaged = true
         }
+        if let usernamePlaceholder = getManagedPreference(key: .UsernameFieldPlaceholder) as? String {
+            os_log("Username Field Placeholder preferences found.", log: uiLog, type: .debug)
+            username.placeholderString = usernamePlaceholder
+        }
+        
         self.window?.isMovable = false
         self.window?.canBecomeVisibleWithoutLogin = true
 
@@ -183,9 +196,16 @@ class SignIn: NSWindowController {
                 imageView.image = NSImage(contentsOf: URL(fileURLWithPath: logoPath))
             }
         }
+        
+        if let logoData = getManagedPreference(key: .LoginLogoData) as? Data {
+            os_log("Found LoginLogoData key has a value", log: uiLog, type: .debug)
+            if let image = NSImage(data: logoData) as NSImage? {
+                imageView.image = image
+            }
+        }
     }
 
-   fileprivate func showResetUI() {
+    fileprivate func showResetUI() {
         os_log("Adjusting UI for change controls", log: uiLog, type: .debug)
         loginStack.isHidden = true
         signIn.isHidden = true
@@ -242,6 +262,9 @@ class SignIn: NSWindowController {
             session.useSSL = isSSLRequired
             session.userPass = passString
             session.delegate = self
+            if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
+                session.siteIgnore = ignoreSites
+            }
             os_log("Attempt to authenticate user", log: uiLog, type: .debug)
             session.authenticate()
         }
@@ -253,6 +276,10 @@ class SignIn: NSWindowController {
             os_log("New passwords didn't match", log: uiLog, type: .error)
             return
         }
+        
+        // set the passChanged flag
+        
+        passChanged = true
 
         //TODO: Terrible hack to be fixed once AD Framework is refactored
         password.stringValue = newPassword.stringValue
@@ -270,25 +297,49 @@ class SignIn: NSWindowController {
     /// I.e. are we picking a domain from a list, using a managed domain, or putting it on the user name with '@'.
     fileprivate func prepareAccountStrings() {
         os_log("Format user and domain strings", log: uiLog, type: .debug)
-        guard isDomainManaged else {
-            if !domain.isHidden {
-                os_log("Using domain list", log: uiLog, type: .default)
-                shortName = username.stringValue
-                domainName = (domain.selectedItem?.title.uppercased())!
-            } else {
-                os_log("Using domain from text field", log: uiLog, type: .default)
-                shortName = (username.stringValue.components(separatedBy: "@").first)!
-                domainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
-            }
-            return
-        }
-        os_log("Using managed domain", log: uiLog, type: .default)
-        if username.stringValue.contains("@")  {
-            os_log("Removing domain from username", log: uiLog, type: .default)
-            shortName = (username.stringValue.components(separatedBy: "@").first)!
-            return
-        }
+        
+        var providedDomainName = ""
+        
         shortName = username.stringValue
+        if username.stringValue.range(of:"@") != nil {
+            shortName = (username.stringValue.components(separatedBy: "@").first)!
+            providedDomainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
+        }
+        
+        if !domain.isHidden {
+            os_log("Using domain from picker", log: uiLog, type: .default)
+            domainName = (domain.selectedItem?.title.uppercased())!
+            return
+        }
+
+        if providedDomainName == domainName {
+            os_log("Provided domain matches  managed domain", log: uiLog, type: .default)
+            return
+        }
+
+        if !providedDomainName.isEmpty {
+            os_log("Optional domain provided in text field: %{public}@", log: uiLog, type: .default, providedDomainName)
+            if getManagedPreference(key: .AdditionalADDomains) as? Bool == true {
+                os_log("Optional domain name allowed by AdditionalADDomains allow-all policy", log: uiLog, type: .default)
+                domainName = providedDomainName
+                return
+            }
+
+            if let optionalDomains = getManagedPreference(key: .AdditionalADDomains) as? [String] {
+                guard optionalDomains.contains(providedDomainName) else {
+                    os_log("Optional domain name not allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
+                    return
+                }
+                os_log("Optional domain name allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
+                domainName = providedDomainName
+                return
+            }
+
+            os_log("Optional domain not name allowed by AdditionalADDomains policy (false or not defined)", log: uiLog, type: .default)
+        }
+
+        os_log("Using domain from managed domain", log: uiLog, type: .default)
+        return
     }
 
 
@@ -369,6 +420,13 @@ extension SignIn: NoMADUserSessionDelegate {
 
 
     func NoMADAuthenticationSucceded() {
+        
+        if passChanged {
+            // need to ensure the right password is stashed
+            passString = newPassword.stringValue
+            passChanged = false
+        }
+        
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
     }
@@ -379,6 +437,8 @@ extension SignIn: NoMADUserSessionDelegate {
         setRequiredHintsAndContext()
         setHint(type: .noMADFirst, hint: user.firstName)
         setHint(type: .noMADLast, hint: user.lastName)
+        setHint(type: .noMADDomain, hint: domainName)
+        setHint(type: .noMADGroups, hint: user.groups)
         completeLogin(authResult: .allow)
     }
 }
