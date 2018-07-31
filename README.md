@@ -5,7 +5,9 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.1.0. There are several enhancements we are working on for the 1.2 release and you can see those in the [1.2 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/7).
+The current production version of NoLoAD is 1.2.0. There are several enhancements we are working on for the 1.3 release and you can see those in the [1.3 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/8).
+
+We would like to give a **huge** thanks to new contributor Joseph Rafferty. A lot of his pull requests really helped get the 1.2 release out the door.
 
 For those of you that are new to NoLo, the basic features are:
 
@@ -16,6 +18,18 @@ For those of you that are new to NoLo, the basic features are:
 * Ability to enable FileVault on APFS without a logout
 * Choose between a macOS-style loginscreen, or the older loginwindow types
 * Customize the login screen with your own art and background
+* Display a EULA for users to accept on login
+* Create a keychain item for NoMAD
+
+## What's new in 1.2.0
+* Support for more than one managed domain (#97)
+* Support for FDE passthrough from EFI unlock to the Desktop for FileVault (#74 & #82)
+* KeychainAdd mechanism allows for NoLoAD to add a NoMAD Keychain item or reset the Login keychain if passwords don't match. (#79)
+* EULA mechanism allows for user acceptance of terms to complete login process
+* Blured effect layer over the background image at login can have alpha adustments. (#71)
+* The placeholder text in the username field can be changed. (#96)
+* Admin user creation can be gated by groups. (#32)
+* Users created by NoMAD Login have an account attribute added to indicate so. (#26)
 
 Please file any issues, or requested features, in the [project issue tracker](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/issues).
 
@@ -23,12 +37,11 @@ Please file any issues, or requested features, in the [project issue tracker](ht
 Getting started with NoLoAD is easy, but currently it takes a few steps.  It's also easy to revert to the Apple login window in case you run in to any issues.
 
 ### To install:
-Currently NoLoAD is a simple manual install, but we will have a pkg install available soon if you aren't packaging it on your own.
 
 Installing is easy!
 
 1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.zip).
-2. If you've never installed NoLoAD on the Mac before, you can run the installer package that includes the `authchanger` tool and be done with it.
+2. You can just run the installer package that includes the `authchanger` tool and be done with it. The only reason not to do this is if you have made other changes to the `system.login.console` rights.
 
 -or-
 
@@ -58,10 +71,6 @@ When you decide that you've had enough it's easy to go back to the standard logi
 2. Run `sudo ./resetDB.bash` to reload the default `system.login.console` mechanisms into the AuthorizationDB.
 3. If you've had to do this from a SSH session behind the NoLoAD login window you can simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
 
-## What's new in 1.1.0
-* Added better authentication failure UI (#25)
-* Changed the bundle ID and defaults domain to menu.nomad.login.ad (#54)
-* Added the ability to customize the login UI (#30, #41)
 
 # Thanks
 Thanks to all of you for trying NoMAD Login AD! Please let us know about issues and features in the issue tracker. You can also find us on Slack in [nomad](https://macadmins.slack.com/messages/C1Y2Y14QG) and [nomad-login](https://macadmins.slack.com/messages/C88MFDLV8).
