@@ -26,7 +26,7 @@ For those of you that are new to NoLo, the basic features are:
 * Support for FDE passthrough from EFI unlock to the Desktop for FileVault (#74 & #82)
 * KeychainAdd mechanism allows for NoLoAD to add a NoMAD Keychain item or reset the Login keychain if passwords don't match. (#79)
 * EULA mechanism allows for user acceptance of terms to complete login process
-* Blured effect layer over the background image at login can have alpha adustments. (#71)
+* Blured effect layer over the background image at login can have alpha adjustments. (#71)
 * The placeholder text in the username field can be changed. (#96)
 * Admin user creation can be gated by groups. (#32)
 * Users created by NoMAD Login have an account attribute added to indicate so. (#26)
