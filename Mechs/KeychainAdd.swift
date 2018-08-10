@@ -24,71 +24,55 @@ class KeychainAdd : NoLoMechanism {
         // get username and password
         // get reference to user's keychain
         // add items
-        
-        username = usernameContext ?? "" //getContextString(type: kAuthorizationEnvironmentUsername) ?? ""
-        userpass = passwordContext ?? "" //getContextString(type: kAuthorizationEnvironmentPassword) ?? ""
-        
-        // touch a file to show we're here
-        
+        var err : OSStatus?
+        var userKeychainTemp : SecKeychain?
+        var userKeychain: SecKeychain?
+        username = usernameContext ?? ""
+        userpass = passwordContext ?? ""
+
         let (uid, home) = checkUIDandHome(name: username)
-        
-        // TODO: find user's home directory via OD APIs
-        
-        var err : OSStatus? = nil
-        var userKeychainTemp : SecKeychain? = nil
-        var userKeychain: SecKeychain? = nil
-        
-        if home == nil {
+
+        guard let homeDir = home else {
             os_log("Unable to get home directory path.", log: keychainAddLog, type: .error)
-            completeLogin(authResult: .allow)
+            allowLogin()
             return
         }
-        
-        if uid == nil {
-            // can't get uid
+
+        guard let userUID = uid else {
             os_log("Unable to get uid.", log: keychainAddLog, type: .error)
-            completeLogin(authResult: .allow)
+            allowLogin()
             return
-            
         }
-        
-        //pthread_setugid_np(uid!, gid_t.init(Double(20)))
-        
+
         // switch uid to user so we have access to home directory and other things
-        
-        seteuid(uid!)
-        
-        let userKeychainPath = home! + "/Library/Keychains/login.keychain-db"
-        
+        seteuid(userUID)
+
         // check to ensure the keychain is there
-        
-        
+        let userKeychainPath = homeDir + "/Library/Keychains/login.keychain-db"
         if !fm.fileExists(atPath: userKeychainPath) {
-            
             // if we're not set to create a keychain, move on
             if getManagedPreference(key: .KeychainCreate) as? Bool == true {
                 os_log("No login.keychain-db, creating one", log: keychainAddLog)
                 SecKeychainResetLogin(UInt32(userpass.count), userpass, true)
             } else {
                 os_log("No login.keychain-db, skipping KeychainAdd", log: keychainAddLog, type: .default)
-                completeLogin(authResult: .allow)
+                allowLogin()
                 return
             }
         }
         
         // now test it we can unlock the keychain
-        
         let tempPath = userKeychainPath + Date().timeIntervalSinceNow.description
         
-        // need to do this on a hardlink to not prevent the keychain reset from working
-        
+        // need to do this on a hardlink to not prevent the keychain reset from working by leaving a handle open
         link(userKeychainPath, tempPath)
         
-        os_log("Getting Temp Keychain reference.", log: uiLog)
+        os_log("Getting Temp Keychain reference.", log: keychainAddLog, type: .info)
         
         err = SecKeychainOpen(tempPath, &userKeychainTemp)
+
         
-        os_log("Unlocking Temp Keychain.", log: uiLog)
+        os_log("Unlocking Temp Keychain.", log: keychainAddLog, type: .info)
         
         err = SecKeychainUnlock(userKeychainTemp, UInt32(userpass.count), userpass, true)
         
@@ -98,28 +82,19 @@ class KeychainAdd : NoLoMechanism {
         
         userKeychainTemp = nil
         
-        if err != 0 && uid != nil {
+        if err != noErr {
             os_log("Unable to unlock keychain reference.", log: keychainAddLog, type: .default)
             
             // check if we should reset
             if getManagedPreference(key: .KeychainReset) as? Bool == true {
                 os_log("Resetting keychain password.", log: keychainAddLog, type: .info)
-                if uid != nil {
-                    clearKeychain(path: home!)
-                }
+                clearKeychain(path: homeDir)
             } else {
                 os_log("Keychain is locked, exiting.", log: keychainAddLog, type: .info)
-                completeLogin(authResult: .allow)
+                allowLogin()
                 return
             }
         }
-        
-        //if let createPass = getManagedPreference(key: .CreateNoMADPasswords) as? Bool {
-        //    if !createPass {
-        //        completeLogin(authResult: .allow)
-        //        return
-        //    }
-        //}
         
         if getManagedPreference(key: .KeychainAddNoMAD) as? Bool == true {
             
@@ -140,6 +115,7 @@ class KeychainAdd : NoLoMechanism {
             if let domain = getManagedPreference(key: .ADDomain) as? String {
                 kItemAccount += "@" + domain.uppercased()
             }
+
             let kItemPass = passwordContext
             
             // set up an item dictionary
@@ -167,14 +143,14 @@ class KeychainAdd : NoLoMechanism {
                 os_log("NoMAD not installed.", log: keychainAddLog, type: .error)
             }
             
-//            if fm.fileExists(atPath: "/Applications/NoMAD Pro.app", isDirectory: nil) {
-//                err = SecTrustedApplicationCreateFromPath("/Applications/NoMAD Pro.app", &nomadProTrust)
-//                if err == 0 {
-//                    secApps.append(nomadProTrust!)
-//                }
-//            } else {
-//                os_log("NoMAD Pro not installed.", log: keychainAddLog, type: .error)
-//            }
+            //            if fm.fileExists(atPath: "/Applications/NoMAD Pro.app", isDirectory: nil) {
+            //                err = SecTrustedApplicationCreateFromPath("/Applications/NoMAD Pro.app", &nomadProTrust)
+            //                if err == 0 {
+            //                    secApps.append(nomadProTrust!)
+            //                }
+            //            } else {
+            //                os_log("NoMAD Pro not installed.", log: keychainAddLog, type: .error)
+            //            }
             
             itemAttrs[kSecAttrType as String] = "genp" as AnyObject
             //itemAttrs[kSecValueRef as String ] = kItemPass as AnyObject
@@ -217,7 +193,7 @@ class KeychainAdd : NoLoMechanism {
                 if err != 0 {
                     os_log("Unable to create new keychain item.", log: keychainAddLog, type: .info)
                     
-                    completeLogin(authResult: .allow)
+                    allowLogin()
                     return
                 }
             }
@@ -285,24 +261,31 @@ class KeychainAdd : NoLoMechanism {
                 
                 err = SecKeychainItemSetAccessWithPassword(keychainItem!, itemAccess!, UInt32((kItemPass?.count)!), kItemPass)
             }
+
+            guard let nomadDefaults = UserDefaults.init(suiteName: "com.trusourcelabs.NoMAD") else {
+                os_log("Could not get NoMAD Pref suite.", log: keychainAddLog, type: .debug)
+                allowLogin()
+                return
+            }
+
+            os_log("Setting LasUser pref to %{public}@", log: keychainAddLog, type: .debug, kItemAccount)
+            nomadDefaults.set(usernameContext, forKey: "LastUser")
             
             if err != 0 {
                 os_log("Error setting up keychain item.", log: keychainAddLog, type: .error)
             }
         }
-        
         // Always complete the login process
-        
-        completeLogin(authResult: .allow)
+        allowLogin()
     }
-    
+
+
     func clearKeychain(path: String) {
         
         // find the hardware UUID to kill the local items keychain
-        
         let service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
-        let hardwareRaw = IORegistryEntryCreateCFProperty(service, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0)
-        let uuid = hardwareRaw?.takeRetainedValue() as? String ?? ""
+        guard let hardwareRaw = IORegistryEntryCreateCFProperty(service, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0) else { return }
+        let uuid = hardwareRaw.takeRetainedValue() as? String ?? ""
         
         if uuid != "" {
             // we have a uuid, now delete the folder
@@ -318,15 +301,7 @@ class KeychainAdd : NoLoMechanism {
         
         SecKeychainResetLogin(UInt32(userpass.count), userpass, true)
     }
-    
-    fileprivate func completeLogin(authResult: AuthorizationResult) {
-        os_log("Complete login process", log: uiLog, type: .debug)
-        seteuid(uid_t.init(Double(0)))
-        let error = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
-        if error != noErr {
-            os_log("Got error setting authentication result", log: uiLog, type: .error)
-        }
-    }
+
     
     // Create keychain item
     
@@ -349,9 +324,10 @@ class KeychainAdd : NoLoMechanism {
             os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
             return (nil, nil)
         }
-        
-        if records.count == 1 {
-            
+
+        if records.count > 1 {
+            os_log("More than one record. ", log: keychainAddLog, type: .info)
+        }
             do {
                 let home = try records.first?.values(forAttribute: kODAttributeTypeNFSHomeDirectory) as? [String] ?? nil
                 let uid = try records.first?.values(forAttribute: kODAttributeTypeUniqueID) as? [String] ?? nil
@@ -360,24 +336,7 @@ class KeychainAdd : NoLoMechanism {
                 return ( uidt, home?.first ?? nil)
             } catch {
                 os_log("Unable to get home.", log: keychainAddLog, type: .error)
-                
-                return (nil, nil)
-            }
-            
-        } else {
-            os_log("More than one record. ", log: keychainAddLog, type: .error)
-            
-            do {
-                let home = try records.first?.values(forAttribute: kODAttributeTypeNFSHomeDirectory) as? [String] ?? nil
-                let uid = try records.first?.values(forAttribute: kODAttributeTypeUniqueID) as? [String] ?? nil
-                
-                let uidt = uid_t.init(Double.init((uid?.first) ?? "0")! )
-                return ( uidt, home?.first ?? nil)
-            } catch {
-                os_log("Unable to get home.", log: keychainAddLog, type: .error)
-                
                 return (nil, nil)
             }
         }
     }
-}

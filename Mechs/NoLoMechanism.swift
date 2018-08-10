@@ -202,23 +202,21 @@ class NoLoMechanism: NSObject {
 
     //MARK: - Mechanism Verdicts
     // Allow the login. End of the mechanism
-    func allowLogin() -> OSStatus {
+    func allowLogin() {
         os_log("Allowing login", log: noLoMechlog, type: .default)
         let error = mechCallbacks.SetResult(mechEngine, .allow)
         if error != noErr {
             logOSStatusErr(error, sender: "allowLogin")
         }
-        return error
     }
     
     // disallow login
-    func denyLogin() -> OSStatus {
+    func denyLogin() {
         os_log("Denying login", log: noLoMechlog, type: .default)
         let error = mechCallbacks.SetResult(mechEngine, .deny)
         if error != noErr {
             logOSStatusErr(error, sender: "denyLogin")
         }
-        return error
     }
 
     /// A simple method to send an OSStatus Error to the os.log error log with the name of the calling function.
