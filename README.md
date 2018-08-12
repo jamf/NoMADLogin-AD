@@ -5,7 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.2.0. There are several enhancements we are working on for the 1.3 release and you can see those in the [1.3 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/8).
+The current production version of NoLoAD is 1.2.1. There are several enhancements we are working on for the 1.3 release and you can see those in the [1.3 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/8).
 
 We would like to give a **huge** thanks to new contributor Joseph Rafferty. A lot of his pull requests really helped get the 1.2 release out the door.
 
@@ -20,6 +20,11 @@ For those of you that are new to NoLo, the basic features are:
 * Customize the login screen with your own art and background
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
+
+## What's new in 1.2.1
+* KeychainAdd mechanism also adds a `LastUser` value to the NoMAD preferences. This allows NoMAD to login on first launch. (#89)
+* EULA mechanism should only run when expect now. (#108)
+* authchanger updated to prevent garbage being entered into authorizationdb. (#109)
 
 ## What's new in 1.2.0
 * Support for more than one managed domain (#97)
@@ -43,14 +48,11 @@ Installing is easy!
 1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.zip).
 2. You can just run the installer package that includes the `authchanger` tool and be done with it. The only reason not to do this is if you have made other changes to the `system.login.console` rights.
 
--or-
+If you want to be more manual about the process for testing you can still use the older console scripts.
 
-3. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
-
-Now we need to configure the AuthorizationDB so that the NoLoAD bundle will load at the login window. We've provided some scripts and templates to make this easy to do and easy to undo.
-
-1. Open a Terminal window in the evaluate-mechanisms folder of the NoLoAD archive.
-2. Run `sudo ./loadAD.bash` to load in the code bundle. All this script does is run the security command to load in the `console-ad` file to AuthorizationDB.
+1. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
+2. Open a Terminal window in the evaluate-mechanisms folder of the NoLoAD archive.
+3. Run `sudo ./loadAD.bash` to load in the code bundle. All this script does is run the security command to load in the `console-ad` file to AuthorizationDB.
 
 Now you should be able to logout and find yourself staring at the majesty of NoMAD Login.
 
@@ -67,6 +69,9 @@ Enticing you to stay now is the ability to customize the login experience with y
 ## I want to get off this crazy ride!
 When you decide that you've had enough it's easy to go back to the standard login window.
 
+The easy way is to simply run `/usr/local/bin authchanger -reset`.
+
+If you are testing with the console scripts, or just feel like doing it this way...
 1. Open a Terminal window in the evaluate-mechanisms folder of the NoLoAD archive.
 2. Run `sudo ./resetDB.bash` to reload the default `system.login.console` mechanisms into the AuthorizationDB.
 3. If you've had to do this from a SSH session behind the NoLoAD login window you can simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
