@@ -1,3 +1,26 @@
+1.2.1 (08/12/2018)
+KeychainAdd mechanism also adds a LastUser value to the NoMAD preferences. This allows NoMAD to login on first launch. (#89)
+EULA mechanism should only run when expect now. (#108)
+authchanger updated to prevent garbage being entered into authorizationdb. (#109)
+
+1.2.0 (07/31/2018)
+Support for more than one managed domain (#97)
+Support for FDE passthrough from EFI unlock to the Desktop for FileVault (#74 & #82)
+KeychainAdd mechanism allows for NoLoAD to add a NoMAD Keychain item or reset the Login keychain if passwords don't match. (#79)
+EULA mechanism allows for user acceptance of terms to complete login process
+Blured effect layer over the background image at login can have alpha adjustments. (#71)
+The placeholder text in the username field can be changed. (#96)
+Admin user creation can be gated by groups. (#32)
+Users created by NoMAD Login have an account attribute added to indicate so. (#26)
+
+1.1.0 (03/28/2018)
+Added better authentication failure UI (#25)
+Changed the bundle ID and defaults domain to menu.nomad.login.ad (#54)
+Added the ability to customize the login UI (#30, #41)
+
+1.0.1 (03/02/2018)
+Added workarounds and advice for users on macOS Sierra (#21)
+
 1.0.0 Release (02/15/2018)
 Initial Prod Release
 Removed Sleep button from Loginwindow (#45)
