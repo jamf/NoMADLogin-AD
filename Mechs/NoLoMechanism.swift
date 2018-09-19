@@ -253,6 +253,36 @@ class NoLoMechanism: NSObject {
         os_log("Results of local user check %{public}@", log: noLoMechlog, type: .debug, isLocal.description)
         return isLocal
     }
+    
+    /// Checks to see if a given user exits in the DSLocal OD node AND was created by NoLo
+    ///
+    /// - Parameter name: The shortname of the user to check as a `String`.
+    /// - Returns: `true` if the user already exists locally and was created by NoLo. Otherwise `false`.
+    class func checkForNoMADUser(name: String) -> Bool {
+        os_log("Checking for local username", log: noLoMechlog, type: .debug)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return false
+        }
+        for record in records {
+            if let values = try? record.values(forAttribute: "dsAttrTypeNative:\(nomadMetaPrefix)_didCreateUser") {
+                for value in values {
+                    if value as? String == "1" {
+                        os_log("User was created by NoLo", log: noLoMechlog, type: .debug)
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
 
     class func verifyUser(name: String, auth: String) -> Bool {
         os_log("Finding user record", log: noLoMechlog, type: .debug)
