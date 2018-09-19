@@ -30,6 +30,8 @@ class NoLoMechanism: NSObject {
 
     /// A convience property to access the `AuthorizationEngineRef` of the Authorization Mechanism.
     let mechEngine: AuthorizationEngineRef
+    
+    static let nomadMetaPrefix: NSString = "_nomad"
 
     //MARK: - Initializer
 

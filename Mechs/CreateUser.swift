@@ -59,14 +59,14 @@ class CreateUser: NoLoMechanism {
             }
             var customAttributes = [String: String]()
             
-            let nomadMetaPrefix = "_nomad"
+//            let nomadMetaPrefix = "_nomad"
             
-            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_didCreateUser"] = "1"
+            customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_didCreateUser"] = "1"
             
             let currentDate = ISO8601DateFormatter().string(from: Date())
-            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_creationDate"] = currentDate
+            customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_creationDate"] = currentDate
             
-            customAttributes["dsAttrTypeNative:\(nomadMetaPrefix)_domain"] = nomadDomain!
+                customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_domain"] = nomadDomain!
             
             createUser(shortName: nomadUser!,
                        first: nomadFirst!,
