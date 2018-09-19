@@ -233,31 +233,26 @@ class CreateUser: NoLoMechanism {
             }
         }
         
-        do {
-            os_log("Find the administrators group", log: createUserLog, type: .debug)
-            let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
-            let query = try ODQuery.init(node: node,
-                                         forRecordTypes: kODRecordTypeGroups,
-                                         attribute: kODAttributeTypeRecordName,
-                                         matchType: ODMatchType(kODMatchEqualTo),
-                                         queryValues: "admin",
-                                         returnAttributes: kODAttributeTypeNativeOnly,
-                                         maximumResults: 1)
-            let results = try query.resultsAllowingPartial(false) as! [ODRecord]
-            let adminGroup = results.first
-            
-            if isAdmin {
-                os_log("Adding user to administrators group", log: createUserLog, type: .default)
+        if isAdmin {
+            do {
+                os_log("Find the administrators group", log: createUserLog, type: .debug)
+                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                let query = try ODQuery.init(node: node,
+                                             forRecordTypes: kODRecordTypeGroups,
+                                             attribute: kODAttributeTypeRecordName,
+                                             matchType: ODMatchType(kODMatchEqualTo),
+                                             queryValues: "admin",
+                                             returnAttributes: kODAttributeTypeNativeOnly,
+                                             maximumResults: 1)
+                let results = try query.resultsAllowingPartial(false) as! [ODRecord]
+                let adminGroup = results.first
+                
+                os_log("Adding user to administrators group", log: createUserLog, type: .debug)
                 try adminGroup?.addMemberRecord(record)
-            } else {
-                if !newRecord {
-                    os_log("Removing user from administrators group", log: createUserLog, type: .default)
-                    try adminGroup?.removeMemberRecord(record)
-                }
+            } catch {
+                let errorText = error.localizedDescription
+                os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
             }
-        } catch {
-            let errorText = error.localizedDescription
-            os_log("Unable to manage local user's administrators group membership: %{public}@", log: createUserLog, type: .error, errorText)
         }
         
         if newRecord {
