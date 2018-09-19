@@ -34,7 +34,13 @@ class CreateUser: NoLoMechanism {
     
     @objc   func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
-        if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
+        
+        var checkDomainUserEveryLogin = false
+        if let prefVal = getManagedPreference(key: .CheckDomainUserEveryLogin) as? Bool {
+            checkDomainUserEveryLogin = prefVal
+        }
+        
+        if nomadPass != nil && (!NoLoMechanism.checkForLocalUser(name: nomadUser!) || (NoLoMechanism.checkForNoMADUser(name: nomadUser!) && checkDomainUserEveryLogin)) {
             guard let uid = findFirstAvaliableUID() else {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return

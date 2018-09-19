@@ -17,6 +17,8 @@ enum Preferences: String {
     case BackgroundImage
     /// The alpha value of the background image as an `Int`.
     case BackgroundImageAlpha
+    /// Should we check the domain user's password at every login? Set as a `Bool`
+    case CheckDomainUserEveryLogin
     /// Should new users be created as local administrators? Set as a `Bool`.
     case CreateAdminUser
     /// List of groups that should have its members created as local administrators. Set as an Array of Strings of the group name.

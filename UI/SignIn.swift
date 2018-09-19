@@ -255,32 +255,33 @@ class SignIn: NSWindowController {
         }
         loginStartedUI()
         prepareAccountStrings()
-        if NoLoMechanism.checkForLocalUser(name: shortName) {
-            os_log("Verify local user login for %{public}@", log: uiLog, type: .default, shortName)
-            if NoLoMechanism.verifyUser(name: shortName, auth: passString) {
-                os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
-                setRequiredHintsAndContext()
-                completeLogin(authResult: .allow)
-            } else {
-                os_log("Could not verify %{public}@", log: uiLog, type: .default, shortName)
-                completeLogin(authResult: .deny)
-            }
-        } else {
-            session = NoMADSession.init(domain: domainName, user: shortName)
-            os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
-            guard let session = session else {
-                os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
-                return
-            }
-            session.useSSL = isSSLRequired
-            session.userPass = passString
-            session.delegate = self
-            if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
-                session.siteIgnore = ignoreSites
-            }
-            os_log("Attempt to authenticate user", log: uiLog, type: .debug)
-            session.authenticate()
+
+        var checkDomainUserEveryLogin = false
+        if let prefVal = getManagedPreference(key: .CheckDomainUserEveryLogin) as? Bool {
+            checkDomainUserEveryLogin = prefVal
         }
+
+        // With the intro of checkDomainUserEveryLogin, we need an additional check to tell if a local account should be subjected to an AD check (i.e., created by NoLo)
+        if NoLoMechanism.checkForLocalUser(name: shortName) && !(NoLoMechanism.checkForNoMADUser(name: shortName) && checkDomainUserEveryLogin) {
+            localLogin()
+            return
+        }
+        
+        // Not a local user, or a NoLo user with checkDomainUserEveryLogin turned on
+        session = NoMADSession.init(domain: domainName, user: shortName)
+        os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
+        guard let session = session else {
+            os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
+            return
+        }
+        session.useSSL = isSSLRequired
+        session.userPass = passString
+        session.delegate = self
+        if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
+            session.siteIgnore = ignoreSites
+        }
+        os_log("Attempt to authenticate user", log: uiLog, type: .debug)
+        session.authenticate()
     }
 
 
@@ -424,6 +425,10 @@ extension SignIn: NoMADUserSessionDelegate {
         case .PasswordExpired:
             os_log("Password is expired or requires change.", log: uiLog, type: .default)
             showResetUI()
+            return
+        case .OffDomain:
+            os_log("Network is not available, falling back to local accounts", log: uiLog, type: .default)
+            localLogin()
             return
         default:
             os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
