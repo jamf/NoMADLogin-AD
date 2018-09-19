@@ -66,9 +66,17 @@ class CreateUser: NoLoMechanism {
             let currentDate = ISO8601DateFormatter().string(from: Date())
             customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_creationDate"] = currentDate
             
+            let existingAccount = NoLoMechanism.checkForLocalUser(name: nomadUser!)
+            if existingAccount {
+                os_log("User already exists, just update the password and other attributes", log: createUserLog, type: .debug)
+                customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_lastSyncDate"] = currentDate
+            } else {
+                customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_didCreateUser"] = "1"
+                customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_creationDate"] = currentDate
                 customAttributes["dsAttrTypeNative:\(NoLoMechanism.nomadMetaPrefix)_domain"] = nomadDomain!
+            }
             
-            createUser(shortName: nomadUser!,
+            createOrUpdateUser(shortName: nomadUser!,
                        first: nomadFirst!,
                        last: nomadLast!,
                        pass: nomadPass!,
@@ -78,11 +86,16 @@ class CreateUser: NoLoMechanism {
                        isAdmin: isAdmin,
                        customAttributes: customAttributes)
             
-            os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
-            createHomeDirFor(nomadUser!)
-            os_log("Fixup home permissions for: %{public}@", log: createUserLog, type: .debug, nomadUser!)
-            let _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
-            os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
+            if existingAccount {
+                os_log("Account update complete, allowing login", log: createUserLog, type: .debug)
+            } else {
+                os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
+                createHomeDirFor(nomadUser!)
+                os_log("Fixup home permissions for: %{public}@", log: createUserLog, type: .debug, nomadUser!)
+                let _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
+                os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
+            }
+           
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
@@ -93,55 +106,72 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
-        var newRecord: ODRecord?
-        os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
-        os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, canChangePass: %{public}@, isAdmin: %{public}@, customAttributes: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, canChangePass.description, isAdmin.description, customAttributes)
-        
-        // note for anyone following behind me
-        // you need to specify the attribute values in an array
-        // regardless of if there's more than one value or not
-        
-        os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
-
-
-        var userPicture = getManagedPreference(key: .UserProfileImage) as? String ?? ""
-        
-        if userPicture.isEmpty && !FileManager.default.fileExists(atPath: userPicture) {
-            os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
-            userPicture = randomUserPic()
-        }
-
-        os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture)
-        
-        // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
-        // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
-        // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
-        let picURL = URL(fileURLWithPath: userPicture)
-        let picData = NSData(contentsOf: picURL)
-        let picString = picData?.description ?? ""
-
-        let attrs: [AnyHashable:Any] = [
-            kODAttributeTypeFullName: [first + " " + last],
-            kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
-            kODAttributeTypeUserShell: ["/bin/bash"],
-            kODAttributeTypeUniqueID: [uid],
-            kODAttributeTypePrimaryGroupID: [gid],
-            kODAttributeTypeAuthenticationHint: [""],
-            kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picString]
-        ]
-        
+    func createOrUpdateUser(shortName: String, first: String, last: String, pass: String?, uid: String?, gid: String?, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
+        var record: ODRecord?
+        var newRecord = false
         do {
-            os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
+            os_log("Attempting to find existing user account in local ODNode", log: createUserLog, type: .debug)
             let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
-            newRecord = try node.createRecord(withRecordType: kODRecordTypeUsers, name: shortName, attributes: attrs)
+            record = try node.record(withRecordType: kODRecordTypeUsers, name: shortName, attributes: nil)
+            os_log("Local ODNode user found successfully", log: createUserLog, type: .debug)
         } catch {
             let errorText = error.localizedDescription
-            os_log("Unable to create account. Error: %{public}@", log: createUserLog, type: .error, errorText)
-            return
+            os_log("Unable to find existing account. Error: %{public}@", log: createUserLog, type: .error, errorText)
+            newRecord = true
         }
-        os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
+        
+        if newRecord {
+            os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
+        } else {
+            os_log("Updating local account: %{public}@", log: createUserLog, type: .default, shortName)
+        }
+        
+        os_log("User attributes provided: first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, canChangePass: %{public}@, isAdmin: %{public}@, customAttributes: %{public}@", log: createUserLog, type: .debug, first, last, uid ?? "" , gid ?? "", canChangePass.description, isAdmin.description, customAttributes)
+
+        
+        if newRecord {
+            os_log("Checking for UserProfileImage key", log: createUserLog, type: .debug)
+
+            var userPicture = getManagedPreference(key: .UserProfileImage) as? String ?? ""
+            
+            if userPicture.isEmpty && !FileManager.default.fileExists(atPath: userPicture) {
+                os_log("Key did not contain an image, randomly picking one", log: createUserLog, type: .debug)
+                userPicture = randomUserPic()
+            }
+
+            os_log("userPicture is: %{public}@", log: createUserLog, type: .debug, userPicture)
+            
+            // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
+            // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
+            // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
+            let picURL = URL(fileURLWithPath: userPicture)
+            let picData = NSData(contentsOf: picURL)
+            let picString = picData?.description ?? ""
+
+            let attrs: [AnyHashable:Any] = [
+                kODAttributeTypeFullName: [first + " " + last],
+                kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
+                kODAttributeTypeUserShell: ["/bin/bash"],
+                kODAttributeTypeUniqueID: [uid],
+                kODAttributeTypePrimaryGroupID: [gid],
+                kODAttributeTypeAuthenticationHint: [""],
+                kODAttributeTypePicture: [userPicture],
+                kODAttributeTypeJPEGPhoto: [picString]
+            ]
+        
+            do {
+                os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
+                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                record = try node.createRecord(withRecordType: kODRecordTypeUsers, name: shortName, attributes: attrs)
+            } catch {
+                let errorText = error.localizedDescription
+                os_log("Unable to create account. Error: %{public}@", log: createUserLog, type: .error, errorText)
+                return
+            }
+            os_log("Local ODNode user created successfully", log: createUserLog, type: .debug)
+            
+            
+        }
         
         os_log("Setting native attributes", log: createUserLog, type: .debug)
         if #available(macOS 10.13, *) {
@@ -152,7 +182,7 @@ class CreateUser: NoLoMechanism {
         for item in nativeAttrsWriters {
             do {
                 os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item)
-                try newRecord?.addValue(shortName, toAttribute: item)
+                try record?.setValue(shortName, forAttribute: item)
             } catch {
                 os_log("Failed to set attribute: %{public}@", log: createUserLog, type: .error, item)
             }
@@ -161,7 +191,7 @@ class CreateUser: NoLoMechanism {
         for item in nativeAttrsDetails {
             do {
                 os_log("Setting %{public}@ attribute for new local user", log: createUserLog, type: .debug, item.key)
-                try newRecord?.addValue(item.value, toAttribute: item.key)
+                try record?.setValue(item.value, forAttribute: item.key)
             } catch {
                 os_log("Failed to set attribute: %{public}@", log: createUserLog, type: .error, item.key)
             }
@@ -169,8 +199,8 @@ class CreateUser: NoLoMechanism {
         
         if canChangePass {
             do {
-                os_log("Setting _writers_passwd for new local user", log: createUserLog, type: .debug)
-                try newRecord?.addValue(shortName, toAttribute: "dsAttrTypeNative:_writers_passwd")
+                os_log("Setting _writers_passwd for local user", log: createUserLog, type: .debug)
+                try record?.setValue(shortName, forAttribute: "dsAttrTypeNative:_writers_passwd")
             } catch {
                 os_log("Unable to set _writers_passwd", log: createUserLog, type: .error)
             }
@@ -178,48 +208,58 @@ class CreateUser: NoLoMechanism {
         
         if let password = pass {
             do {
-                os_log("Setting password for new local user", log: createUserLog, type: .debug)
-                try newRecord?.changePassword(nil, toPassword: password)
+                os_log("Setting password for user", log: createUserLog, type: .debug)
+                try record?.changePassword(nil, toPassword: password)
             } catch {
-                os_log("Error setting password for new local user", log: createUserLog, type: .error)
+                os_log("Error setting password user", log: createUserLog, type: .error)
             }
         }
         
         if customAttributes.isEmpty == false {
-            os_log("Setting additional attributes for new local user", log: createUserLog, type: .debug)
+            os_log("Setting additional attributes for local user", log: createUserLog, type: .debug)
             for item in customAttributes {
                 do {
-                    os_log("Setting %{public}@ attribute for new local user, value: %{public}@", log: createUserLog, type: .debug, item.key, item.value)
-                    try newRecord?.addValue(item.value, toAttribute: item.key)
+                    os_log("Setting %{public}@ attribute for local user, value: %{public}@", log: createUserLog, type: .debug, item.key, item.value)
+                    try record?.addValue(item.value, toAttribute: item.key)
                 } catch {
                     os_log("Failed to set additional attribute: %{public}@", log: createUserLog, type: .error, item.key)
                 }
             }
         }
         
-        if isAdmin {
-            do {
-                os_log("Find the administrators group", log: createUserLog, type: .debug)
-                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
-                let query = try ODQuery.init(node: node,
-                                             forRecordTypes: kODRecordTypeGroups,
-                                             attribute: kODAttributeTypeRecordName,
-                                             matchType: ODMatchType(kODMatchEqualTo),
-                                             queryValues: "admin",
-                                             returnAttributes: kODAttributeTypeNativeOnly,
-                                             maximumResults: 1)
-                let results = try query.resultsAllowingPartial(false) as! [ODRecord]
-                let adminGroup = results.first
-                
-                os_log("Adding user to administrators group", log: createUserLog, type: .debug)
-                try adminGroup?.addMemberRecord(newRecord)
-            } catch {
-                let errorText = error.localizedDescription
-                os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
+        do {
+            os_log("Find the administrators group", log: createUserLog, type: .debug)
+            let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node,
+                                         forRecordTypes: kODRecordTypeGroups,
+                                         attribute: kODAttributeTypeRecordName,
+                                         matchType: ODMatchType(kODMatchEqualTo),
+                                         queryValues: "admin",
+                                         returnAttributes: kODAttributeTypeNativeOnly,
+                                         maximumResults: 1)
+            let results = try query.resultsAllowingPartial(false) as! [ODRecord]
+            let adminGroup = results.first
+            
+            if isAdmin {
+                os_log("Adding user to administrators group", log: createUserLog, type: .default)
+                try adminGroup?.addMemberRecord(record)
+            } else {
+                if !newRecord {
+                    os_log("Removing user from administrators group", log: createUserLog, type: .default)
+                    try adminGroup?.removeMemberRecord(record)
+                }
             }
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("Unable to manage local user's administrators group membership: %{public}@", log: createUserLog, type: .error, errorText)
         }
         
-        os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
+        if newRecord {
+            os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
+        } else {
+            os_log("User update complete for: %{public}@", log: createUserLog, type: .debug, shortName)
+        }
+        
     }
     
     // func to get a random string
