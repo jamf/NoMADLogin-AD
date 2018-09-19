@@ -225,6 +225,19 @@ class SignIn: NSWindowController {
         username.isEnabled = !username.isEnabled
         password.isEnabled = !password.isEnabled
     }
+    
+    // Sequence to perform a local login
+    fileprivate func localLogin() {
+        os_log("Verify local user login for %{public}@", log: uiLog, type: .default, shortName)
+        if NoLoMechanism.verifyUser(name: shortName, auth: passString) {
+            os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
+            setRequiredHintsAndContext()
+            completeLogin(authResult: .allow)
+        } else {
+            os_log("Could not verify %{public}@", log: uiLog, type: .default, shortName)
+            completeLogin(authResult: .deny)
+        }
+    }
 
 
     /// When the sign in button is clicked we check a few things.
