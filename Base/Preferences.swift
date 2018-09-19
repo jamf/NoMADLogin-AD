@@ -19,6 +19,10 @@ enum Preferences: String {
     case BackgroundImageAlpha
     /// Should we check the domain user's password at every login? Set as a `Bool`
     case CheckDomainUserEveryLogin
+    /// Should we check every user again a domain, regardless of whether NoLo created them initially? Set as a `Bool`
+    case CheckEveryUserEveryLogin
+    /// An array of users to exclude from the CheckEveryUserEveryLogin option. Populate this `Array` with `Strings` of your local accounts, i.e. 'admin'.
+    case CheckEveryUserExclusions
     /// Should new users be created as local administrators? Set as a `Bool`.
     case CreateAdminUser
     /// List of groups that should have its members created as local administrators. Set as an Array of Strings of the group name.

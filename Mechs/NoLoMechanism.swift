@@ -328,6 +328,64 @@ class NoLoMechanism: NSObject {
             return records.first?.recordName
         }
     }
+    
+    /// Decides if we should skip straight to a local login for a user
+    ///
+    /// - Parameters:
+    ///   - name: the shortname of the user to check as a `String`.
+    /// - Returns: `true` if we should skip straight to a local logi, skipping account creation and updating.
+    class func checkIfLocalOnlyUser(name: String) -> Bool {
+        // true = should skip all AD checks and account creation
+        // false = should do an AD check if specified, and create or update if specified in prefs
+        if NoLoMechanism.checkForLocalUser(name: name) {
+            // user exists on the system
+            // Should we check creds at login?
+            var checkDomainUserEveryLogin = false
+            if let prefVal = getManagedPreference(key: .CheckDomainUserEveryLogin) as? Bool {
+                checkDomainUserEveryLogin = prefVal
+            }
+            var checkEveryUser = false
+            if let prefVal = getManagedPreference(key: .CheckEveryUserEveryLogin) as? Bool {
+                checkEveryUser = prefVal
+            }
+            
+            if checkDomainUserEveryLogin {
+                // we should check user creds at login
+                // Is the user a nomad user?
+                if NoLoMechanism.checkForNoMADUser(name: name) {
+                    // yes, user is a nomad user. We should do a check.
+                    return false
+                } else {
+                    // user is not a nomad user
+                    // what about should we check every user?
+                    if checkEveryUser {
+                        // yes we should check every user
+                        // except those on the exclusion list
+                        var checkEveryUserExclusions = ["admin", "administrator"]
+                        if let users = getManagedPreference(key: .CheckEveryUserExclusions) as? [String] {
+                            checkEveryUserExclusions = users
+                        }
+                        if checkEveryUserExclusions.contains(name) {
+                            // user is on the exclusion list, local only login
+                            return true
+                        } else {
+                            // user is not excluded, proceed with the check!
+                            return false
+                        }
+                    } else {
+                        // no, we should not check every user.
+                        return true
+                    }
+                }
+            } else {
+                // no, we should not chekc at login. Local-only login
+                return true
+            }
+            
+        }
+        // user does not exist on the system, so no chance for local login
+        return false
+    }
 }
 
 

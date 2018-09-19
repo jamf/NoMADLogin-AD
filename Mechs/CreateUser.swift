@@ -34,13 +34,13 @@ class CreateUser: NoLoMechanism {
     
     @objc   func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
-        
-        var checkDomainUserEveryLogin = false
-        if let prefVal = getManagedPreference(key: .CheckDomainUserEveryLogin) as? Bool {
-            checkDomainUserEveryLogin = prefVal
-        }
-        
-        if nomadPass != nil && (!NoLoMechanism.checkForLocalUser(name: nomadUser!) || (NoLoMechanism.checkForNoMADUser(name: nomadUser!) && checkDomainUserEveryLogin)) {
+
+        if NoLoMechanism.checkIfLocalOnlyUser(name: nomadUser!) == false {
+            guard nomadPass != nil else {
+                os_log("Somehow we got here without a password", log: createUserLog, type: .debug)
+                return
+            }
+            
             guard let uid = findFirstAvaliableUID() else {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return

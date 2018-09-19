@@ -255,14 +255,9 @@ class SignIn: NSWindowController {
         }
         loginStartedUI()
         prepareAccountStrings()
-
-        var checkDomainUserEveryLogin = false
-        if let prefVal = getManagedPreference(key: .CheckDomainUserEveryLogin) as? Bool {
-            checkDomainUserEveryLogin = prefVal
-        }
-
+        
         // With the intro of checkDomainUserEveryLogin, we need an additional check to tell if a local account should be subjected to an AD check (i.e., created by NoLo)
-        if NoLoMechanism.checkForLocalUser(name: shortName) && !(NoLoMechanism.checkForNoMADUser(name: shortName) && checkDomainUserEveryLogin) {
+        if NoLoMechanism.checkIfLocalOnlyUser(name: shortName) {
             localLogin()
             return
         }
