@@ -55,7 +55,7 @@ class DeMobilize : NoLoMechanism {
         }
 
         os_log("DeMobilize mech starting", log: demobilizeLog, type: .debug)
-        guard let shortName = nomadUser else {
+        guard let shortName = usernameContext else {
             os_log("Something went wrong, there is no user here at all", log: demobilizeLog, type: .error)
             _ = allowLogin()
             return
@@ -63,7 +63,7 @@ class DeMobilize : NoLoMechanism {
 
         // sanity check to ensure we have valid information and a local user
         os_log("Checking for password", log: demobilizeLog, type: .debug)
-        if nomadPass == nil {
+        if passwordContext == nil {
             os_log("Something went wrong, there is no password in user data", log: demobilizeLog, type: .error)
             // nothing to see here, most likely auth failed earlier on
             // we're just here for auditing purposes
@@ -150,7 +150,17 @@ class DeMobilize : NoLoMechanism {
             let authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
             os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
-            return authAuthority.contains(where: {$0.contains(";LocalCachedUser;/Active Directory")})
+            if authAuthority.contains(where: {$0.contains(";LocalCachedUser;/Active Directory")}) {
+                os_log("User is AD mobile account", log: demobilizeLog, type: .default)
+                return true
+            }
+            
+            if authAuthority.contains(where: {$0.contains(";LocalCachedUser;/CentrifyDC")}) {
+                os_log("User is AD mobile account", log: demobilizeLog, type: .default)
+                return true
+            }
+            
+            return false
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             os_log("No Auth Authorities, strange place, but we'll let other mechs decide. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
@@ -186,14 +196,28 @@ class DeMobilize : NoLoMechanism {
             var authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
             os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
+            
+            var changedAuthAuthority = false
+            
             if let adAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;/Active Directory")}) {
                 authAuthority.remove(at: adAuthority)
-            } else {
-                os_log("Could not remove AD from the AuthAuthority. Bail out and allow login.", log: demobilizeLog, type: .error)
-                return false
+                changedAuthAuthority = true
             }
-            os_log("Write back the cleansed AuthAuthority", log: demobilizeLog, type: .debug)
-            try userRecord.setValue(authAuthority, forAttribute: kAuthAuthority)
+            
+            os_log("Looking for a Centrify attribute on the account", log: demobilizeLog, type: .debug)
+            
+            if let centrifyAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;/CentrifyDC")}) {
+                authAuthority.remove(at: centrifyAuthority)
+                changedAuthAuthority = true
+            }
+            
+            if !changedAuthAuthority {
+                os_log("No change to AuthAuthority! Stopping De-mobilizing process.", log: demobilizeLog, type: .default)
+                return false
+            } else {
+                os_log("Write back the cleansed AuthAuthority", log: demobilizeLog, type: .debug)
+                try userRecord.setValue(authAuthority, forAttribute: kAuthAuthority)
+            }
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             os_log("Ran into a problem modifying the AuthAuthority. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)

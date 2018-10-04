@@ -51,10 +51,24 @@ enum Preferences: String {
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
     case LoginScreen
+    /// If Notify should add additional logging
+    case NotifyLogStyle
+    /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
+    case ScriptPath
+    /// Arguments for the script, if any
+    case ScriptArgs
     /// A string to show as the placeholder in the Username textfield
     case UsernameFieldPlaceholder
     /// A filesystem path to an image to set the user profile image to as a `String`
     case UserProfileImage
+    
+    //UserInput bits
+    
+    case UserInputOutputPath
+    case UserInputUI
+    case UserInputLogo
+    case UserInputTitle
+    case UserInputMainText
 }
 
 

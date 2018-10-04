@@ -30,7 +30,7 @@ class EULAUI : NSWindowController {
     
     override func windowDidLoad() {
         
-        os_log("Calling super.windowDidLoad", log: uiLog, type: .debug)
+        os_log("Calling super.windowDidLoad", log: uiLog, type: .default)
         super.windowDidLoad()
         
         let scrollNotification = NSNotification.Name.init(rawValue: "NSScrollViewDidLiveScroll")
@@ -47,17 +47,17 @@ class EULAUI : NSWindowController {
         // set the text
         
         if let titleTextPref = getManagedPreference(key: .EULATitle) as? String {
-            os_log("Setting title text", log: eulaLog, type: .debug )
+            os_log("Setting title text", log: eulaLog, type: .default )
             titleText.stringValue = titleTextPref
         }
         
         if let subTitleTextPref = getManagedPreference(key: .EULASubTitle) as? String {
-            os_log("Setting subtitle text", log: eulaLog, type: .debug )
+            os_log("Setting subtitle text", log: eulaLog, type: .default )
             subTitleText.stringValue = subTitleTextPref
         }
         
         if let text = getManagedPreference(key: .EULAText) as? String {
-            os_log("Setting eula text", log: eulaLog, type: .debug )
+            os_log("Setting eula text", log: eulaLog, type: .default )
 
             // We may need to do some line break things here
             textView.string = text.replacingOccurrences(of: "***", with: "\n")
@@ -67,10 +67,10 @@ class EULAUI : NSWindowController {
             completeLogin(authResult: .allow)
         }
         
-        os_log("Configure EULA window", log: eulaLog, type: .debug)
+        os_log("Configure EULA window", log: eulaLog, type: .default)
         loginApperance()
 
-        os_log("create background windows", log: eulaLog, type: .debug)
+        os_log("create background windows", log: eulaLog, type: .default)
         createBackgroundWindow()
         
     }
@@ -173,7 +173,7 @@ class EULAUI : NSWindowController {
     ///
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
-        os_log("Complete login process", log: uiLog, type: .debug)
+        os_log("Complete login process", log: uiLog, type: .default)
         let error = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
         if error != noErr {
             os_log("Got error setting authentication result", log: uiLog, type: .error)
@@ -183,7 +183,7 @@ class EULAUI : NSWindowController {
     }
     
     fileprivate func loginApperance() {
-        os_log("Setting window level", log: uiLog, type: .debug)
+        os_log("Setting window level", log: uiLog, type: .default)
         self.window?.level = .screenSaver
         self.window?.orderFrontRegardless()
         self.window?.titlebarAppearsTransparent = true
@@ -196,7 +196,7 @@ class EULAUI : NSWindowController {
         var image: NSImage?
         // Is a background image path set? If not just use gray.
         if let backgroundImage = getManagedPreference(key: .BackgroundImage) as? String  {
-            os_log("BackgroundImage preferences found.", log: uiLog, type: .debug)
+            os_log("BackgroundImage preferences found.", log: uiLog, type: .default)
             image = NSImage(contentsOf: URL(fileURLWithPath: backgroundImage))
         }
         for screen in NSScreen.screens {
