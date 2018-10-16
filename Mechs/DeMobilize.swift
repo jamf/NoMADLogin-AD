@@ -55,7 +55,7 @@ class DeMobilize : NoLoMechanism {
         }
 
         os_log("DeMobilize mech starting", log: demobilizeLog, type: .debug)
-        guard let shortName = nomadUser else {
+        guard let shortName = usernameContext else {
             os_log("Something went wrong, there is no user here at all", log: demobilizeLog, type: .error)
             _ = allowLogin()
             return
@@ -63,7 +63,7 @@ class DeMobilize : NoLoMechanism {
 
         // sanity check to ensure we have valid information and a local user
         os_log("Checking for password", log: demobilizeLog, type: .debug)
-        if nomadPass == nil {
+        if passwordContext == nil {
             os_log("Something went wrong, there is no password in user data", log: demobilizeLog, type: .error)
             // nothing to see here, most likely auth failed earlier on
             // we're just here for auditing purposes
@@ -79,7 +79,7 @@ class DeMobilize : NoLoMechanism {
         }
 
         // Is the local account cached from AD?
-        if !isCachedAD(userRecord) {
+        if !isCachedUser(userRecord) {
             os_log("Account wasn't a cached account, but just a local one. Allow login.", log: demobilizeLog, type: .debug)
             _ = allowLogin()
             return
@@ -141,16 +141,16 @@ class DeMobilize : NoLoMechanism {
     }
 
 
-    /// Search in a given ODRecord for an Active Directory cached Authentication Authority.
+    /// Search in a given ODRecord for an LocalCachedUser cached Authentication Authority.
     ///
     /// - Parameter userRecord: `ODRecord` to search in
-    /// - Returns: `true` if the user is a mobile account cached from Active Directory. `false` if the user is not cached from Active Directory or an error occurs.
-    func isCachedAD(_ userRecord: ODRecord) -> Bool {
+    /// - Returns: `true` if the user is a mobile account. `false` if the user is not cached or an error occurs.
+    func isCachedUser(_ userRecord: ODRecord) -> Bool {
         do {
             let authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
-            os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
-            return authAuthority.contains(where: {$0.contains(";LocalCachedUser;/Active Directory")})
+            os_log("Looking for an LocalCachedUser attribute on the account", log: demobilizeLog, type: .debug)
+            return authAuthority.contains(where: {$0.contains(";LocalCachedUser;")})
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             os_log("No Auth Authorities, strange place, but we'll let other mechs decide. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
@@ -186,8 +186,8 @@ class DeMobilize : NoLoMechanism {
             var authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
             os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
-            if let adAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;/Active Directory")}) {
-                authAuthority.remove(at: adAuthority)
+            if let cacheAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;")}) {
+                authAuthority.remove(at: cacheAuthority)
             } else {
                 os_log("Could not remove AD from the AuthAuthority. Bail out and allow login.", log: demobilizeLog, type: .error)
                 return false
