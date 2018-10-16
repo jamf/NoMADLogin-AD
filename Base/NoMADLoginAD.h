@@ -46,6 +46,9 @@ struct MechanismRecord {
     Boolean                         fEnableFDE;
     Boolean                         fSierraFixes;
     Boolean                         fEULA;
+    Boolean                         fUserInput;
+    Boolean                         fRunScript;
+    Boolean                         fNotify;
 };
 
 typedef struct MechanismRecord MechanismRecord;
