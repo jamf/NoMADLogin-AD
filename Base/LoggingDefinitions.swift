@@ -20,3 +20,4 @@ let enableFDELog = OSLog(subsystem: "menu.nomad.login.ad", category: "EnableFDEL
 let sierraFixesLog = OSLog(subsystem: "menu.nomad.login.ad", category: "SierraFixesLog")
 let keychainAddLog = OSLog(subsystem: "menu.nomad.login.ad", category: "KeychainAdd")
 let eulaLog = OSLog(subsystem: "menu.nomad.login.ad", category: "EULA")
+let runScriptLog = OSLog(subsystem: "menu.nomad.login.ad", category: "RunScript")

@@ -100,6 +100,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fEnableFDE = (strcmp(mechanismId, "EnableFDE") == 0);
     mechanism->fSierraFixes = (strcmp(mechanismId, "SierraFixes") == 0);
     mechanism->fEULA = (strcmp(mechanismId, "EULA") == 0);
+    mechanism->fRunScript = (strcmp(mechanismId, "RunScript") == 0);
     *outMechanism = mechanism;
     os_log_debug(pluginLog, "NoLoPlugin:MechanismCreate: inPlugin=%p, inEngine=%p, mechanismId='%{public}s'", inPlugin, inEngine, mechanismId);
     return errSecSuccess;
@@ -152,6 +153,11 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         EULA * eula = [[EULA alloc] initWithMechanism:mechanism];
         [eula run];
         NSLog(@"EULA done");
+    } else if (mechanism->fRunScript) {
+        NSLog(@"Calling RunScript");
+        RunScript * runScript = [[RunScript alloc] initWithMechanism:mechanism];
+        [runScript run];
+        NSLog(@"RunScript done");
     }
     return noErr;
 }

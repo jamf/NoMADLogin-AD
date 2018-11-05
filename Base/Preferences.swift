@@ -51,6 +51,10 @@ enum Preferences: String {
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
     case LoginScreen
+    /// Arguments for the script that will run
+    case ScriptArgs
+    /// Path to the script
+    case ScriptPath
     /// A string to show as the placeholder in the Username textfield
     case UsernameFieldPlaceholder
     /// A filesystem path to an image to set the user profile image to as a `String`
