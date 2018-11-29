@@ -44,23 +44,23 @@ class DeMobilize : NoLoMechanism {
         "dsAttrTypeStandard:MCXFlags",
         "dsAttrTypeNative:accountPolicyData"
     ]
-
+    
     @objc  func run() {
         // Check to see if demobilize is requested
-
+        
         guard getManagedPreference(key: .DemobilizeUsers) as? Bool == true else {
-                os_log("Preference set to not demobilize, skipping.", log: demobilizeLog, type: .debug)
-                _ = allowLogin()
-                return
+            os_log("Preference set to not demobilize, skipping.", log: demobilizeLog, type: .debug)
+            _ = allowLogin()
+            return
         }
-
+        
         os_log("DeMobilize mech starting", log: demobilizeLog, type: .debug)
         guard let shortName = usernameContext else {
             os_log("Something went wrong, there is no user here at all", log: demobilizeLog, type: .error)
             _ = allowLogin()
             return
         }
-
+        
         // sanity check to ensure we have valid information and a local user
         os_log("Checking for password", log: demobilizeLog, type: .debug)
         if passwordContext == nil {
@@ -77,31 +77,31 @@ class DeMobilize : NoLoMechanism {
             _ = allowLogin()
             return
         }
-
+        
         // Is the local account cached from AD?
-        if !isCachedAD(userRecord) {
+        if !isCachedUser(userRecord) {
             os_log("Account wasn't a cached account, but just a local one. Allow login.", log: demobilizeLog, type: .debug)
             _ = allowLogin()
             return
         }
-
+        
         // Remove all the mobile account attributes
         if !demobilizeAccount(userRecord) {
             os_log("Something went wrong demobilizing. Restored account. Allow login.", log: demobilizeLog, type: .error)
             _ = allowLogin()
             return
         }
-
+        
         // Remove the .account file for the user
         removeExternalAccount(shortName)
-
+        
         os_log("Account modification complete, allow login.", log: demobilizeLog)
         _ = allowLogin()
         os_log("DeMobilize Mech complete", log: demobilizeLog)
     }
-
+    
     //MARK: - Demobilzer Functions
-
+    
     /// Given a user short name, search the DSLocal domain and return the `ODRecord` of a singular matching user.
     ///
     /// - Parameter shortName: A `String` of the user short name to check for.
@@ -124,13 +124,13 @@ class DeMobilize : NoLoMechanism {
             // not a local user so pass
             return nil
         }
-
+        
         if records.count == 0 {
             // no local user, this will most likely error out later, but not our place to say
             os_log("No local user found. Passing on demobilizing allow login.", log: demobilizeLog, type: .debug)
             return nil
         }
-
+        
         if records.count > 1 {
             // conflicting records, don't do anything
             os_log("More than one local user found for name. Passing on demobilizing allow login.", log: demobilizeLog, type: .debug)
@@ -139,36 +139,26 @@ class DeMobilize : NoLoMechanism {
         os_log("Found local user: %{public}@", log: demobilizeLog, type: .debug, records.first!)
         return records.first
     }
-
-
-    /// Search in a given ODRecord for an Active Directory cached Authentication Authority.
+    
+    
+    /// Search in a given ODRecord for an LocalCachedUser cached Authentication Authority.
     ///
     /// - Parameter userRecord: `ODRecord` to search in
-    /// - Returns: `true` if the user is a mobile account cached from Active Directory. `false` if the user is not cached from Active Directory or an error occurs.
-    func isCachedAD(_ userRecord: ODRecord) -> Bool {
+    /// - Returns: `true` if the user is a mobile account. `false` if the user is not cached or an error occurs.
+    func isCachedUser(_ userRecord: ODRecord) -> Bool {
         do {
             let authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
-            os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
-            if authAuthority.contains(where: {$0.contains(";LocalCachedUser;/Active Directory")}) {
-                os_log("User is AD mobile account", log: demobilizeLog, type: .default)
-                return true
-            }
-            
-            if authAuthority.contains(where: {$0.contains(";LocalCachedUser;/CentrifyDC")}) {
-                os_log("User is AD mobile account", log: demobilizeLog, type: .default)
-                return true
-            }
-            
-            return false
+            os_log("Looking for an LocalCachedUser attribute on the account", log: demobilizeLog, type: .debug)
+            return authAuthority.contains(where: {$0.contains(";LocalCachedUser;")})
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             os_log("No Auth Authorities, strange place, but we'll let other mechs decide. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
             return false
         }
     }
-
-
+    
+    
     /// Removes the cached .account file for a mobile user that creates an external OD account.
     ///
     /// - Parameter shortname: Shortname of the user to remove. This should match the name of their homefolder.
@@ -186,7 +176,7 @@ class DeMobilize : NoLoMechanism {
         }
         os_log("Deleted external account file", log: demobilizeLog, type: .debug)
     }
-
+    
     /// Remove the OD attributes that make the OS see an account as a mobile account.
     ///
     /// - Parameter userRecord: The `ODRecord` to convert.
@@ -195,35 +185,21 @@ class DeMobilize : NoLoMechanism {
         do {
             var authAuthority = try userRecord.values(forAttribute: kAuthAuthority) as! [String]
             os_log("Found user AuthAuthority: %{public}@", log: demobilizeLog, type: .debug, authAuthority.debugDescription)
-            os_log("Looking for an Active Directory attribute on the account", log: demobilizeLog, type: .debug)
-            
-            var changedAuthAuthority = false
-            
-            if let adAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;/Active Directory")}) {
-                authAuthority.remove(at: adAuthority)
-                changedAuthAuthority = true
-            }
-            
-            os_log("Looking for a Centrify attribute on the account", log: demobilizeLog, type: .debug)
-            
-            if let centrifyAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;/CentrifyDC")}) {
-                authAuthority.remove(at: centrifyAuthority)
-                changedAuthAuthority = true
-            }
-            
-            if !changedAuthAuthority {
-                os_log("No change to AuthAuthority! Stopping De-mobilizing process.", log: demobilizeLog, type: .default)
-                return false
+            os_log("Looking for an Cached Account attribute on the account", log: demobilizeLog, type: .debug)
+            if let cacheAuthority = authAuthority.index(where: {$0.contains(";LocalCachedUser;")}) {
+                authAuthority.remove(at: cacheAuthority)
             } else {
-                os_log("Write back the cleansed AuthAuthority", log: demobilizeLog, type: .debug)
-                try userRecord.setValue(authAuthority, forAttribute: kAuthAuthority)
+                os_log("Could not remove ;LocalCachedUser; from the AuthAuthority. Bail out and allow login.", log: demobilizeLog, type: .error)
+                return false
             }
+            os_log("Writing back the cleansed AuthAuthority", log: demobilizeLog, type: .debug)
+            try userRecord.setValue(authAuthority, forAttribute: kAuthAuthority)
         } catch {
             // No Auth Authorities, strange place, but we'll let other mechs decide
             os_log("Ran into a problem modifying the AuthAuthority. Allow login. Error: %{public}@", log: demobilizeLog, type: .error, error.localizedDescription)
             return false
         }
-
+        
         // now to clean up the account
         // first remove all the extraneous records
         // we mark the try with ? as we don't want to error just because the attribute doesn't exist
