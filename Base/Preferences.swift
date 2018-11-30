@@ -59,6 +59,8 @@ enum Preferences: String {
     case LocalFallback
     /// A filesystem path to an image to display on the login screen as a `String`.
     case LoginLogo
+    /// Alpha value for the login logo
+    case LoginLogoAlpha
     /// A Base64 encoded string of an image to display on the login screen.
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,

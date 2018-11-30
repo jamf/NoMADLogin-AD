@@ -33,14 +33,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="521" height="504"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <imageView horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="C6d-sv-yXM">
-                        <rect key="frame" x="121" y="232" width="279" height="272"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="279" id="2pB-Pe-VuL"/>
-                            <constraint firstAttribute="height" constant="272" id="c1H-mE-DNN"/>
-                        </constraints>
-                        <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NoLoAD Logo Alpha Channel" id="2vJ-kZ-7Fn"/>
-                    </imageView>
                     <popUpButton hidden="YES" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-bz-Qqt">
                         <rect key="frame" x="187" y="188" width="149" height="25"/>
                         <constraints>
@@ -276,10 +268,18 @@ DQ
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <imageView wantsLayer="YES" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="C6d-sv-yXM">
+                        <rect key="frame" x="0.0" y="232" width="521" height="272"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="521" id="2pB-Pe-VuL"/>
+                            <constraint firstAttribute="height" constant="272" id="c1H-mE-DNN"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NoLoAD Logo Alpha Channel" id="2vJ-kZ-7Fn"/>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="UUS-jL-biV" firstAttribute="trailing" secondItem="RLo-4d-Xte" secondAttribute="trailing" id="8Se-CL-h1U"/>
-                    <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="F2L-Xq-DaN"/>
+                    <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" constant="121" id="F2L-Xq-DaN"/>
                     <constraint firstItem="UUS-jL-biV" firstAttribute="leading" secondItem="RLo-4d-Xte" secondAttribute="leading" id="Fck-3o-klE"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="Jlu-Kj-M83"/>
                     <constraint firstItem="RLo-4d-Xte" firstAttribute="top" secondItem="ktB-bz-Qqt" secondAttribute="bottom" constant="8" id="OBe-rZ-XCM"/>
@@ -287,12 +287,12 @@ DQ
                     <constraint firstItem="C6d-sv-yXM" firstAttribute="centerX" secondItem="ktB-bz-Qqt" secondAttribute="centerX" id="Tgf-4A-kM1"/>
                     <constraint firstItem="RLo-4d-Xte" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="121" id="WHs-C6-bzE"/>
                     <constraint firstItem="BKh-qb-RHS" firstAttribute="leading" secondItem="7fI-fi-xA6" secondAttribute="leading" id="XNM-Zx-ya9"/>
-                    <constraint firstItem="gGp-dd-t9H" firstAttribute="trailing" secondItem="C6d-sv-yXM" secondAttribute="trailing" id="dBy-Zl-syq"/>
+                    <constraint firstItem="gGp-dd-t9H" firstAttribute="trailing" secondItem="C6d-sv-yXM" secondAttribute="trailing" constant="-121" id="dBy-Zl-syq"/>
                     <constraint firstItem="BKh-qb-RHS" firstAttribute="trailing" secondItem="7fI-fi-xA6" secondAttribute="trailing" id="erE-iq-6rZ"/>
                     <constraint firstItem="7fI-fi-xA6" firstAttribute="bottom" secondItem="gGp-dd-t9H" secondAttribute="bottom" id="gjq-Sz-Rtc"/>
                     <constraint firstItem="RLo-4d-Xte" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="hYj-hr-scX"/>
                     <constraint firstItem="C6d-sv-yXM" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="j3Q-9t-XRh"/>
-                    <constraint firstItem="gGp-dd-t9H" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" id="npS-hu-l0d"/>
+                    <constraint firstItem="gGp-dd-t9H" firstAttribute="leading" secondItem="C6d-sv-yXM" secondAttribute="leading" constant="121" id="npS-hu-l0d"/>
                     <constraint firstItem="7fI-fi-xA6" firstAttribute="leading" secondItem="gGp-dd-t9H" secondAttribute="trailing" constant="8" symbolic="YES" id="oez-tZ-PnI"/>
                     <constraint firstItem="ktB-bz-Qqt" firstAttribute="top" secondItem="C6d-sv-yXM" secondAttribute="bottom" constant="20" id="rwk-6G-eYg"/>
                     <constraint firstItem="UUS-jL-biV" firstAttribute="top" secondItem="RLo-4d-Xte" secondAttribute="bottom" constant="8" symbolic="YES" id="wCA-q7-WPK"/>

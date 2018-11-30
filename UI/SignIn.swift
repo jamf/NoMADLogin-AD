@@ -94,7 +94,7 @@ class SignIn: NSWindowController {
             effectWindow.contentView = effectView
             
             if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
-                effectWindow.alphaValue = CGFloat.init((backgroundImageAlpha / 100))
+                effectWindow.alphaValue = CGFloat.init(Double.init(exactly: backgroundImageAlpha) ?? 100.0 / 100.0)
             } else {
                 effectWindow.alphaValue = 0.8
             }
@@ -203,6 +203,13 @@ class SignIn: NSWindowController {
             if let image = NSImage(data: logoData) as NSImage? {
                 imageView.image = image
             }
+        }
+        
+        // check for Logo Alpha
+        
+        if let alpha = getManagedPreference(key: .LoginLogoAlpha) as? Int {
+            os_log("Updating logo alpha value", log: uiLog, type: .debug)
+            imageView.alphaValue = CGFloat.init(Double.init(exactly: alpha) ?? 100.0 / 100.0)
         }
     }
 
