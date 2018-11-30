@@ -25,7 +25,43 @@ class RunScript : NoLoMechanism {
                 task.launchPath = scriptPath
                 
                 if let args = getManagedPreference(key: .ScriptArgs) as? [String] {
-                    task.arguments = args
+                    var cleanArgs = [String]()
+                    
+                    for arg in args {
+                        if arg == "<<User>>" {
+                            
+                            if let setupUser = getHint(type: .noMADUser) as? String {
+                                cleanArgs.append(setupUser)
+                            } else {
+                                cleanArgs.append(kArgError)
+                            }
+                            
+                        } else if arg == "<<First>>" {
+                            
+                            if let setupPass = getHint(type: .noMADFirst) as? String {
+                                cleanArgs.append(setupPass)
+                            } else {
+                                cleanArgs.append(kArgError)
+                            }
+                            
+                        } else if arg == "<<Last>>" {
+                            if let adminUser = getHint(type: .noMADLast) as? String {
+                                cleanArgs.append(adminUser)
+                            } else {
+                                cleanArgs.append(kArgError)
+                            }
+                        } else if arg == "<<Principal>>" {
+                            
+                            if let setupAdminPass = getHint(type: .kerberos_principal) as? String {
+                                cleanArgs.append(setupAdminPass)
+                            } else {
+                                cleanArgs.append(kArgError)
+                            }
+                        } else {
+                            cleanArgs.append(arg)
+                        }
+                    }
+                    task.arguments = cleanArgs
                 }
                 
                 do {

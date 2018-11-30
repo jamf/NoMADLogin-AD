@@ -6,6 +6,7 @@
 //  Copyright © 2018 Orchard & Grove Inc. All rights reserved.
 //
 
+import Cocoa
 import Security
 import os.log
 import OpenDirectory
@@ -140,17 +141,18 @@ class KeychainAdd : NoLoMechanism {
                     secApps.append(nomadTrust!)
                 }
             } else {
-                os_log("NoMAD not installed.", log: keychainAddLog, type: .error)
+                os_log("Checking for NoMAD anywhere on the device.", log: keychainAddLog, type: .error)
+                let ws = NSWorkspace.shared
+                if let customPath = ws.absolutePathForApplication(withBundleIdentifier: "com.trusourcelabs.NoMAD")  {
+                    err = SecTrustedApplicationCreateFromPath(customPath, &nomadTrust)
+                    if err == 0 {
+                        secApps.append(nomadTrust!)
+                    }
+                } else {
+                    os_log("Unable to get custom NoMAD path", log: keychainAddLog, type: .error)
+
+                }
             }
-            
-            //            if fm.fileExists(atPath: "/Applications/NoMAD Pro.app", isDirectory: nil) {
-            //                err = SecTrustedApplicationCreateFromPath("/Applications/NoMAD Pro.app", &nomadProTrust)
-            //                if err == 0 {
-            //                    secApps.append(nomadProTrust!)
-            //                }
-            //            } else {
-            //                os_log("NoMAD Pro not installed.", log: keychainAddLog, type: .error)
-            //            }
             
             itemAttrs[kSecAttrType as String] = "genp" as AnyObject
             //itemAttrs[kSecValueRef as String ] = kItemPass as AnyObject

@@ -296,6 +296,45 @@ class NoLoMechanism: NSObject {
             return records.first?.recordName
         }
     }
+    
+    /// Updates a timestamp on a local account
+    ///
+    /// - Parameters:
+    ///   - name: the shortname of the user to check as a `String`.
+    ///   - time: The time to add  as a `String`.
+    /// - Returns: `true` if time attribute can be added, false if not.
+    class func updateSignIn(name: String, time: AnyObject ) -> Bool {
+        os_log("Checking for local username", log: noLoMechlog, type: .default)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return false
+        }
+        
+        let isLocal = records.isEmpty ? false : true
+        os_log("Results of local user check %{public}@", log: noLoMechlog, type: .default, isLocal.description)
+        
+        if !isLocal {
+            return isLocal
+        }
+        
+        // now to update the attribute
+        
+        do {
+            try records.first?.setValue(time, forAttribute: kODAttributeNetworkSignIn)
+        } catch {
+            os_log("Unable to add sign in time to record", log: noLoMechlog, type: .error)
+            return false
+        }
+        
+        return true
+    }
 }
 
 

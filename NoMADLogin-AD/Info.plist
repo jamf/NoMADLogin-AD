@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.3b1</string>
+	<string>1.2.2b1</string>
 	<key>CFBundleVersion</key>
-	<string>307</string>
+	<string>330</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2018 Orchard &amp; Grove. All rights reserved.</string>
 	<key>NSPrincipalClass</key>

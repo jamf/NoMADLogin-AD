@@ -7,6 +7,7 @@
 //
 
 enum HintType: String {
+    case networkSignIn
     case noMADUser
     case noMADDomain
     case noMADPass
@@ -18,6 +19,11 @@ enum HintType: String {
     case gid
     case kerberos_principal
 }
+
+// attribute statics
+
+let kODAttributeADUser = "dsAttrTypeStandard:ADUser"
+let kODAttributeNetworkSignIn = "dsAttrTypeStandard:NetworkSignIn"
 
 protocol ContextAndHintHandling {
     var mech: MechanismRecord? {get}

@@ -86,6 +86,10 @@ class CreateUser: NoLoMechanism {
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
+            
+            // Set the login timestamp if requested
+            setTimestampFor(nomadUser as? String ?? "")
+            
             os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
         }
         let _ = allowLogin()
@@ -121,7 +125,7 @@ class CreateUser: NoLoMechanism {
         let picData = NSData(contentsOf: picURL)
         let picString = picData?.description ?? ""
 
-        let attrs: [AnyHashable:Any] = [
+        var attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
             kODAttributeTypeUserShell: ["/bin/bash"],
@@ -129,8 +133,17 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
             kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picString]
+            kODAttributeTypeJPEGPhoto: [picString],
+            kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
+        
+        if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
+            attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
+        }
+        
+        if let signInTime = getHint(type: .networkSignIn) {
+            attrs[kODAttributeNetworkSignIn] = [signInTime]
+        }
         
         do {
             os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
@@ -381,6 +394,17 @@ class CreateUser: NoLoMechanism {
             return "zh_TW" + templateName
         default:
             return "Non_localized"
+        }
+    }
+    
+    fileprivate func setTimestampFor(_ nomadUser: String) {
+        // Add network sign in stamp
+        if let signInTime = getHint(type: .networkSignIn) {
+            if NoLoMechanism.updateSignIn(name: nomadUser, time: signInTime as AnyObject) {
+                os_log("Sign in time updated", log: createUserLog, type: .default)
+            } else {
+                os_log("Dould not add timestamp", log: createUserLog, type: .error)
+            }
         }
     }
 }

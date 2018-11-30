@@ -39,6 +39,7 @@ class SignIn: NSWindowController {
     @IBOutlet weak var oldPassword: NSSecureTextField!
     @IBOutlet weak var newPassword: NSSecureTextField!
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
+    @IBOutlet weak var alertText: NSTextField!
     
     //MARK: - UI Methods
     override func windowDidLoad() {
@@ -216,6 +217,12 @@ class SignIn: NSWindowController {
         oldPassword.becomeFirstResponder()
     }
 
+    fileprivate func authFail() {
+        session = nil
+        password.stringValue = ""
+        alertText.stringValue = "Authentication Failed"
+        loginStartedUI()
+    }
 
     /// Simple toggle to change the state of the NoLo window UI between active and inactive.
     fileprivate func loginStartedUI() {
@@ -240,34 +247,75 @@ class SignIn: NSWindowController {
             os_log("No username entered", log: uiLog, type: .default)
             return
         }
+        
+        // clear any alerts
+        
+        alertText.stringValue = ""
+        
         loginStartedUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
             os_log("Verify local user login for %{public}@", log: uiLog, type: .default, shortName)
+            
+            if getManagedPreference(key: .DenyLocal) as? Bool ?? false {
+                os_log("DenyLocal is enabled, looking for %{public}@ in excluded users", log: uiLog, type: .default, shortName)
+                
+                var exclude = false
+                
+                if let excludedUsers = getManagedPreference(key: .DenyLocalExcluded) as? [String] {
+                    if excludedUsers.contains(shortName) {
+                        os_log("Allowing local sign in via exclusions %{public}@", log: uiLog, type: .default, shortName)
+                        exclude = true
+                    }
+                }
+                
+                if !exclude {
+                    os_log("No exclusions for %{public}@, denying local login. Forcing network auth", log: uiLog, type: .default, shortName)
+                    networkAuth()
+                    return
+                }
+            }
+            
             if NoLoMechanism.verifyUser(name: shortName, auth: passString) {
-                os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
-                setRequiredHintsAndContext()
-                completeLogin(authResult: .allow)
+                    os_log("Allowing local user login for %{public}@", log: uiLog, type: .default, shortName)
+                    setRequiredHintsAndContext()
+                    completeLogin(authResult: .allow)
+                    return
             } else {
                 os_log("Could not verify %{public}@", log: uiLog, type: .default, shortName)
-                completeLogin(authResult: .deny)
-            }
-        } else {
-            session = NoMADSession.init(domain: domainName, user: shortName)
-            os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
-            guard let session = session else {
-                os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
+                authFail()
                 return
             }
-            session.useSSL = isSSLRequired
-            session.userPass = passString
-            session.delegate = self
-            if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
-                session.siteIgnore = ignoreSites
-            }
-            os_log("Attempt to authenticate user", log: uiLog, type: .debug)
-            session.authenticate()
+        } else {
+            networkAuth()
         }
+    }
+    
+    fileprivate func networkAuth() {
+        session = NoMADSession.init(domain: domainName, user: shortName)
+        os_log("NoMAD Login User: %{public}@, Domain: %{public}@", log: uiLog, type: .default, shortName, domainName)
+        guard let session = session else {
+            os_log("Could not create NoMADSession from SignIn window", log: uiLog, type: .error)
+            return
+        }
+        session.useSSL = isSSLRequired
+        session.userPass = passString
+        session.delegate = self
+        
+        if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
+            os_log("Ignoring AD sites", log: uiLog, type: .debug)
+
+            session.siteIgnore = ignoreSites
+        }
+        
+        if let ldapServers = getManagedPreference(key: .LDAPServers) as? [String] {
+            os_log("Adding custom LDAP servers", log: uiLog, type: .debug)
+
+            session.ldapServers = ldapServers
+        }
+        
+        os_log("Attempt to authenticate user", log: uiLog, type: .debug)
+        session.authenticate()
     }
 
 
@@ -414,7 +462,8 @@ extension SignIn: NoMADUserSessionDelegate {
             return
         default:
             os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
-            completeLogin(authResult: .deny)
+            authFail()
+            return
         }
     }
 
@@ -433,13 +482,45 @@ extension SignIn: NoMADUserSessionDelegate {
 
 
     func NoMADUserInformation(user: ADUserRecord) {
-        os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
-        setRequiredHintsAndContext()
-        setHint(type: .noMADFirst, hint: user.firstName)
-        setHint(type: .noMADLast, hint: user.lastName)
-        setHint(type: .noMADDomain, hint: domainName)
-        setHint(type: .noMADGroups, hint: user.groups)
-        completeLogin(authResult: .allow)
+        
+        var allowedLogin = true
+        
+        os_log("Checking for DenyLogin groups", log: uiLog, type: .debug)
+        
+        if let adminGroups = getManagedPreference(key: .DenyLoginUnlessGroupMember) as? [String] {
+            os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+            
+            // set the allowed login to false for now
+            
+            allowedLogin = false
+            
+            user.groups.forEach { group in
+                if adminGroups.contains(group) {
+                    allowedLogin = true
+                    os_log("User is a member of %{public}@ group. Setting allowedLogin = true ", log: uiLog, type: .debug, group)
+                }
+            }
+        }
+        
+        if allowedLogin {
+            os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
+            setRequiredHintsAndContext()
+            setHint(type: .noMADFirst, hint: user.firstName)
+            setHint(type: .noMADLast, hint: user.lastName)
+            setHint(type: .noMADDomain, hint: domainName)
+            setHint(type: .noMADGroups, hint: user.groups)
+            setHint(type: .noMADFull, hint: user.cn)
+            setHint(type: .kerberos_principal, hint: user.userPrincipal)
+            
+            // set the network auth time to be added to the user record
+            setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
+            
+            completeLogin(authResult: .allow)
+        } else {
+            authFail()
+            alertText.stringValue = "Not authorized to login."
+            showResetUI()
+        }
     }
 }
 
