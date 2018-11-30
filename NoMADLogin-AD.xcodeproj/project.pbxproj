@@ -19,6 +19,7 @@
 		1AA58F02216611BD00431201 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EF42166104400431201 /* EULAUI.xib */; };
 		1AA58F03216611C100431201 /* UserInputUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEA2166101100431201 /* UserInputUI.swift */; };
 		1AA58F04216611C400431201 /* UserInputUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EEB2166101100431201 /* UserInputUI.xib */; };
+		1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
@@ -74,6 +75,7 @@
 		1AA58EF8216610B300431201 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
 		1AA58EFA216610C300431201 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		1AA58EFC216610C700431201 /* RunScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScript.swift; sourceTree = "<group>"; };
+		1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLoWindow.swift; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 		9CBDCFBB1FC5CE6400CF73F4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */,
 				9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */,
 				9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */,
 			);
@@ -321,6 +324,7 @@
 				1AA58EFD216610C700431201 /* RunScript.swift in Sources */,
 				1AA58EFB216610C300431201 /* Notify.swift in Sources */,
 				9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */,
+				1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */,
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
 				1AA58F00216611B700431201 /* NoLoNotify.swift in Sources */,
 				9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */,

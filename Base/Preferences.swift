@@ -15,6 +15,8 @@ enum Preferences: String {
     case AdditionalADDomains
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
+    /// An image to display as the background image as a Base64 encoded `String`.
+    case BackgroundImageData
     /// The alpha value of the background image as an `Int`.
     case BackgroundImageAlpha
     /// Should new users be created as local administrators? Set as a `Bool`.

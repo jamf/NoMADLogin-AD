@@ -65,6 +65,11 @@ class SignIn: NSWindowController {
             os_log("BackgroundImage preferences found.", log: uiLog, type: .debug)
             image = NSImage(contentsOf: URL(fileURLWithPath: backgroundImage))
         }
+        
+        if let backgroundImageData = getManagedPreference(key: .BackgroundImageData) as? Data {
+            os_log("BackgroundImageData found", log: uiLog, type: .debug)
+            image = NSImage(data: backgroundImageData)
+        }
 
         for screen in NSScreen.screens {
             let view = NSView()
