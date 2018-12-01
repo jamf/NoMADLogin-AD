@@ -99,7 +99,33 @@ class SignIn: NSWindowController {
             effectWindow.contentView = effectView
             
             if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
-                effectWindow.alphaValue = CGFloat.init(Double.init(exactly: backgroundImageAlpha) ?? 100.0 / 100.0)
+                
+                switch backgroundImageAlpha {
+                case 0 :
+                    effectWindow.alphaValue = 0.0
+                case 1 :
+                    effectWindow.alphaValue = 0.1
+                case 2 :
+                    effectWindow.alphaValue = 0.2
+                case 3 :
+                    effectWindow.alphaValue = 0.3
+                case 4 :
+                    effectWindow.alphaValue = 0.4
+                case 5 :
+                    effectWindow.alphaValue = 0.5
+                case 6 :
+                    effectWindow.alphaValue = 0.6
+                case 7 :
+                    effectWindow.alphaValue = 0.7
+                case 8 :
+                    effectWindow.alphaValue = 0.8
+                case 9 :
+                    effectWindow.alphaValue = 0.9
+                case 10 :
+                    effectWindow.alphaValue = 1.0
+                default :
+                    effectWindow.alphaValue = 1.0
+                }
             } else {
                 effectWindow.alphaValue = 0.8
             }
@@ -214,7 +240,32 @@ class SignIn: NSWindowController {
         
         if let alpha = getManagedPreference(key: .LoginLogoAlpha) as? Int {
             os_log("Updating logo alpha value", log: uiLog, type: .debug)
-            imageView.alphaValue = CGFloat.init(Double.init(exactly: alpha) ?? 100.0 / 100.0)
+            switch alpha {
+            case 0 :
+                imageView.alphaValue = 0.0
+            case 1 :
+                imageView.alphaValue = 0.1
+            case 2 :
+                imageView.alphaValue = 0.2
+            case 3 :
+                imageView.alphaValue = 0.3
+            case 4 :
+                imageView.alphaValue = 0.4
+            case 5 :
+                imageView.alphaValue = 0.5
+            case 6 :
+                imageView.alphaValue = 0.6
+            case 7 :
+                imageView.alphaValue = 0.7
+            case 8 :
+                imageView.alphaValue = 0.8
+            case 9 :
+                imageView.alphaValue = 0.9
+            case 10 :
+                imageView.alphaValue = 1.0
+            default :
+                imageView.alphaValue = 0.0
+            }
         }
     }
 
@@ -334,6 +385,7 @@ class SignIn: NSWindowController {
     @IBAction func changePassowrd(_ sender: Any) {
         guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
             os_log("New passwords didn't match", log: uiLog, type: .error)
+            alertText.stringValue = "New passwords don't match"
             return
         }
         
@@ -348,6 +400,13 @@ class SignIn: NSWindowController {
         session?.newPass = newPassword.stringValue
 
         os_log("Attempting password change for %{public}@", log: uiLog, type: .debug, shortName)
+        
+        // disable the fields
+        
+        oldPassword.isEnabled = false
+        newPassword.isEnabled = false
+        newPasswordConfirmation.isEnabled = false
+        
         session?.changePassword()
     }
 
@@ -361,6 +420,7 @@ class SignIn: NSWindowController {
         var providedDomainName = ""
         
         shortName = username.stringValue
+        
         if username.stringValue.range(of:"@") != nil {
             shortName = (username.stringValue.components(separatedBy: "@").first)!
             providedDomainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
@@ -467,6 +527,20 @@ class SignIn: NSWindowController {
 extension SignIn: NoMADUserSessionDelegate {
     
     func NoMADAuthenticationFailed(error: NoMADSessionError, description: String) {
+        
+        if passChanged {
+            os_log("Password change failed.", log: uiLog, type: .default)
+            oldPassword.isEnabled = true
+            newPassword.isEnabled = true
+            newPasswordConfirmation.isEnabled = true
+            
+            newPassword.stringValue = ""
+            newPasswordConfirmation.stringValue = ""
+            
+            alertText.stringValue = "Password change failed"
+            return
+        }
+        
         switch error {
         case .PasswordExpired:
             os_log("Password is expired or requires change.", log: uiLog, type: .default)
