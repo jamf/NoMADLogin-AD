@@ -230,6 +230,13 @@ class CreateUser: NoLoMechanism {
                 let errorText = error.localizedDescription
                 os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
             }
+            
+            if isFdeEnabled() == false {
+                if #available(OSX 10.14, *) {
+                    addSecureToken(shortName, pass)
+                }
+            }
+            
         }
         
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
@@ -405,6 +412,61 @@ class CreateUser: NoLoMechanism {
             } else {
                 os_log("Dould not add timestamp", log: createUserLog, type: .error)
             }
+        }
+    }
+    
+    fileprivate func addSecureToken(_ shortName: String, _ pass: String?) {
+        //MARK: 10.14 fix
+        // check for 10.14
+        // check for no existing local users?
+        // - perhaps looking for diskutil apfs listcryptousers /
+        //     if a user already has a token, this will fail anyway
+        // - gate behind a pref key?
+        
+        // attempt to add token to user
+        
+        
+        os_log("Attempting to add a token to new user.", log: createUserLog, type: .default)
+        
+        let launchPath = "/usr/sbin/sysadminctl"
+        
+        var args = [
+            "-secureTokenOn",
+            shortName,
+            "-password",
+            pass ?? "",
+            "-adminUser",
+            shortName,
+            "-adminPassword",
+            pass ?? ""
+        ]
+        
+        let result = cliTask(launchPath, arguments: args, waitForTermination: true)
+        os_log("sysdaminctl result: @{public}%", log: createUserLog, type: .debug, result)
+        args = [
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********"
+        ]
+    }
+    
+    fileprivate func isFdeEnabled() -> Bool {
+        
+        // check to see if FV is already running
+        
+        let launchPath = "/usr/bin/fdesetup"
+        let args = [
+            "status"
+        ]
+        if cliTask(launchPath, arguments: args, waitForTermination: true).contains("FileVault is Off") {
+            return false
+        } else {
+            return true
         }
     }
 }
