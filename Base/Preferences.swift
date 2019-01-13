@@ -37,6 +37,8 @@ enum Preferences: String {
     case EnableFDERecoveryKey
     // Specify a custom path for the recovery key
     case EnableFDERecoveryKeyPath
+    // Should we rotate the PRK
+    case EnableFDERekey
     /// Path for where the EULA acceptance info goes
     case EULAPath
     /// Text for EULA as a `String`.
