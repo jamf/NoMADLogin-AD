@@ -26,7 +26,7 @@ class EULA : NoLoMechanism {
         os_log("Activating app", log: eulaLog, type: .debug)
         NSApp.activate(ignoringOtherApps: true)
         os_log("Loading XIB", log: eulaLog, type: .debug)
-        let eula = EULAUI(windowNibName: NSNib.Name(rawValue: "EULAUI"))
+        let eula = EULAUI(windowNibName: NSNib.Name("EULAUI"))
         eula.mech = mech
         
         let windowTest = eula.window
