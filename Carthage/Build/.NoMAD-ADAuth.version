@@ -1,0 +1,18 @@
+{
+  "Mac" : [
+    {
+      "name" : "NoMAD_ADAuth",
+      "hash" : "655a2bff40e6da1396c92d09cf027c5b02d7f77db9e4f1fa1efa4c40cd7f75bb"
+    }
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "1.0.4",
+  "iOS" : [
+
+  ]
+}
