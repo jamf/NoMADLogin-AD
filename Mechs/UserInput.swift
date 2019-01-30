@@ -18,7 +18,7 @@ import Cocoa
             os_log("Activating app", log: userinputLog, type: .default)
             NSApp.activate(ignoringOtherApps: true)
             os_log("Loading XIB", log: userinputLog, type: .default)
-            let userInput = UserInputUI(windowNibName: NSNib.Name(rawValue: "UserInputUI"))
+            let userInput = UserInputUI(windowNibName: NSNib.Name("UserInputUI"))
             userInput.mech = mech
             userInput.inputSettings = inputSettings
             

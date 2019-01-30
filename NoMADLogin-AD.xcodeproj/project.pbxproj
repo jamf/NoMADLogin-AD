@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0126150B2200E2F00058E5CA /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
 		0126150C2200E3000058E5CA /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0126150E2200E3190058E5CA /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0126150D2200E3190058E5CA /* NoMAD_ADAuth.framework.dSYM */; };
+		017F5D1722022A0700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */; };
 		1AA58EF9216610B300431201 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EF8216610B300431201 /* UserInput.swift */; };
 		1AA58EFB216610C300431201 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFA216610C300431201 /* Notify.swift */; };
 		1AA58EFD216610C700431201 /* RunScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFC216610C700431201 /* RunScript.swift */; };
@@ -48,7 +48,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				0126150E2200E3190058E5CA /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
+				017F5D1722022A0700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0126150D2200E3190058E5CA /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
+		017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
 		1AA58EEA2166101100431201 /* UserInputUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputUI.swift; sourceTree = "<group>"; };
 		1AA58EEB2166101100431201 /* UserInputUI.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInputUI.xib; sourceTree = "<group>"; };
 		1AA58EED2166104400431201 /* NoLoNotify.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoLoNotify.xib; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 		9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0126150D2200E3190058E5CA /* NoMAD_ADAuth.framework.dSYM */,
+				017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */,
 				9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */,
 			);
 			name = Frameworks;

@@ -16,7 +16,7 @@ class Notify : NoLoMechanism {
     @objc func run() {
         
         NSApp.activate(ignoringOtherApps: true)
-        let notifyWindow = NoLoNotify(windowNibName: NSNib.Name(rawValue: "NoLoNotify"))
+        let notifyWindow = NoLoNotify(windowNibName: NSNib.Name("NoLoNotify"))
         
         notifyWindow.mech = mech
         
