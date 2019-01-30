@@ -613,7 +613,7 @@ extension SignIn: NoMADUserSessionDelegate {
 
 //MARK: - NSTextField Delegate
 extension SignIn: NSTextFieldDelegate {
-    public override func controlTextDidChange(_ obj: Notification) {
+    public func controlTextDidChange(_ obj: Notification) {
         let passField = obj.object as! NSTextField
         passString = passField.stringValue
     }
@@ -646,7 +646,7 @@ extension NSWindow {
         shakeAnimation.path = shakePath;
         shakeAnimation.duration = durationOfShake;
 
-        self.animations = [NSAnimatablePropertyKey(rawValue: "frameOrigin"):shakeAnimation]
+        self.animations = [NSAnimatablePropertyKey("frameOrigin"):shakeAnimation]
         self.animator().setFrameOrigin(self.frame.origin)
     }
 

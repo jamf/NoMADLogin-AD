@@ -24,7 +24,7 @@ class CheckAD: NoLoMechanism {
         os_log("Activating app", log: checkADLog, type: .debug)
         NSApp.activate(ignoringOtherApps: true)
         os_log("Loading XIB", log: checkADLog, type: .debug)
-        signIn = SignIn(windowNibName: NSNib.Name(rawValue: "SignIn"))
+        signIn = SignIn(windowNibName: NSNib.Name("SignIn"))
         os_log("Set mech for loginwindow", log: checkADLog, type: .debug)
         signIn.mech = mech
         if let domain = self.managedDomain {

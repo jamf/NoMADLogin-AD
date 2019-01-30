@@ -5,7 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.2.1. There are several enhancements we are working on for the 1.3 release and you can see those in the [1.3 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/8).
+The current production version of NoLoAD is 1.2.2. There are several enhancements we are working on for the 1.3 release and you can see those in the [1.3 Milestone](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/milestones/8).
 
 We would like to give a **huge** thanks to new contributor Joseph Rafferty. A lot of his pull requests really helped get the 1.2 release out the door.
 
@@ -20,6 +20,9 @@ For those of you that are new to NoLo, the basic features are:
 * Customize the login screen with your own art and background
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
+
+## What's new in 1.2.2
+* Built product with current Swift SDK.
 
 ## What's new in 1.2.1
 * KeychainAdd mechanism also adds a `LastUser` value to the NoMAD preferences. This allows NoMAD to login on first launch. (#89)
