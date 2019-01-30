@@ -86,6 +86,10 @@ class CreateUser: NoLoMechanism {
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
+            
+            // Set the login timestamp if requested
+            setTimestampFor(nomadUser as? String ?? "")
+            
             os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
         }
         let _ = allowLogin()
@@ -121,7 +125,7 @@ class CreateUser: NoLoMechanism {
         let picData = NSData(contentsOf: picURL)
         let picString = picData?.description ?? ""
 
-        let attrs: [AnyHashable:Any] = [
+        var attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
             kODAttributeTypeNFSHomeDirectory: [ "/Users/" + shortName ],
             kODAttributeTypeUserShell: ["/bin/bash"],
@@ -129,8 +133,17 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
             kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picString]
+            kODAttributeTypeJPEGPhoto: [picString],
+            kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
+        
+        if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
+            attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
+        }
+        
+        if let signInTime = getHint(type: .networkSignIn) {
+            attrs[kODAttributeNetworkSignIn] = [signInTime]
+        }
         
         do {
             os_log("Creating user account in local ODNode", log: createUserLog, type: .debug)
@@ -217,6 +230,13 @@ class CreateUser: NoLoMechanism {
                 let errorText = error.localizedDescription
                 os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
             }
+            
+            if isFdeEnabled() == false {
+                if #available(OSX 10.14, *) {
+                    addSecureToken(shortName, pass)
+                }
+            }
+            
         }
         
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
@@ -381,6 +401,72 @@ class CreateUser: NoLoMechanism {
             return "zh_TW" + templateName
         default:
             return "Non_localized"
+        }
+    }
+    
+    fileprivate func setTimestampFor(_ nomadUser: String) {
+        // Add network sign in stamp
+        if let signInTime = getHint(type: .networkSignIn) {
+            if NoLoMechanism.updateSignIn(name: nomadUser, time: signInTime as AnyObject) {
+                os_log("Sign in time updated", log: createUserLog, type: .default)
+            } else {
+                os_log("Dould not add timestamp", log: createUserLog, type: .error)
+            }
+        }
+    }
+    
+    fileprivate func addSecureToken(_ shortName: String, _ pass: String?) {
+        //MARK: 10.14 fix
+        // check for 10.14
+        // check for no existing local users?
+        // - perhaps looking for diskutil apfs listcryptousers /
+        //     if a user already has a token, this will fail anyway
+        // - gate behind a pref key?
+        
+        // attempt to add token to user
+        
+        
+        os_log("Attempting to add a token to new user.", log: createUserLog, type: .default)
+        
+        let launchPath = "/usr/sbin/sysadminctl"
+        
+        var args = [
+            "-secureTokenOn",
+            shortName,
+            "-password",
+            pass ?? "",
+            "-adminUser",
+            shortName,
+            "-adminPassword",
+            pass ?? ""
+        ]
+        
+        let result = cliTask(launchPath, arguments: args, waitForTermination: true)
+        os_log("sysdaminctl result: @{public}%", log: createUserLog, type: .debug, result)
+        args = [
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********",
+            "********"
+        ]
+    }
+    
+    fileprivate func isFdeEnabled() -> Bool {
+        
+        // check to see if FV is already running
+        
+        let launchPath = "/usr/bin/fdesetup"
+        let args = [
+            "status"
+        ]
+        if cliTask(launchPath, arguments: args, waitForTermination: true).contains("FileVault is Off") {
+            return false
+        } else {
+            return true
         }
     }
 }

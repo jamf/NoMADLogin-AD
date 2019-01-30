@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="EULAUI" customModule="NoMADLoginAD" customModuleProvider="target">
+            <connections>
+                <outlet property="agreeButton" destination="13t-aQ-b6g" id="DVj-cc-VMI"/>
+                <outlet property="cancelButton" destination="Y1Q-h7-aun" id="rJl-yC-Hhq"/>
+                <outlet property="doneButton" destination="r2k-nZ-bYA" id="ski-XU-Js8"/>
+                <outlet property="scrollView" destination="rhH-jO-XbW" id="QxA-fA-I5g"/>
+                <outlet property="scroller" destination="NN2-cG-KqE" id="Ldi-JH-bcc"/>
+                <outlet property="subTitleText" destination="ai0-qT-HVg" id="43r-FK-kHk"/>
+                <outlet property="textView" destination="W9R-pJ-Y3v" id="se3-XT-X6l"/>
+                <outlet property="titleText" destination="3nh-Z8-OcN" id="7Lx-1O-lmu"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="5Iw-le-MKU"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <rect key="contentRect" x="196" y="240" width="706" height="449"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="706" height="449"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rhH-jO-XbW">
+                        <rect key="frame" x="20" y="48" width="666" height="327"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="C09-Oc-zUj">
+                            <rect key="frame" x="1" y="1" width="664" height="325"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" editable="NO" selectable="NO" importsGraphics="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsCharacterPickerTouchBarItem="NO" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" textCompletion="NO" spellingCorrection="YES" smartInsertDelete="YES" id="W9R-pJ-Y3v">
+                                    <rect key="frame" x="0.0" y="0.0" width="664" height="336"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="664" height="325"/>
+                                    <size key="maxSize" width="671" height="10000000"/>
+                                    <attributedString key="textStorage">
+                                        <fragment>
+                                            <mutableString key="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at tortor maximus, vestibulum justo eu, convallis risus. Nullam eget diam facilisis, venenatis nibh faucibus, cursus lorem. Maecenas sed erat et diam aliquam ultricies eget vitae metus. Suspendisse non est at nibh porttitor maximus vitae et nulla. Duis hendrerit nec nunc ac sodales. Quisque gravida finibus tortor a egestas. Suspendisse ullamcorper aliquam augue imperdiet convallis. Nunc ultrices faucibus blandit. Vivamus posuere urna a dolor volutpat, ac maximus enim eleifend. Praesent placerat, dolor sit amet semper eleifend, mi augue suscipit sapien, ac interdum lectus lectus id quam. Vestibulum vel magna in tortor accumsan tincidunt eget at mi. Fusce justo ex, rutrum nec justo eu, cursus tristique mauris. Cras rhoncus, lectus eget volutpat vulputate, sem metus sollicitudin velit, et egestas velit nisi a odio.
+
+Aenean orci tellus, rutrum ut vulputate eu, efficitur et lorem. Mauris sodales id odio a bibendum. Donec a mauris velit. Aenean ornare dolor ut tempor consectetur. Nam malesuada sapien nec vestibulum luctus. Suspendisse venenatis purus et massa tempor, vitae facilisis ligula malesuada. Donec volutpat eget enim eu rhoncus. Ut mattis condimentum ornare. Duis a ipsum nunc. Proin venenatis sodales ultricies. Integer tempor facilisis eros, sit amet sodales erat dictum id. Nulla luctus varius risus, eget finibus tortor molestie sit amet. Mauris sed enim at est sodales mattis at in purus. Pellentesque nisl nisl, interdum id elit vel, consequat bibendum enim. Duis dolor nisi, faucibus aliquam efficitur sit amet, pellentesque vitae tellus. Aenean imperdiet dolor eu ullamcorper fermentum.
+
+Proin odio elit, sollicitudin lacinia iaculis vel, pellentesque sed elit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque finibus libero lorem, et blandit dolor porta at. Nulla ullamcorper ut enim at pulvinar. Vestibulum consequat, ex at aliquam laoreet, ante nisi vestibulum urna, in varius purus justo a libero. Cras sed felis iaculis, sodales mi at, venenatis enim. Donec nunc neque, elementum a viverra eget, vehicula et elit. Mauris euismod est mattis nulla sodales, et faucibus magna sollicitudin. Vestibulum non erat a urna ornare aliquet. Donec dapibus scelerisque nibh nec fringilla. Curabitur ultrices ligula sit amet neque varius, sit amet sagittis velit facilisis. Integer et dui a magna euismod elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</mutableString>
+                                            <attributes>
+                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <font key="NSFont" size="12" name="Helvetica"/>
+                                                <real key="NSKern" value="0.0"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                    <tabStops/>
+                                                </paragraphStyle>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="P9H-8W-Hem">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="NN2-cG-KqE">
+                            <rect key="frame" x="649" y="1" width="16" height="325"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r2k-nZ-bYA">
+                        <rect key="frame" x="616" y="13" width="72" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ARo-Ng-wxM">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="doneClick:" target="-2" id="YGM-wp-k29"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3nh-Z8-OcN">
+                        <rect key="frame" x="18" y="413" width="670" height="34"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Terms &amp; Conditions" id="1Ax-Fl-Ju5">
+                            <font key="font" metaFont="systemThin" size="28"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ai0-qT-HVg">
+                        <rect key="frame" x="18" y="383" width="670" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Accept these terms and conditions to start using your Mac." id="moy-OF-U3A">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y1Q-h7-aun">
+                        <rect key="frame" x="14" y="10" width="82" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jVA-Zs-64n">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancelClick:" target="-2" id="444-0j-GsK"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13t-aQ-b6g">
+                        <rect key="frame" x="551" y="22" width="65" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="I Agree" bezelStyle="regularSquare" imagePosition="left" inset="2" id="ExR-jA-Pqc">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="agreeAction:" target="-2" id="dVc-PQ-zoN"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="Z5S-Rf-KrW"/>
+            </connections>
+            <point key="canvasLocation" x="252" y="250.5"/>
+        </window>
+        <userDefaultsController representsSharedInstance="YES" id="QyS-zV-NDt"/>
+    </objects>
+</document>

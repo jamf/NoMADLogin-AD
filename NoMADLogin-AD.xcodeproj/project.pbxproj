@@ -7,9 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0161EE972202287C00F1696F /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0161EE962202287C00F1696F /* NoMAD_ADAuth.framework */; };
-		0161EE982202288900F1696F /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0161EE962202287C00F1696F /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		017F5D1922022CC700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 017F5D1822022CC700042737 /* NoMAD_ADAuth.framework.dSYM */; };
+		0126150B2200E2F00058E5CA /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
+		0126150C2200E3000058E5CA /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		017F5D1722022A0700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */; };
+		1AA58EF9216610B300431201 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EF8216610B300431201 /* UserInput.swift */; };
+		1AA58EFB216610C300431201 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFA216610C300431201 /* Notify.swift */; };
+		1AA58EFD216610C700431201 /* RunScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFC216610C700431201 /* RunScript.swift */; };
+		1AA58EFE216611AF00431201 /* NoLoNotify.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EED2166104400431201 /* NoLoNotify.xib */; };
+		1AA58EFF216611B400431201 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEE2166104400431201 /* Tracker.swift */; };
+		1AA58F00216611B700431201 /* NoLoNotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEF2166104400431201 /* NoLoNotify.swift */; };
+		1AA58F01216611BA00431201 /* EULAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EF32166104400431201 /* EULAUI.swift */; };
+		1AA58F02216611BD00431201 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EF42166104400431201 /* EULAUI.xib */; };
+		1AA58F03216611C100431201 /* UserInputUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEA2166101100431201 /* UserInputUI.swift */; };
+		1AA58F04216611C400431201 /* UserInputUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EEB2166101100431201 /* UserInputUI.xib */; };
+		1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
@@ -28,8 +39,6 @@
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */; };
 		9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3320EBEE4000D69F43 /* EULA.swift */; };
-		9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3620EBEED100D69F43 /* EULAUI.swift */; };
-		9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3720EBEED100D69F43 /* EULAUI.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,7 +48,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				017F5D1922022CC700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
+				017F5D1722022A0700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,15 +58,25 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0161EE982202288900F1696F /* NoMAD_ADAuth.framework in CopyFiles */,
+				0126150C2200E3000058E5CA /* NoMAD_ADAuth.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0161EE962202287C00F1696F /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = Carthage/Build/Mac/NoMAD_ADAuth.framework; sourceTree = "<group>"; };
-		017F5D1822022CC700042737 /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = NoMAD_ADAuth.framework.dSYM; path = Carthage/Build/Mac/NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
+		017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
+		1AA58EEA2166101100431201 /* UserInputUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputUI.swift; sourceTree = "<group>"; };
+		1AA58EEB2166101100431201 /* UserInputUI.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInputUI.xib; sourceTree = "<group>"; };
+		1AA58EED2166104400431201 /* NoLoNotify.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoLoNotify.xib; sourceTree = "<group>"; };
+		1AA58EEE2166104400431201 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
+		1AA58EEF2166104400431201 /* NoLoNotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLoNotify.swift; sourceTree = "<group>"; };
+		1AA58EF32166104400431201 /* EULAUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EULAUI.swift; sourceTree = "<group>"; };
+		1AA58EF42166104400431201 /* EULAUI.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EULAUI.xib; sourceTree = "<group>"; };
+		1AA58EF8216610B300431201 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
+		1AA58EFA216610C300431201 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
+		1AA58EFC216610C700431201 /* RunScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScript.swift; sourceTree = "<group>"; };
+		1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLoWindow.swift; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -65,6 +84,7 @@
 		9C63B74A203DE22300516AF7 /* SierraFixes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SierraFixes.swift; sourceTree = "<group>"; };
 		9C709EED1FE07D91006C74D1 /* loadAD.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = loadAD.bash; sourceTree = "<group>"; };
 		9C709EEE1FE07D91006C74D1 /* resetDB.bash */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = resetDB.bash; sourceTree = "<group>"; };
+		9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NoMAD_ADAuth.framework; path = Carthage/Build/Mac/NoMAD_ADAuth.framework; sourceTree = "<group>"; };
 		9C8A2608207D917900204336 /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		9C9740181FC5DD6A00D9EAE6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		9C97401F1FC5DE4500D9EAE6 /* console-ad */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "console-ad"; sourceTree = "<group>"; };
@@ -85,8 +105,6 @@
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
 		9CDF3A3320EBEE4000D69F43 /* EULA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULA.swift; sourceTree = "<group>"; };
-		9CDF3A3620EBEED100D69F43 /* EULAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULAUI.swift; sourceTree = "<group>"; };
-		9CDF3A3720EBEED100D69F43 /* EULAUI.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EULAUI.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,13 +112,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0161EE972202287C00F1696F /* NoMAD_ADAuth.framework in Frameworks */,
+				0126150B2200E2F00058E5CA /* NoMAD_ADAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1AA58EE92166101100431201 /* UserInput */ = {
+			isa = PBXGroup;
+			children = (
+				1AA58EEA2166101100431201 /* UserInputUI.swift */,
+				1AA58EEB2166101100431201 /* UserInputUI.xib */,
+			);
+			path = UserInput;
+			sourceTree = "<group>";
+		};
+		1AA58EEC2166104400431201 /* Notify */ = {
+			isa = PBXGroup;
+			children = (
+				1AA58EED2166104400431201 /* NoLoNotify.xib */,
+				1AA58EEE2166104400431201 /* Tracker.swift */,
+				1AA58EEF2166104400431201 /* NoLoNotify.swift */,
+			);
+			path = Notify;
+			sourceTree = "<group>";
+		};
+		1AA58EF22166104400431201 /* EULA */ = {
+			isa = PBXGroup;
+			children = (
+				1AA58EF32166104400431201 /* EULAUI.swift */,
+				1AA58EF42166104400431201 /* EULAUI.xib */,
+			);
+			path = EULA;
+			sourceTree = "<group>";
+		};
 		9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,8 +161,10 @@
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
-				017F5D1822022CC700042737 /* NoMAD_ADAuth.framework.dSYM */,
 				9C2F03601FEB0B9A0036C08C /* README.md */,
+				1AA58EEC2166104400431201 /* Notify */,
+				1AA58EF22166104400431201 /* EULA */,
+				1AA58EE92166101100431201 /* UserInput */,
 				9CBDCFB61FC5CE2900CF73F4 /* Base */,
 				9CBDCFB21FC5CE0000CF73F4 /* Mechs */,
 				9CBDCFBB1FC5CE6400CF73F4 /* UI */,
@@ -147,7 +195,8 @@
 		9CBDCFA41FC4CEEF00CF73F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0161EE962202287C00F1696F /* NoMAD_ADAuth.framework */,
+				017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */,
+				9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -164,7 +213,10 @@
 				9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */,
 				9C63B74A203DE22300516AF7 /* SierraFixes.swift */,
 				9C9E3F5A207D8BDC001C7BB8 /* KeychainAdd.swift */,
+				1AA58EFC216610C700431201 /* RunScript.swift */,
 				9CDF3A3320EBEE4000D69F43 /* EULA.swift */,
+				1AA58EF8216610B300431201 /* UserInput.swift */,
+				1AA58EFA216610C300431201 /* Notify.swift */,
 			);
 			path = Mechs;
 			sourceTree = "<group>";
@@ -186,20 +238,11 @@
 		9CBDCFBB1FC5CE6400CF73F4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				9CDF3A3520EBEED100D69F43 /* EULA */,
+				1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */,
 				9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */,
 				9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		9CDF3A3520EBEED100D69F43 /* EULA */ = {
-			isa = PBXGroup;
-			children = (
-				9CDF3A3620EBEED100D69F43 /* EULAUI.swift */,
-				9CDF3A3720EBEED100D69F43 /* EULAUI.xib */,
-			);
-			path = EULA;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,9 +306,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA58F02216611BD00431201 /* EULAUI.xib in Resources */,
+				1AA58F04216611C400431201 /* UserInputUI.xib in Resources */,
+				1AA58EFE216611AF00431201 /* NoLoNotify.xib in Resources */,
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
-				9CDF3A3920EBEED100D69F43 /* EULAUI.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,19 +321,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA58EFD216610C700431201 /* RunScript.swift in Sources */,
+				1AA58EFB216610C300431201 /* Notify.swift in Sources */,
 				9CA733FE202E553C00EA1FE6 /* EnableFDE.swift in Sources */,
+				1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */,
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
+				1AA58F00216611B700431201 /* NoLoNotify.swift in Sources */,
 				9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */,
 				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
+				1AA58F01216611BA00431201 /* EULAUI.swift in Sources */,
+				1AA58EFF216611B400431201 /* Tracker.swift in Sources */,
+				1AA58F03216611C100431201 /* UserInputUI.swift in Sources */,
 				9C8A2609207D917900204336 /* DataExtension.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
+				1AA58EF9216610B300431201 /* UserInput.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9C9E3F5B207D8BDD001C7BB8 /* KeychainAdd.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
-				9CDF3A3820EBEED100D69F43 /* EULAUI.swift in Sources */,
 				9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */,
 				9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */,
 				9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */,

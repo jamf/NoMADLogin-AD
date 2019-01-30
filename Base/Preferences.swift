@@ -15,6 +15,8 @@ enum Preferences: String {
     case AdditionalADDomains
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
+    /// An image to display as the background image as a Base64 encoded `String`.
+    case BackgroundImageData
     /// The alpha value of the background image as an `Int`.
     case BackgroundImageAlpha
     /// Should new users be created as local administrators? Set as a `Bool`.
@@ -23,10 +25,20 @@ enum Preferences: String {
     case CreateAdminIfGroupMember
     /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
     case DemobilizeUsers
+    /// Dissallow local auth, and always do network authentication
+    case DenyLocal
+    /// Users to allow locally when DenyLocal is on
+    case DenyLocalExcluded
+    /// List of groups that should have it's members allowed to sign in. Set as an Array of Strings of the group name
+    case DenyLoginUnlessGroupMember
     /// Should FDE be enabled at first login on APFS disks? Set as a `Bool`.
     case EnableFDE
     /// Should the PRK be saved to disk for the MDM Escrow Service to collect? Set as a `Bool`.
     case EnableFDERecoveryKey
+    // Specify a custom path for the recovery key
+    case EnableFDERecoveryKeyPath
+    // Should we rotate the PRK
+    case EnableFDERekey
     /// Path for where the EULA acceptance info goes
     case EULAPath
     /// Text for EULA as a `String`.
@@ -45,16 +57,38 @@ enum Preferences: String {
     case KeychainReset
     /// Force LDAP lookups to use SSL connections. Requires certificate trust be established. Set as a `Bool`.
     case LDAPOverSSL
+    /// Force specific LDAP servers instead of finding them via DNS
+    case LDAPServers
+    /// Fallback to local auth if the network is not available
+    case LocalFallback
     /// A filesystem path to an image to display on the login screen as a `String`.
     case LoginLogo
+    /// Alpha value for the login logo
+    case LoginLogoAlpha
     /// A Base64 encoded string of an image to display on the login screen.
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
     case LoginScreen
+    /// If Notify should add additional logging
+    case NotifyLogStyle
+    /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
+    case ScriptPath
+    /// Arguments for the script, if any
+    case ScriptArgs
+    /// Use the CN from AD as the full name
+    case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield
     case UsernameFieldPlaceholder
     /// A filesystem path to an image to set the user profile image to as a `String`
     case UserProfileImage
+    
+    //UserInput bits
+    
+    case UserInputOutputPath
+    case UserInputUI
+    case UserInputLogo
+    case UserInputTitle
+    case UserInputMainText
 }
 
 
@@ -64,23 +98,27 @@ enum Preferences: String {
 /// - Parameter key: A member of the `Preferences` enum
 /// - Returns: The value, if any, for the preference. If no preference is set, returns `nil`
 func getManagedPreference(key: Preferences) -> Any? {
-    if let preference = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.value(forKey: key.rawValue)  {
-        os_log("Found managed preference: %{public}@", type: .debug, key.rawValue)
-        return preference
-    }
-
-    os_log("No NoMAD preferences found. Checking NoLoAD", type: .debug)
-
-    if let preference = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.value(forKey: key.rawValue)  {
-        os_log("Found managed preference: %{public}@", type: .debug, key.rawValue)
-        return preference
-    }
-
-    os_log("No NoLoAD preferences found. Checking new menu.nomad.login.ad", type: .debug)
+    
+    os_log("Checking menu.nomad.login.ad preference domain.", type: .debug)
 
     if let preference = UserDefaults(suiteName: "menu.nomad.login.ad")?.value(forKey: key.rawValue)  {
         os_log("Found managed preference: %{public}@", type: .debug, key.rawValue)
         return preference
     }
+
+    os_log("No menu.nomad.login.ad preference found. Checking menu.nomad.NoMADLoginAD", type: .debug)
+
+    if let preference = UserDefaults(suiteName: "menu.nomad.NoMADLoginAD")?.value(forKey: key.rawValue)  {
+        os_log("Found managed preference: %{public}@", type: .debug, key.rawValue)
+        return preference
+    }
+    
+    os_log("No menu.nomad.NoMADLoginAD preference found. Checking com.trusourcelabs.NoMAD", type: .debug)
+
+    if let preference = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")?.value(forKey: key.rawValue)  {
+        os_log("Found managed preference: %{public}@", type: .debug, key.rawValue)
+        return preference
+    }
+    
     return nil
 }
