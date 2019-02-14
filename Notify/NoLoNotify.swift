@@ -407,6 +407,8 @@ class NoLoNotify : NSWindowController, TrackerDelegate {
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
         let _ = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
+        backgroundWindow.close()
+        effectWindow.close()
         NSApp.abortModal()
         self.window?.close()
     }
