@@ -34,6 +34,34 @@ class CreateUser: NoLoMechanism {
     
     @objc   func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
+        
+        // check if we are a guest account
+        // if so, remove any existing user/home for the guest
+        // then allow the mech to create a new user/home
+        
+        if (getHint(type: .guestUser) as? String == "true") {
+            os_log("Setting up a guest account", log: createUserLog, type: .default)
+            
+            guard let password = passwordContext else {
+                os_log("No username, denying login", log: createUserLog, type: .error)
+                denyLogin()
+                return
+            }
+            
+            let result = cliTask("/usr/sbin/sysadminctl", arguments: ["-deleteUser", nomadUser ?? "NONE"], waitForTermination: true)
+            
+            try? result.write(toFile: "/tmp/sysadminctl.output", atomically: true, encoding: String.Encoding.utf8)
+            
+            if let path = getManagedPreference(key: .GuestUserAccountPasswordPath) as? String {
+                do {
+                    let pass = password + "\n"
+                    try pass.write(toFile: path + "-\(nomadUser!)", atomically: true, encoding: String.Encoding.utf8)
+                } catch {
+                    os_log("Unable to write out guest password", log: createUserLog, type: .error)
+                }
+            }
+        }
+        
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
             guard let uid = findFirstAvaliableUID() else {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)

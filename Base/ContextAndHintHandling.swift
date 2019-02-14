@@ -7,6 +7,7 @@
 //
 
 enum HintType: String {
+    case guestUser
     case networkSignIn
     case noMADUser
     case noMADDomain

@@ -47,6 +47,16 @@ enum Preferences: String {
     case EULATitle
     /// Subhead for EULA as a `String`.
     case EULASubTitle
+    /// Allow for guest accounts
+    case GuestUser
+    /// the accounts to allow as an array of strings
+    case GuestUserAccounts
+    /// where to put the guest user password
+    case GuestUserAccountPasswordPath
+    /// First name for the guest user
+    case GuestUserFirst
+    /// Last name for  the guest user
+    case GuestUserLast
     /// Ignore sites in AD. This is a compatibility measure for AD installs that have issues with sites. Set as a `Bool`.
     case IgnoreSites
     /// Adds a NoMAD entry into the keychain. `Bool` value.
