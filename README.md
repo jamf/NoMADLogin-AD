@@ -21,6 +21,38 @@ For those of you that are new to NoLo, the basic features are:
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
 
+## What's new in 1.3.0
+* `BackgroundImageAlpha` an Integer from 0-10 which determines the alpha value for the background image in 10% increments, i.e. a value of `3` would be a 30% alpha
+This was broken before and is now fixed.
+* `DenyLocal` Boolean determines if local user accounts are allowed to sign in, or if all auth is forced through AD.
+* `DenyLocalExcluded` Array or strings of user shortnames that will be allowed to authenticate locally instead of via AD.
+* `DenyLoginUnlessGroupMember` Array of strings of AD group names. When an AD user is authenticating, only allow login if the user is a member of one of these groups.
+* `EnableFDERecoveryKeyPath` String of a folder path where the recovery key will be stored. NoLo will create this folder if it does not already exist.
+* `EnableFDERekey` Boolean that determines if the FileVault personal recovery key should be rotated when a valid FileVault user signs in.
+* `LDAPServers` Array of strings of LDAP servers that you would like to use for AD authentication instead of using SRV record lookup.
+* `LoginLogoAlpha` an Integer from 0-10 which determines the alpha value for the logo image in 10% increments, i.e. a value of `3` would be a 30% alpha
+This was broken before and is now fixed.
+* `LoginLogoData` is working again.
+* `NotifyLogStyle` Takes a string of `jamf`, `filewave`, `munki` or `none` and will add the appropriate log file to the the Notify mechanism.
+* `ScriptPath` Path to a script for the RunScript mechanism to run.
+* `ScriptArgs` Array of strings of arguments to give the script being run by the RunScript mechanism. `<<User>>` will be replaced with the current user's shortname, `<<First>>` with the current user's first name, `<<Last>>` with the current user's last name, `<<Principal>>` with the current user's Kerberos principal.
+* `UseCNForFullName` Use the the user's cn from AD instead of attempting to create the user name from the first and last name attributes of the user's AD record.
+* `UsernameFieldPlaceholder` text to place into the user field in the loginwindow to give a hint as to what to enter.
+* `UserInputOutputPath` string determining the path where the `userinfo.plist` will be written.
+* `UserInputUI` a rather complicated dictionary that contains the settings for up to 4 text fields and 4 pop up buttons that will be shown during the UserInput mechanism. Look in the ConfigSamples folder in the source for an example of this configuration profile.
+* `UserInputLogo` path to a logo file to use for the UserInput mechanism.
+* `UserInputTitle` string for the UserInput mechanism title.
+* `UserInputMainText` string for the UserInput text.
+
+### New Mechanisms
+* `NoMADLoginAD:RunScript` will run a script of your choosing as set by the preferences. This is typically marked as `privileged` to allow the script to run as root.
+* `NoMADLoginAD:Notify` runs the Notify screen. See the DEPNotify project for more information.
+* `NoMADLoginAD:UserInput` displays up to 4 text fields and 4 pull down menus to allow the user to enter information during the login process.
+
+### Other changes
+* The Demobilize mechanism will work with mobile accounts from other services than just Apple's AD plugin.
+* The Demobilze and Notify mechanisms can be used without the NoMAD Login login window UI.
+
 ## What's new in 1.2.2
 * Built product with current Swift SDK.
 

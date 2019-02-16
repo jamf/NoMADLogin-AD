@@ -573,15 +573,15 @@ extension SignIn: NoMADUserSessionDelegate {
         
         os_log("Checking for DenyLogin groups", log: uiLog, type: .debug)
         
-        if let adminGroups = getManagedPreference(key: .DenyLoginUnlessGroupMember) as? [String] {
-            os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+        if let allowedGroups = getManagedPreference(key: .DenyLoginUnlessGroupMember) as? [String] {
+            os_log("Found a DenyLoginUnlessGroupMember key value: %{public}@ ", log: uiLog, type: .debug, allowedGroups.debugDescription)
             
             // set the allowed login to false for now
             
             allowedLogin = false
             
             user.groups.forEach { group in
-                if adminGroups.contains(group) {
+                if allowedGroups.contains(group) {
                     allowedLogin = true
                     os_log("User is a member of %{public}@ group. Setting allowedLogin = true ", log: uiLog, type: .debug, group)
                 }
