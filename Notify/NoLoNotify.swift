@@ -182,7 +182,13 @@ class NoLoNotify : NSWindowController, TrackerDelegate {
                                     defer: true)
             
             effectWindow.contentView = effectView
-            effectWindow.alphaValue = 0.8
+            
+            if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
+                effectWindow.alphaValue = CGFloat(Double(backgroundImageAlpha) * 0.1)
+            } else {
+                effectWindow.alphaValue = 0.8
+            }
+            
             effectWindow.orderFrontRegardless()
             effectWindow.canBecomeVisibleWithoutLogin = true
         }

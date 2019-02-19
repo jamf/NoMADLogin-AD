@@ -99,33 +99,7 @@ class SignIn: NSWindowController {
             effectWindow.contentView = effectView
             
             if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
-                
-                switch backgroundImageAlpha {
-                case 0 :
-                    effectWindow.alphaValue = 0.0
-                case 1 :
-                    effectWindow.alphaValue = 0.1
-                case 2 :
-                    effectWindow.alphaValue = 0.2
-                case 3 :
-                    effectWindow.alphaValue = 0.3
-                case 4 :
-                    effectWindow.alphaValue = 0.4
-                case 5 :
-                    effectWindow.alphaValue = 0.5
-                case 6 :
-                    effectWindow.alphaValue = 0.6
-                case 7 :
-                    effectWindow.alphaValue = 0.7
-                case 8 :
-                    effectWindow.alphaValue = 0.8
-                case 9 :
-                    effectWindow.alphaValue = 0.9
-                case 10 :
-                    effectWindow.alphaValue = 1.0
-                default :
-                    effectWindow.alphaValue = 1.0
-                }
+                effectWindow.alphaValue = CGFloat(Double(backgroundImageAlpha) * 0.1)
             } else {
                 effectWindow.alphaValue = 0.8
             }
