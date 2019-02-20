@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0126150B2200E2F00058E5CA /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
 		0126150C2200E3000058E5CA /* NoMAD_ADAuth.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		017F5D1722022A0700042737 /* NoMAD_ADAuth.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */; };
+		1A43759E221CF00E00D1B976 /* LocalCheckAndMigrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A43759D221CF00E00D1B976 /* LocalCheckAndMigrate.swift */; };
+		1A4375A0221CF08400D1B976 /* DSQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A43759F221CF08400D1B976 /* DSQueryable.swift */; };
+		1A4375A2221CF13500D1B976 /* DS+Okta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4375A1221CF13500D1B976 /* DS+Okta.swift */; };
 		1AA58EF9216610B300431201 /* UserInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EF8216610B300431201 /* UserInput.swift */; };
 		1AA58EFB216610C300431201 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFA216610C300431201 /* Notify.swift */; };
 		1AA58EFD216610C700431201 /* RunScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EFC216610C700431201 /* RunScript.swift */; };
@@ -21,6 +23,7 @@
 		1AA58F03216611C100431201 /* UserInputUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEA2166101100431201 /* UserInputUI.swift */; };
 		1AA58F04216611C400431201 /* UserInputUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EEB2166101100431201 /* UserInputUI.xib */; };
 		1AACDAE02217B72B006D8A65 /* NoLoUserInput Sample.mobileconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */; };
+		1AACDAE12217BAFC006D8A65 /* NoMAD_ADAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7FA0B6203369DA00E7D67B /* NoMAD_ADAuth.framework */; };
 		1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
@@ -67,6 +70,9 @@
 
 /* Begin PBXFileReference section */
 		017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
+		1A43759D221CF00E00D1B976 /* LocalCheckAndMigrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCheckAndMigrate.swift; sourceTree = "<group>"; };
+		1A43759F221CF08400D1B976 /* DSQueryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSQueryable.swift; sourceTree = "<group>"; };
+		1A4375A1221CF13500D1B976 /* DS+Okta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DS+Okta.swift"; sourceTree = "<group>"; };
 		1AA58EEA2166101100431201 /* UserInputUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputUI.swift; sourceTree = "<group>"; };
 		1AA58EEB2166101100431201 /* UserInputUI.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInputUI.xib; sourceTree = "<group>"; };
 		1AA58EED2166104400431201 /* NoLoNotify.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoLoNotify.xib; sourceTree = "<group>"; };
@@ -114,7 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0126150B2200E2F00058E5CA /* NoMAD_ADAuth.framework in Frameworks */,
+				1AACDAE12217BAFC006D8A65 /* NoMAD_ADAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,9 +241,12 @@
 		9CBDCFB61FC5CE2900CF73F4 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				1A43759F221CF08400D1B976 /* DSQueryable.swift */,
+				1A43759D221CF00E00D1B976 /* LocalCheckAndMigrate.swift */,
 				9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */,
 				9CBDCFB41FC5CE2100CF73F4 /* NoMADLoginAD.h */,
 				9CBDCFB31FC5CE2100CF73F4 /* NoMADLoginAD.m */,
+				1A4375A1221CF13500D1B976 /* DS+Okta.swift */,
 				9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */,
 				9C8A2608207D917900204336 /* DataExtension.swift */,
 				9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */,
@@ -343,10 +352,13 @@
 				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
 				1AA58F01216611BA00431201 /* EULAUI.swift in Sources */,
 				1AA58EFF216611B400431201 /* Tracker.swift in Sources */,
+				1A43759E221CF00E00D1B976 /* LocalCheckAndMigrate.swift in Sources */,
 				1AA58F03216611C100431201 /* UserInputUI.swift in Sources */,
 				9C8A2609207D917900204336 /* DataExtension.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
+				1A4375A2221CF13500D1B976 /* DS+Okta.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
+				1A4375A0221CF08400D1B976 /* DSQueryable.swift in Sources */,
 				1AA58EF9216610B300431201 /* UserInput.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,

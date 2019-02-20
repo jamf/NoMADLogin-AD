@@ -7,6 +7,8 @@
 //
 
 enum HintType: String {
+    case migratePass
+    case migrateUser
     case networkSignIn
     case noMADUser
     case noMADDomain

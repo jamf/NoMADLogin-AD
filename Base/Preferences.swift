@@ -69,6 +69,10 @@ enum Preferences: String {
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
     case LoginScreen
+    /// should we migrate users?
+    case Migrate
+    /// should we hide users when we migrate?
+    case MigrateUsersHide
     /// If Notify should add additional logging
     case NotifyLogStyle
     /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
