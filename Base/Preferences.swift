@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Preferences: String {
+enum Preferences: String, CaseIterable {
     /// The desired AD domain as a `String`.
     case ADDomain
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
@@ -93,6 +93,45 @@ enum Preferences: String {
     case UserInputLogo
     case UserInputTitle
     case UserInputMainText
+}
+
+func printAllPrefs(writeOut: Bool=false) {
+    var result = ""
+    
+    for key in Preferences.allCases {
+        
+        let defaults = UserDefaults.init(suiteName: "menu.nomad.login.ad")
+        
+        let pref = defaults?.object(forKey: key.rawValue) as AnyObject
+        
+        switch String(describing: type(of: pref)) {
+        case "__NSCFBoolean" :
+            result.append("\t" + key.rawValue + ": " + String(describing: ( defaults?.bool(forKey: key.rawValue))))
+        case "__NSCFArray" :
+            result.append("\t" + key.rawValue + ": " + ( String(describing: (defaults?.array(forKey: key.rawValue)!))))
+        case "__NSTaggedDate", "__NSDate" :
+            result.append("\t" + key.rawValue + ": " + ( defaults?.object(forKey: key.rawValue) as! Date ).description(with: Locale.current))
+        case "__NSCFDictionary":
+            result.append("\t" + key.rawValue + ": " + String(describing: defaults?.dictionary(forKey: key.rawValue)!))
+        case "__NSCFData" :
+            result.append("\t" + key.rawValue + ": " + (defaults?.data(forKey: key.rawValue)?.base64EncodedString() ?? "ERROR"))
+        case "__NSCFNumber" :
+            result.append("\t" + key.rawValue + ": " + String(describing: defaults?.integer(forKey: key.rawValue)))
+        default :
+            result.append("\t" + key.rawValue + ": " + ( defaults?.object(forKey: key.rawValue) as? String ?? "Unset"))
+        }
+        
+        if defaults?.objectIsForced(forKey: key.rawValue) ?? false {
+            result.append("\t\tForced")
+        }
+        result.append("\n")
+    }
+    
+    if writeOut {
+        try? result.write(toFile: "/tmp/menu.nomad.login.ad.plist", atomically: true, encoding: String.Encoding.utf8)
+    } else {
+        print(result)
+    }
 }
 
 

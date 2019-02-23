@@ -74,6 +74,10 @@ class LogOnly : NoLoMechanism {
                 os_log("Hint item %{public}@: %{public}@", log: loggerMech, type: .default, item, result)
             }
         }
+        
+        os_log("Printing all preferences", log: loggerMech, type: .debug)
+        
+        
 
         let _ = allowLogin()
         os_log("LogOnly mech complete", log: loggerMech, type: .debug)

@@ -297,10 +297,10 @@ class SignIn: NSWindowController, DSQueryable {
         oldPassword.becomeFirstResponder()
     }
 
-    fileprivate func authFail() {
+    fileprivate func authFail( _ message: String?=nil) {
         session = nil
         password.stringValue = ""
-        alertText.stringValue = "Authentication Failed"
+        alertText.stringValue = message ?? "Authentication Failed"
         loginStartedUI()
     }
 
@@ -563,6 +563,18 @@ extension SignIn: NoMADUserSessionDelegate {
             os_log("Password is expired or requires change.", log: uiLog, type: .default)
             showResetUI()
             return
+        case .OffDomain :
+            os_log("AD authentication failed, off domain.", log: uiLog, type: .default)
+            
+            if getManagedPreference(key: .LocalFallback) as? Bool ?? false {
+                os_log("Local fallback enabled, passing off to local authentication", log: uiLog, type: .default)
+                setRequiredHintsAndContext()
+                completeLogin(authResult: .allow)
+                return
+            } else {
+                authFail()
+                return
+            }
         default:
             os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
             authFail()
@@ -672,7 +684,7 @@ extension SignIn: NoMADUserSessionDelegate {
             if self.didUpdateFail == true {
                 self.migrateText.stringValue = "Invalid password. Try again."
             } else {
-                self.migrateText.stringValue = "Cloud password does not match local password. Please enter your previous local password to update it."
+                self.migrateText.stringValue = "Active Directory password does not match local password. Please enter your previous local password to update it."
             }
             
         }

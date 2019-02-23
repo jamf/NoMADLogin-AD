@@ -6,7 +6,7 @@
 //  Copyright © 2017 NoMAD. All rights reserved.
 //
 
-enum HintType: String {
+enum HintType: String, CaseIterable {
     case migratePass
     case migrateUser
     case networkSignIn
