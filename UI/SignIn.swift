@@ -579,7 +579,6 @@ extension SignIn: NoMADUserSessionDelegate {
         } else {
             authFail()
             alertText.stringValue = "Not authorized to login."
-            showResetUI()
         }
     }
 }
