@@ -638,12 +638,15 @@ extension SignIn: NoMADUserSessionDelegate {
                     if localCheck.syncPass(oldPass: originalPass!) {
                         // password changed clean
                         completeLogin(authResult: .allow)
+                        return
                     } else {
                         // unable to change the pass, let user fix
                         showMigration()
                     }
+                } else {
+                    showMigration()
                 }
-            case .errorSkipMigration, .skipMigration, .userMatchSkipMigration, .complete:
+        case .errorSkipMigration, .skipMigration, .userMatchSkipMigration, .complete:
                 completeLogin(authResult: .allow)
             }
 
