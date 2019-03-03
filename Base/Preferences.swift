@@ -86,6 +86,10 @@ enum Preferences: String, CaseIterable {
     /// A filesystem path to an image to set the user profile image to as a `String`
     case UserProfileImage
     
+    //Messages
+    
+    case MessagePasswordSync // what to show when the password needs to sync
+    
     //UserInput bits
     
     case UserInputOutputPath
@@ -93,6 +97,11 @@ enum Preferences: String, CaseIterable {
     case UserInputLogo
     case UserInputTitle
     case UserInputMainText
+    
+    //Password update keys
+    
+    case PasswordOverwriteSilent // will silently update user password to new one
+    case PasswordOverwriteOptional // allow the user to stomp on the password if interested
 }
 
 func printAllPrefs(writeOut: Bool=false) {

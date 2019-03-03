@@ -12,7 +12,7 @@ import NoMAD_ADAuth
 
 
 /// Mechanism to create a local user and homefolder.
-class CreateUser: NoLoMechanism {
+class CreateUser: NoLoMechanism, DSQueryable {
     
     //MARK: - Properties
     let session = ODSession.default()
@@ -86,6 +86,18 @@ class CreateUser: NoLoMechanism {
         } else {
             // no user to create
             os_log("Skipping local account creation", log: createUserLog, type: .default)
+            
+            // check to see if we need to overwrite the password
+            
+            if (getHint(type: .passwordOverride) as? String == "true") {
+                os_log("Attempting to override user password.", log: createUserLog)
+                do {
+                    let localUserRecord = try getLocalRecord(nomadUser ?? "NONE")
+                    try localUserRecord.changePassword(nil, toPassword: nomadPass)
+                } catch {
+                    os_log("Unable to override user password", log: createUserLog)
+                }
+            }
             
             // Set the login timestamp if requested
             setTimestampFor(nomadUser as? String ?? "")
@@ -339,6 +351,8 @@ class CreateUser: NoLoMechanism {
             return "English" + templateName
         case "fr":
             return "French" + templateName
+        case "de":
+            return "German" + templateName
         case "it":
             return "Italian" + templateName
         case "ja":

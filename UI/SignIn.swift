@@ -558,7 +558,7 @@ class SignIn: NSWindowController, DSQueryable {
         if self.didUpdateFail == true {
             self.migrateText.stringValue = "Invalid password. Try again."
         } else {
-            self.migrateText.stringValue = "Active Directory password does not match local password. Please enter your previous local password to update it."
+            self.migrateText.stringValue = getManagedPreference(key: .MessagePasswordSync) as? String ?? "Active Directory password does not match local password. Please enter your previous local password to update it."
         }
     }
     

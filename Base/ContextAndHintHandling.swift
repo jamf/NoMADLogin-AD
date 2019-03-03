@@ -20,6 +20,8 @@ enum HintType: String, CaseIterable {
     case uid
     case gid
     case kerberos_principal
+    
+    case passwordOverride // stmop on the password
 }
 
 // attribute statics

@@ -54,8 +54,15 @@ class LocalCheckAndMigrate : ContextAndHintHandling, DSQueryable {
             } else {
                 
                 os_log("Local name matches, but not password", log: uiLog, type: .default)
-                return .syncPassword
                 
+                if getManagedPreference(key: .PasswordOverwriteSilent) as? Bool ?? false {
+                    // set the hint and return complete
+                    
+                    setHint(type: .passwordOverride, hint: true)
+                    return .complete
+                } else {
+                    return .syncPassword
+                }
             }
         } catch DSQueryableErrors.notLocalUser {
             os_log("User is not a local user", log: uiLog, type: .default)
