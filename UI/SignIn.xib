@@ -8,10 +8,18 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SignIn" customModule="NoMADLoginAD" customModuleProvider="target">
             <connections>
+                <outlet property="MigrateNo" destination="aQQ-vc-DJZ" id="ub1-Kq-w50"/>
                 <outlet property="alertText" destination="YLL-tT-giS" id="Lp8-lB-zAf"/>
                 <outlet property="domain" destination="ktB-bz-Qqt" id="Nsn-IH-wYf"/>
                 <outlet property="imageView" destination="C6d-sv-yXM" id="h6w-xM-lUP"/>
                 <outlet property="loginStack" destination="gGp-dd-t9H" id="OVU-WY-L3G"/>
+                <outlet property="migrateBox" destination="rCK-5d-4Ch" id="AOQ-Iw-85M"/>
+                <outlet property="migrateCancel" destination="BFr-hb-LZC" id="Y1p-Rm-k5c"/>
+                <outlet property="migrateOK" destination="xJG-bo-uda" id="9OR-8O-EId"/>
+                <outlet property="migratePassword" destination="4Km-RD-8Xk" id="Dz8-Nf-VWm"/>
+                <outlet property="migrateSpinner" destination="Zwm-jn-pYp" id="sZo-x9-Yg6"/>
+                <outlet property="migrateText" destination="4Q7-1l-DME" id="J69-Iz-2ef"/>
+                <outlet property="migrateUsers" destination="Afi-Ru-xbY" id="4wk-Dd-ro9"/>
                 <outlet property="newPassword" destination="oSe-dI-fep" id="SEH-66-qCR"/>
                 <outlet property="newPasswordConfirmation" destination="czU-dA-foI" id="tmr-OM-1N8"/>
                 <outlet property="oldPassword" destination="dYF-nq-lV9" id="eF6-IC-GU7"/>
@@ -20,6 +28,7 @@
                 <outlet property="passwordChangeStack" destination="RLo-4d-Xte" id="fRB-o1-ghd"/>
                 <outlet property="signIn" destination="7fI-fi-xA6" id="Vek-BT-qmg"/>
                 <outlet property="username" destination="bz7-9V-hj9" id="SmY-n9-wt5"/>
+                <outlet property="usernameLabel" destination="7Kk-xo-jYg" id="9xh-ie-tOZ"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="NDA-Gg-a3e"/>
             </connections>
         </customObject>
@@ -310,6 +319,9 @@ DQ
 DQ
 </string>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationOK:" target="-2" id="Od5-6D-HPm"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BFr-hb-LZC">
                                     <rect key="frame" x="29" y="20" width="82" height="32"/>
@@ -321,6 +333,9 @@ DQ
 Gw
 </string>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationCancel:" target="-2" id="Ad7-T3-q8O"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aQQ-vc-DJZ">
                                     <rect key="frame" x="111" y="20" width="123" height="32"/>
@@ -329,6 +344,9 @@ Gw
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationNo:" target="-2" id="7oc-zd-aao"/>
+                                    </connections>
                                 </button>
                                 <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Zwm-jn-pYp">
                                     <rect key="frame" x="153" y="9" width="16" height="16"/>

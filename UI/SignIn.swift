@@ -291,6 +291,7 @@ class SignIn: NSWindowController, DSQueryable {
         loginStack.isHidden = true
         signIn.isHidden = true
         signIn.isEnabled = false
+        migrateBox.isHidden = true
         passwordChangeStack.isHidden = false
         passwordChangeButton.isHidden = false
         passwordChangeButton.isEnabled = true
@@ -537,6 +538,125 @@ class SignIn: NSWindowController, DSQueryable {
         setHint(type: .noMADUser, hint: SpecialUsers.noloShutdown.rawValue)
         completeLogin(authResult: .allow)
     }
+    
+    //MARK: - Migration Methods
+    
+    fileprivate func showPasswordSync() {
+        // hide other possible boxes
+        self.migrateBox.isHidden = true
+        self.loginStack.isHidden = true
+        self.signIn.isHidden = true
+        self.signIn.isEnabled = true
+        self.MigrateNo.isHidden = true
+        self.migrateUsers.isHidden = true
+        self.usernameLabel.isHidden = true
+        
+        // show migration box
+        self.migrateBox.isHidden = false
+        self.migrateSpinner.isHidden = false
+        
+        if self.didUpdateFail == true {
+            self.migrateText.stringValue = "Invalid password. Try again."
+        } else {
+            self.migrateText.stringValue = "Active Directory password does not match local password. Please enter your previous local password to update it."
+        }
+    }
+    
+    fileprivate func showMigration() {
+        
+        //RunLoop.main.perform {
+        // hide other possible boxes
+        os_log("Showing migration box", log: uiLog, type: .default)
+        
+        self.loginStack.isHidden = true
+        self.signIn.isHidden = true
+        self.signIn.isEnabled = true
+        
+        // show migration box
+        self.migrateBox.isHidden = false
+        self.migrateSpinner.isHidden = false
+        self.migrateUsers.addItems(withTitles: self.localCheck.migrationUsers ?? [""])
+        //}
+    }
+    
+    @IBAction func clickMigrationOK(_ sender: Any) {
+        RunLoop.main.perform {
+            self.migrateSpinner.isHidden = false
+            self.migrateSpinner.startAnimation(nil)
+        }
+        
+        let migrateUIPass = self.migratePassword.stringValue
+        if migrateUIPass.isEmpty {
+            os_log("No password was entered", log: uiLog, type: .error)
+            RunLoop.main.perform {
+                self.migrateSpinner.isHidden = true
+                self.migrateSpinner.stopAnimation(nil)
+            }
+            return
+        }
+        
+        // Take a look to see if we are syncing passwords. Until the next refactor the easiest way to tell is if the picklist is hidden.
+        if self.migrateUsers.isHidden {
+            do {
+                os_log("Password doesn't match existing local. Try to change local pass to match.", log: uiLog, type: .default)
+                let localUser = try getLocalRecord(shortName)
+                try localUser.changePassword(migrateUIPass, toPassword: passString)
+                didUpdateFail = false
+                passChanged = false
+                os_log("Password sync worked, allowing login", log: uiLog, type: .default)
+                setHint(type: .migratePass, hint: migrateUIPass)
+                completeLogin(authResult: .allow)
+                return
+            } catch {
+                os_log("Unable to sync local password to Network password. Reload and try again", log: uiLog, type: .error)
+                didUpdateFail = true
+                showPasswordSync()
+                return
+            }
+        }
+        guard let migrateToUser = self.migrateUsers.selectedItem?.title else {
+            os_log("Could not select user to migrate from pick list.", log: uiLog, type: .error)
+            return
+        }
+        do {
+            os_log("Getting user record for %{public}@", log: uiLog, type: .default, migrateToUser)
+            migrateUserRecord = try getLocalRecord(migrateToUser)
+            os_log("Checking existing password for %{public}@", log: uiLog, type: .default, migrateToUser)
+            if migrateUIPass != passString {
+                os_log("No match. Upating local password for %{public}@", log: uiLog, type: .default, migrateToUser)
+                try migrateUserRecord?.changePassword(migrateUIPass, toPassword: passString)
+            } else {
+                os_log("Okta and local passwords matched for %{public}@", log: uiLog, type: .default, migrateToUser)
+            }
+            // Mark the record to add an alias if required
+            os_log("Setting hints for %{public}@", log: uiLog, type: .default, migrateToUser)
+            self.setHint(type: .migrateUser, hint: migrateToUser)
+            self.setHint(type: .migratePass, hint: migrateUIPass)
+            os_log("Allowing login", log: uiLog, type: .default, migrateToUser)
+            completeLogin(authResult: .allow)
+        } catch {
+            os_log("Migration failed with: %{public}@", log: uiLog, type: .error, error.localizedDescription)
+            return
+        }
+        
+        // if we are here, the password didn't work
+        os_log("Unable to migrate user.", log: uiLog, type: .error)
+        self.migrateSpinner.isHidden = true
+        self.migrateSpinner.stopAnimation(nil)
+        self.migratePassword.stringValue = ""
+        self.completeLogin(authResult: .deny)
+    }
+    
+    @IBAction func clickMigrationCancel(_ sender: Any) {
+        passChanged = false
+        didUpdateFail = false
+        completeLogin(authResult: .deny)
+    }
+    
+    @IBAction func clickMigrationNo(_ sender: Any) {
+        // user doesn't want to migrate, so create a new account
+        completeLogin(authResult: .allow)
+    }
 }
 
 
@@ -632,6 +752,7 @@ extension SignIn: NoMADUserSessionDelegate {
                 showMigration()
             case .syncPassword:
                 // first check to see if we can resolve this ourselves
+                os_log("Sync password called.", log: uiLog)
                 
                 if originalPass != nil {
                     os_log("Attempting to sync local pass.", log: uiLog, type: .default)
@@ -641,10 +762,10 @@ extension SignIn: NoMADUserSessionDelegate {
                         return
                     } else {
                         // unable to change the pass, let user fix
-                        showMigration()
+                        showPasswordSync()
                     }
                 } else {
-                    showMigration()
+                    showPasswordSync()
                 }
         case .errorSkipMigration, .skipMigration, .userMatchSkipMigration, .complete:
                 completeLogin(authResult: .allow)
@@ -669,118 +790,6 @@ extension SignIn: NoMADUserSessionDelegate {
         
         // set the network auth time to be added to the user record
         setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
-    }
-    
-    //MARK: - Migration Methods
-    
-    fileprivate func showPasswordSync() {
-        RunLoop.main.perform {
-            // hide other possible boxes
-            self.MigrateNo.isHidden = true
-            self.migrateUsers.isHidden = true
-            self.usernameLabel.isHidden = true
-            
-            // show migration box
-            self.migrateBox.isHidden = false
-            self.migrateSpinner.isHidden = false
-            
-            if self.didUpdateFail == true {
-                self.migrateText.stringValue = "Invalid password. Try again."
-            } else {
-                self.migrateText.stringValue = "Active Directory password does not match local password. Please enter your previous local password to update it."
-            }
-            
-        }
-    }
-    
-    fileprivate func showMigration() {
-        
-        RunLoop.main.perform {
-            // hide other possible boxes
-            
-            // show migration box
-            self.migrateBox.isHidden = false
-            self.migrateSpinner.isHidden = false
-            self.migrateUsers.addItems(withTitles: self.localCheck.migrationUsers ?? [""])
-        }
-    }
-    
-    @IBAction func clickMigrationOK(_ sender: Any) {
-        RunLoop.main.perform {
-            self.migrateSpinner.isHidden = false
-            self.migrateSpinner.startAnimation(nil)
-        }
-        
-        let migrateUIPass = self.migratePassword.stringValue
-        if migrateUIPass.isEmpty {
-            os_log("No password was entered", log: uiLog, type: .error)
-            RunLoop.main.perform {
-                self.migrateSpinner.isHidden = true
-                self.migrateSpinner.stopAnimation(nil)
-            }
-            return
-        }
-        
-        // Take a look to see if we are syncing passwords. Until the next refactor the easiest way to tell is if the picklist is hidden.
-        if self.migrateUsers.isHidden {
-            do {
-                os_log("Password doesn't match existing local. Try to change local pass to match.", log: uiLog, type: .default)
-                let localUser = try getLocalRecord(shortName)
-                try localUser.changePassword(migrateUIPass, toPassword: passString)
-                didUpdateFail = false
-                passChanged = false
-                os_log("Password sync worked, allowing login", log: uiLog, type: .default)
-                completeLogin(authResult: .allow)
-                return
-            } catch {
-                os_log("Unable to sync local password to Network password. Reload and try again", log: uiLog, type: .error)
-                didUpdateFail = true
-                showPasswordSync()
-                return
-            }
-        }
-        guard let migrateToUser = self.migrateUsers.selectedItem?.title else {
-            os_log("Could not select user to migrate from pick list.", log: uiLog, type: .error)
-            return
-        }
-        do {
-            os_log("Getting user record for %{public}@", log: uiLog, type: .default, migrateToUser)
-            migrateUserRecord = try getLocalRecord(migrateToUser)
-            os_log("Checking existing password for %{public}@", log: uiLog, type: .default, migrateToUser)
-            if migrateUIPass != passString {
-                os_log("No match. Upating local password for %{public}@", log: uiLog, type: .default, migrateToUser)
-                try migrateUserRecord?.changePassword(migrateUIPass, toPassword: passString)
-            } else {
-                os_log("Okta and local passwords matched for %{public}@", log: uiLog, type: .default, migrateToUser)
-            }
-            // Mark the record to add an alias if required
-            os_log("Setting hints for %{public}@", log: uiLog, type: .default, migrateToUser)
-            self.setHint(type: .migrateUser, hint: migrateToUser)
-            self.setHint(type: .migratePass, hint: migrateUIPass)
-            os_log("Allowing login", log: uiLog, type: .default, migrateToUser)
-            completeLogin(authResult: .allow)
-        } catch {
-            os_log("Migration failed with: %{public}@", log: uiLog, type: .error, error.localizedDescription)
-            return
-        }
-        
-        // if we are here, the password didn't work
-        os_log("Unable to migrate user.", log: uiLog, type: .error)
-        self.migrateSpinner.isHidden = true
-        self.migrateSpinner.stopAnimation(nil)
-        self.migratePassword.stringValue = ""
-        self.completeLogin(authResult: .deny)
-    }
-    
-    @IBAction func clickMigrationCancel(_ sender: Any) {
-        passChanged = false
-        didUpdateFail = false
-        completeLogin(authResult: .deny)
-    }
-    
-    @IBAction func clickMigrationNo(_ sender: Any) {
-        // user doesn't want to migrate, so create a new account
-        completeLogin(authResult: .allow)
     }
 }
 
