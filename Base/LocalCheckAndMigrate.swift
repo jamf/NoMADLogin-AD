@@ -55,7 +55,7 @@ class LocalCheckAndMigrate : ContextAndHintHandling, DSQueryable {
                 
                 os_log("Local name matches, but not password", log: uiLog, type: .default)
                 
-                if getManagedPreference(key: .PasswordOverwriteSilent) as? Bool ?? false {
+                if (getManagedPreference(key: .PasswordOverwriteSilent) as? Bool ?? false) {
                     // set the hint and return complete
                     
                     setHint(type: .passwordOverride, hint: true)
