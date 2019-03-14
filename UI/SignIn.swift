@@ -356,7 +356,7 @@ class SignIn: NSWindowController {
     }
 
 
-    @IBAction func changePassowrd(_ sender: Any) {
+    @IBAction func ChangePassword(_ sender: Any) {
         guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
             os_log("New passwords didn't match", log: uiLog, type: .error)
             alertText.stringValue = "New passwords don't match"
@@ -504,6 +504,7 @@ extension SignIn: NoMADUserSessionDelegate {
         
         if passChanged {
             os_log("Password change failed.", log: uiLog, type: .default)
+            os_log("Password change failure description: %{public}@", log: uiLog, type: .error, description)
             oldPassword.isEnabled = true
             newPassword.isEnabled = true
             newPasswordConfirmation.isEnabled = true
