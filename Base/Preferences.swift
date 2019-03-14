@@ -14,6 +14,8 @@ enum Preferences: String {
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
     case AdditionalADDomains
     /// A filesystem path to a background image as a `String`.
+    case ADDomainWriteConfig
+    /// Specifies if you do not want to want to write out the krb5.conf file. `Bool` value.
     case BackgroundImage
     /// An image to display as the background image as a Base64 encoded `String`.
     case BackgroundImageData

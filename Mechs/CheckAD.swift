@@ -30,11 +30,32 @@ class CheckAD: NoLoMechanism {
         if let domain = self.managedDomain {
             os_log("Set managed domain for loginwindow", log: checkADLog, type: .debug)
             signIn.domainName = domain.uppercased()
+            
+            let writeKerb5Conf = getManagedPreference(key: .ADDomainWriteConfig) as? Bool
+            if writeKerb5Conf != false {
+                os_log("Writing Kerberos configuration file", log: checkADLog, type: .debug)
+                let krb5FileLoc = "/etc/krb5.conf"
+                let krb5Config = """
+                [libdefaults]
+                    default_realm = \(signIn.domainName)
+                """
+                
+                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    
+                    let krb5FileURL = dir.appendingPathComponent(krb5FileLoc)
+                    do {
+                        try krb5Config.write(to: krb5FileURL, atomically: false, encoding: .utf8)
+                    } catch {
+                        os_log("Failure writing krb5.conf file", log: checkADLog, type: .error)
+                    }
+                }
+            }
         }
         if let isSSLRequired = self.isSSLRequired {
             os_log("Set SSL required", log: checkADLog, type: .debug)
             signIn.isSSLRequired = isSSLRequired
         }
+
         guard signIn.window != nil else {
             os_log("Could not create login window UI", log: checkADLog, type: .default)
             return
