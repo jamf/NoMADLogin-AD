@@ -99,33 +99,7 @@ class SignIn: NSWindowController {
             effectWindow.contentView = effectView
             
             if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
-                
-                switch backgroundImageAlpha {
-                case 0 :
-                    effectWindow.alphaValue = 0.0
-                case 1 :
-                    effectWindow.alphaValue = 0.1
-                case 2 :
-                    effectWindow.alphaValue = 0.2
-                case 3 :
-                    effectWindow.alphaValue = 0.3
-                case 4 :
-                    effectWindow.alphaValue = 0.4
-                case 5 :
-                    effectWindow.alphaValue = 0.5
-                case 6 :
-                    effectWindow.alphaValue = 0.6
-                case 7 :
-                    effectWindow.alphaValue = 0.7
-                case 8 :
-                    effectWindow.alphaValue = 0.8
-                case 9 :
-                    effectWindow.alphaValue = 0.9
-                case 10 :
-                    effectWindow.alphaValue = 1.0
-                default :
-                    effectWindow.alphaValue = 1.0
-                }
+                effectWindow.alphaValue = CGFloat(Double(backgroundImageAlpha) * 0.1)
             } else {
                 effectWindow.alphaValue = 0.8
             }
@@ -382,7 +356,7 @@ class SignIn: NSWindowController {
     }
 
 
-    @IBAction func changePassowrd(_ sender: Any) {
+    @IBAction func ChangePassword(_ sender: Any) {
         guard newPassword.stringValue == newPasswordConfirmation.stringValue else {
             os_log("New passwords didn't match", log: uiLog, type: .error)
             alertText.stringValue = "New passwords don't match"
@@ -530,6 +504,7 @@ extension SignIn: NoMADUserSessionDelegate {
         
         if passChanged {
             os_log("Password change failed.", log: uiLog, type: .default)
+            os_log("Password change failure description: %{public}@", log: uiLog, type: .error, description)
             oldPassword.isEnabled = true
             newPassword.isEnabled = true
             newPasswordConfirmation.isEnabled = true
@@ -573,15 +548,15 @@ extension SignIn: NoMADUserSessionDelegate {
         
         os_log("Checking for DenyLogin groups", log: uiLog, type: .debug)
         
-        if let adminGroups = getManagedPreference(key: .DenyLoginUnlessGroupMember) as? [String] {
-            os_log("Found a CreateAdminIfGroupMember key value: %{public}@ ", log: uiLog, type: .debug, adminGroups)
+        if let allowedGroups = getManagedPreference(key: .DenyLoginUnlessGroupMember) as? [String] {
+            os_log("Found a DenyLoginUnlessGroupMember key value: %{public}@ ", log: uiLog, type: .debug, allowedGroups.debugDescription)
             
             // set the allowed login to false for now
             
             allowedLogin = false
             
             user.groups.forEach { group in
-                if adminGroups.contains(group) {
+                if allowedGroups.contains(group) {
                     allowedLogin = true
                     os_log("User is a member of %{public}@ group. Setting allowedLogin = true ", log: uiLog, type: .debug, group)
                 }
@@ -605,7 +580,6 @@ extension SignIn: NoMADUserSessionDelegate {
         } else {
             authFail()
             alertText.stringValue = "Not authorized to login."
-            showResetUI()
         }
     }
 }
