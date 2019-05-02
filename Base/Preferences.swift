@@ -47,6 +47,8 @@ enum Preferences: String, CaseIterable {
     case EULATitle
     /// Subhead for EULA as a `String`.
     case EULASubTitle
+    case HideRestart
+    case HideShutdown
     /// Ignore sites in AD. This is a compatibility measure for AD installs that have issues with sites. Set as a `Bool`.
     case IgnoreSites
     /// Adds a NoMAD entry into the keychain. `Bool` value.
@@ -79,6 +81,8 @@ enum Preferences: String, CaseIterable {
     case ScriptPath
     /// Arguments for the script, if any
     case ScriptArgs
+    /// what level the sign in window should be at
+    case SignInWindowLevel
     /// Use the CN from AD as the full name
     case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield

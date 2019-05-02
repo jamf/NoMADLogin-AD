@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,6 +26,10 @@
                 <outlet property="password" destination="k7j-rX-Mra" id="FD9-ZH-5GK"/>
                 <outlet property="passwordChangeButton" destination="BKh-qb-RHS" id="ulU-Al-ADx"/>
                 <outlet property="passwordChangeStack" destination="RLo-4d-Xte" id="fRB-o1-ghd"/>
+                <outlet property="restartButton" destination="KQE-va-A2l" id="4wG-2C-HMq"/>
+                <outlet property="restartText" destination="5ws-sB-NFB" id="cty-hZ-bOc"/>
+                <outlet property="shutdownButton" destination="XWB-j3-Tsa" id="tmu-3d-IZY"/>
+                <outlet property="shutdownText" destination="QCK-Fv-hy4" id="qEy-pg-Ubd"/>
                 <outlet property="signIn" destination="7fI-fi-xA6" id="Vek-BT-qmg"/>
                 <outlet property="username" destination="bz7-9V-hj9" id="SmY-n9-wt5"/>
                 <outlet property="usernameLabel" destination="7Kk-xo-jYg" id="9xh-ie-tOZ"/>
@@ -457,7 +461,7 @@ Gw
     </objects>
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>
-        <image name="NoLoAD Logo Alpha Channel" width="247.19999694824219" height="394.32000732421875"/>
+        <image name="NoLoAD Logo Alpha Channel" width="1030" height="1643"/>
         <image name="Restart" width="128" height="128"/>
         <image name="Shutdown" width="128" height="150"/>
         <image name="Sleep" width="128" height="128"/>
