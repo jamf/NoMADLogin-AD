@@ -25,6 +25,8 @@ enum Preferences: String, CaseIterable {
     case CreateAdminIfGroupMember
     /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
     case DemobilizeUsers
+    /// should we check for a password in the hints before demobilzing the user?
+    case DemobilizeForcePasswordCheck
     /// Dissallow local auth, and always do network authentication
     case DenyLocal
     /// Users to allow locally when DenyLocal is on
