@@ -139,7 +139,10 @@ class CreateUser: NoLoMechanism {
         
         if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
             attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
+        } else if getManagedPreference(key: .UseCNForFullNameFallback) as? Bool ?? false && getHint(type: .noMADFull) as? String ?? " " == " " {
+            attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
         }
+        
         
         if let signInTime = getHint(type: .networkSignIn) {
             attrs[kODAttributeNetworkSignIn] = [signInTime]
