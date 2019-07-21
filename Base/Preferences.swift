@@ -80,6 +80,8 @@ enum Preferences: String {
     /// Use the CN from AD as the full name
     case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield
+    case UseCNForFullNameFallback
+    /// Uses the CN as the fullname on the account when the givenName and sn fields are blank
     case UsernameFieldPlaceholder
     /// A filesystem path to an image to set the user profile image to as a `String`
     case UserProfileImage
