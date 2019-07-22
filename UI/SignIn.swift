@@ -40,6 +40,7 @@ class SignIn: NSWindowController {
     @IBOutlet weak var newPassword: NSSecureTextField!
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
     @IBOutlet weak var alertText: NSTextField!
+    @IBOutlet weak var powerControlStack: NSStackView!
     
     //MARK: - UI Methods
     override func windowDidLoad() {
@@ -240,6 +241,12 @@ class SignIn: NSWindowController {
             default :
                 imageView.alphaValue = 0.0
             }
+        }
+        
+        // Checking if the shutdown and restart options should be hidden in the UI
+        if getManagedPreference(key: .PowerControlDisabled) as? Bool == true {
+            os_log("Disabling and hiding the power control mechanisms", log: uiLog, type: .debug)
+            powerControlStack.isHidden = true
         }
     }
 
