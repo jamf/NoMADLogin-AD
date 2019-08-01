@@ -51,8 +51,8 @@ class CheckAD: NoLoMechanism {
 
     func useAutologin() -> Bool {
         
-        if getManagedPreference(key: .DisableFDEAutoLogin) as? Bool == true {
-            os_log("FDE AutoLogin Disabled per preference key", log: checkADLog, type: .debug)
+        if UserDefaults(suiteName: "com.apple.loginwindow")?.bool(forKey: "DisableFDEAutoLogin") ?? false {
+            os_log("FDE AutoLogin Disabled per loginwindow preference key", log: checkADLog, type: .debug)
             return false
         }
         

@@ -32,8 +32,6 @@ enum Preferences: String {
     /// List of groups that should have it's members allowed to sign in. Set as an Array of Strings of the group name
     case DenyLoginUnlessGroupMember
     /// Should FDE be enabled at first login on APFS disks? Set as a `Bool`.
-    case DisableFDEAutoLogin
-    /// A Bool to determine if FDE autologin should be disabled.
     case EnableFDE
     /// Should the PRK be saved to disk for the MDM Escrow Service to collect? Set as a `Bool`.
     case EnableFDERecoveryKey
