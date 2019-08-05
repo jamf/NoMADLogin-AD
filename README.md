@@ -25,6 +25,7 @@ For those of you that are new to NoLo, the basic features are:
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
 * `PowerControlDisabled` a Boolean that determines if the powercontrol options should be disabled/hidden in the SignIn UI
 * Updated the new user home directory creation to fully populate all expected folders in prep for Catalina
+* `DisableFDEAutoLogin` now respected under the `com.apple.loginwindow` preference domain
 
 ## What's new in 1.3.0
 * `BackgroundImageAlpha` an Integer from 0-10 which determines the alpha value for the background image in 10% increments, i.e. a value of `3` would be a 30% alpha
