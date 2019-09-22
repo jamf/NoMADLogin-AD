@@ -80,7 +80,7 @@ Getting started with NoLoAD is easy, but currently it takes a few steps.  It's a
 
 Installing is easy!
 
-1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.zip).
+1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.pkg).
 2. You can just run the installer package that includes the `authchanger` tool and be done with it. The only reason not to do this is if you have made other changes to the `system.login.console` rights.
 
 If you want to be more manual about the process for testing you can still use the older console scripts.
