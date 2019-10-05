@@ -7,6 +7,8 @@
 //
 
 enum HintType: String {
+    case migratePass
+    case migrateUser
     case networkSignIn
     case noMADUser
     case noMADDomain
@@ -18,6 +20,7 @@ enum HintType: String {
     case uid
     case gid
     case kerberos_principal
+    case passwordOverride // stomp on the password
 }
 
 // attribute statics

@@ -25,6 +25,8 @@ enum Preferences: String {
     case CreateAdminIfGroupMember
     /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
     case DemobilizeUsers
+    /// Should we always have a password already set up before demobilizing
+    case DemobilizeForcePasswordCheck
     /// Dissallow local auth, and always do network authentication
     case DenyLocal
     /// Users to allow locally when DenyLocal is on
@@ -71,8 +73,14 @@ enum Preferences: String {
     case LoginScreen
     /// If Notify should add additional logging
     case NotifyLogStyle
+    /// should we migrate users?
+    case Migrate
+    /// should we hide users when we migrate?
+    case MigrateUsersHide
     /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
     case PowerControlDisabled
+    /// should we recursively looku groups at login
+    case RecursiveGroupLookup
     /// If the powercontrol options should be disabled in the SignIn UI
     case ScriptPath
     /// Arguments for the script, if any
@@ -93,6 +101,16 @@ enum Preferences: String {
     case UserInputLogo
     case UserInputTitle
     case UserInputMainText
+    
+    //Messages
+    
+    case MessagePasswordSync // what to show when the password needs to sync
+    
+    //Password update keys
+      
+      case PasswordOverwriteSilent // will silently update user password to new one
+      case PasswordOverwriteOptional // allow the user to stomp on the password if interested
+
 }
 
 
