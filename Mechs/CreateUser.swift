@@ -269,6 +269,19 @@ class CreateUser: NoLoMechanism {
     func findFirstAvaliableUID() -> String? {
         var newUID = ""
         os_log("Checking for avaliable UID", log: createUserLog, type: .debug)
+        
+        if let uidToolpath = getManagedPreference(key: .UIDTool) as? String {
+            os_log("Checking UIDTool", log: createUserLog, type: .debug)
+            if FileManager.default.isExecutableFile(atPath: uidToolpath) {
+                os_log("Calling UIDTool", log: createUserLog, type: .debug)
+                let uid = cliTask(uidToolpath, arguments: [nomadUser ?? "NONE" ], waitForTermination: true)
+                if uid != "" {
+                    os_log("Found custom uid, using: \(uid)", log: createUserLog, type: .debug)
+                    return uid.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                }
+            }
+        }
+        
         for potentialUID in 501... {
             do {
                 let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
@@ -284,7 +297,7 @@ class CreateUser: NoLoMechanism {
                 return nil
             }
         }
-        os_log("Found first avaliable UID: %{public}@", log: createUserLog, type: .default, newUID)
+        os_log("Found first available UID: %{public}@", log: createUserLog, type: .default, newUID)
         return newUID
     }
 
@@ -348,6 +361,8 @@ class CreateUser: NoLoMechanism {
             return "French" + templateName
         case "it":
             return "Italian" + templateName
+        case "de":
+            return "German" + templateName
         case "ja":
             return "Japanese" + templateName
         case "ar":

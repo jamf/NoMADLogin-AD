@@ -85,6 +85,8 @@ enum Preferences: String {
     case ScriptPath
     /// Arguments for the script, if any
     case ScriptArgs
+    /// Tool to use for UID numbers
+    case UIDTool
     /// Use the CN from AD as the full name
     case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield
