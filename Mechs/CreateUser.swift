@@ -348,6 +348,8 @@ class CreateUser: NoLoMechanism {
             return "French" + templateName
         case "it":
             return "Italian" + templateName
+        case "de":
+            return "German" + templateName
         case "ja":
             return "Japanese" + templateName
         case "ar":
