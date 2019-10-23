@@ -137,6 +137,10 @@ class CreateUser: NoLoMechanism {
             kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
         
+        if #available(macOS 10.15, *) {
+            attrs["kODAttributeTypeUserShell"] = ["/bin/zsh"]
+        }
+        
         if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
             attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
         }
