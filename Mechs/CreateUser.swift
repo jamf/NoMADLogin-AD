@@ -137,6 +137,11 @@ class CreateUser: NoLoMechanism {
             kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
         
+        if #available(macOS 10.15, *) {
+            os_log("Replacing default bash shell with zsh for Catalina and above", log: createUserLog, type: .debug)
+            attrs[kODAttributeTypeUserShell] = ["/bin/zsh"]
+        }
+        
         if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
             attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
         } else if getManagedPreference(key: .UseCNForFullNameFallback) as? Bool ?? false && "\(first) \(last)" == " " {
