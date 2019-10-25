@@ -144,7 +144,10 @@ class CreateUser: NoLoMechanism {
         
         if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
             attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
+        } else if getManagedPreference(key: .UseCNForFullNameFallback) as? Bool ?? false && "\(first) \(last)" == " " {
+            attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
         }
+        
         
         if let signInTime = getHint(type: .networkSignIn) {
             attrs[kODAttributeNetworkSignIn] = [signInTime]
@@ -300,14 +303,18 @@ class CreateUser: NoLoMechanism {
         os_log("System language is: %{public}@", log: createUserLog, type: .debug, currentLanguage)
         let templateName = templateForLang(currentLanguage)
         let sourceURL = URL(fileURLWithPath: "/System/Library/User Template/" + templateName)
-        let downloadsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
-        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Documents")
+        let homeDirLocations = ["Desktop", "Downloads", "Documents", "Movies", "Music", "Pictures", "Public"]
         do {
-            os_log("Copying template to /Users", log: createUserLog, type: .debug)
+            os_log("Initializing the user home directory", log: createUserLog, type: .debug)
             try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
+            
             os_log("Copying non-localized folders to new home", log: createUserLog, type: .debug)
-            try FileManager.default.copyItem(at: downloadsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Downloads"))
-            try FileManager.default.copyItem(at: documentsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Documents"))
+            for location in homeDirLocations {
+                try FileManager.default.copyItem(at: URL(fileURLWithPath: "/System/Library/User Template/Non_localized/\(location)"), to: URL(fileURLWithPath: "/Users/" + user + "/\(location)"))
+            }
+            
+            os_log("Copying language template", log: createUserLog, type: .debug)
+            try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
         } catch {
             os_log("Home template copy failed with: %{public}@", log: createUserLog, type: .error, error.localizedDescription)
         }
@@ -346,6 +353,8 @@ class CreateUser: NoLoMechanism {
             return "French" + templateName
         case "it":
             return "Italian" + templateName
+        case "de":
+            return "German" + templateName
         case "ja":
             return "Japanese" + templateName
         case "ar":

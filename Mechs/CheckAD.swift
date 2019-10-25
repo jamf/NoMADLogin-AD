@@ -50,6 +50,12 @@ class CheckAD: NoLoMechanism {
     }
 
     func useAutologin() -> Bool {
+        
+        if UserDefaults(suiteName: "com.apple.loginwindow")?.bool(forKey: "DisableFDEAutoLogin") ?? false {
+            os_log("FDE AutoLogin Disabled per loginwindow preference key", log: checkADLog, type: .debug)
+            return false
+        }
+        
         os_log("Checking for autologin.", log: checkADLog, type: .default)
         if FileManager.default.fileExists(atPath: "/tmp/nolorun") {
             os_log("NoLo has run once already. Load regular window as this isn't a reboot", log: checkADLog, type: .debug)
