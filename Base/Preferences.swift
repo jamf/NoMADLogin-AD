@@ -23,7 +23,9 @@ enum Preferences: String {
     case CreateAdminUser
     /// List of groups that should have its members created as local administrators. Set as an Array of Strings of the group name.
     case CreateAdminIfGroupMember
-    /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
+    /// Should existing mobile accounts be converted into plain local accounts? Set as a `Bool`.
+    case CustomNoMADLocation
+    /// If defined it specifies the custom location of the appication to be given access to the keychain item. Set as a `String`
     case DemobilizeUsers
     /// Dissallow local auth, and always do network authentication
     case DenyLocal
