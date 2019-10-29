@@ -160,6 +160,13 @@ class EnableFDE : NoLoMechanism {
             task.launchPath = "/usr/bin/fdesetup"
             task.arguments = ["enable", "-outputplist", "-inputplist"]
             
+            // if an IRK exists, we have to use it, otherwise we fail
+            
+            if FileManager.default.fileExists(atPath: "/Library/Keychains/FileVaultMaster.keychain") {
+                 os_log("Appending -keychain to fdesetup args since you have a FileVaultMaster.keychain. FV enablement will fail otherwise.", log: enableFDELog, type: .default)
+                 task.arguments?.append("-keychain")
+               }
+            
             task.standardInput = inPipe
             task.standardOutput = outPipe
             task.standardError = errorPipe
