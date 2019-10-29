@@ -121,9 +121,11 @@ class CreateUser: NoLoMechanism {
         // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
         // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
         // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
-        let picURL = URL(fileURLWithPath: userPicture)
-        let picData = NSData(contentsOf: picURL)
-        let picString = picData?.description ?? ""
+        
+        // Removing to test for @nstrauss
+        // let picURL = URL(fileURLWithPath: userPicture)
+        // let picData = NSData(contentsOf: picURL)
+        // let picString = picData?.description ?? ""
 
         var attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
@@ -133,7 +135,7 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
             kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picString],
+            //kODAttributeTypeJPEGPhoto: [picString],
             kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
         
