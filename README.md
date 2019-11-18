@@ -5,9 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.3.
-
-We would like to give a **huge** thanks to new contributor Joseph Rafferty. A lot of his pull requests really helped get the 1.2 release out the door.
+The current production version of NoLoAD is 1.3.1
 
 For those of you that are new to NoLo, the basic features are:
 
@@ -21,11 +19,12 @@ For those of you that are new to NoLo, the basic features are:
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
 
-## Staged Development Changes
+## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
 * `PowerControlDisabled` a Boolean that determines if the powercontrol options should be disabled/hidden in the SignIn UI
 * Updated the new user home directory creation to fully populate all expected folders in prep for Catalina
 * `DisableFDEAutoLogin` now respected under the `com.apple.loginwindow` preference domain
+* Fixed an issue with the German localization of the home directory
 
 ## What's new in 1.3.0
 * `BackgroundImageAlpha` an Integer from 0-10 which determines the alpha value for the background image in 10% increments, i.e. a value of `3` would be a 30% alpha
