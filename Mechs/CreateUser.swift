@@ -35,6 +35,12 @@ class CreateUser: NoLoMechanism {
     @objc   func run() {
         os_log("CreateUser mech starting", log: createUserLog, type: .debug)
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
+            
+            var secureTokenCreds = [String:String]()
+            if getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
+                secureTokenCreds = GetSecureTokenCreds()
+            }
+            
             guard let uid = findFirstAvaliableUID() else {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return
@@ -76,7 +82,8 @@ class CreateUser: NoLoMechanism {
                        gid: "20",
                        canChangePass: true,
                        isAdmin: isAdmin,
-                       customAttributes: customAttributes)
+                       customAttributes: customAttributes,
+                       secureTokenCreds: secureTokenCreds)
             
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
@@ -97,7 +104,7 @@ class CreateUser: NoLoMechanism {
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String], secureTokenCreds: [String:String]) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
         os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, canChangePass: %{public}@, isAdmin: %{public}@, customAttributes: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, canChangePass.description, isAdmin.description, customAttributes)
@@ -243,7 +250,7 @@ class CreateUser: NoLoMechanism {
             
             if isFdeEnabled() == false {
                 if #available(OSX 10.14, *) {
-                    addSecureToken(shortName, pass)
+                    addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
                 }
             }
             
@@ -431,7 +438,7 @@ class CreateUser: NoLoMechanism {
         }
     }
     
-    fileprivate func addSecureToken(_ shortName: String, _ pass: String?) {
+    fileprivate func addSecureToken(_ username: String, _ userPass: String?,_ adminUsername: String,_ adminPassword: String?) {
         //MARK: 10.14 fix
         // check for 10.14
         // check for no existing local users?
@@ -448,17 +455,17 @@ class CreateUser: NoLoMechanism {
         
         var args = [
             "-secureTokenOn",
-            shortName,
+            username,
             "-password",
-            pass ?? "",
+            userPass ?? "",
             "-adminUser",
-            shortName,
+            adminUsername,
             "-adminPassword",
-            pass ?? ""
+            adminPassword ?? ""
         ]
         
         let result = cliTask(launchPath, arguments: args, waitForTermination: true)
-        os_log("sysdaminctl result: @{public}%", log: createUserLog, type: .debug, result)
+        os_log("sysdaminctl result: %{public}@", log: createUserLog, type: .debug, result)
         args = [
             "********",
             "********",
@@ -484,5 +491,96 @@ class CreateUser: NoLoMechanism {
         } else {
             return true
         }
+    }
+    
+    fileprivate func GetSecureTokenCreds() -> [String:String] {
+        
+        os_log("Starting SecureToken Credential acquisition process", log: createUserLog, type: .debug)
+        
+        // Initializing the return variables
+        var secureTokenCreds = ["username":"",
+                                "password":""]
+        
+        // Getting the list of secure token enabled users
+        let secureTokenUsers = GetSecureTokenUserList()
+        os_log("SecureToken Authorized Users: %{public}@", log: createUserLog, type: .debug, secureTokenUsers.joined(separator: ", "))
+        
+        // Reading the managed perferences
+        let secureTokenManagementUsername = getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin"
+        let secureTokenManagementpasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+        var secureTokenUserCreated = false
+        
+        // Doing base analysis
+        if secureTokenUsers.count == 0 {
+            // Nobody has the initial token
+            if !CreateSecureTokenManagementUser(secureTokenManagementUsername, secureTokenManagementpasswordLocation){
+                os_log("Unable to create SecureToken User", log: createUserLog, type: .debug)
+            }
+            let secureTokenManagementPassword = String(data: FileManager.default.contents(atPath: secureTokenManagementpasswordLocation)!, encoding: .ascii)!
+            addSecureToken(secureTokenManagementUsername, secureTokenManagementPassword, secureTokenManagementUsername, secureTokenManagementPassword)
+            secureTokenUserCreated = true
+        }
+        
+        if secureTokenUsers.contains(getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin") || secureTokenUserCreated {
+            // The Secure Token management account has a token
+            
+            // Assigning the username to the return variable
+            secureTokenCreds["username"] = getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin"
+            
+            // Getting the secureToken creds from the saved file
+            os_log("Retrieving password from %{public}@", log: createUserLog, type: .debug, secureTokenManagementpasswordLocation)
+            secureTokenCreds["password"] = String(data: FileManager.default.contents(atPath: secureTokenManagementpasswordLocation)!, encoding: .ascii)!
+            
+        } else {
+            // The Secure Token management account does not have a token, but their are tokens already given
+            os_log("Secure Token management unable to get credentials", log: createUserLog, type: .debug)
+        }
+        return secureTokenCreds
+    }
+    
+    fileprivate func CreateSecureTokenManagementUser(_ username: String,_ passwordLocation: String) -> Bool{
+        
+        // Generating a random password string and assigning that as the password to the user
+        let password = randomString(length: getManagedPreference(key: .SecureTokenManagementPasswordLength) as? Int ?? 16)
+        
+        // Creating the user record
+        let launchPath = "/usr/sbin/sysadminctl"
+        let args = [
+            "-addUser",
+            "\(username)",
+            "-password",
+            "\(password)",
+            "-UID",
+            "400",
+            "-fullName",
+            getManagedPreference(key: .SecureTokenManagementFullName) as? String ?? "NoMAD Login",
+            "-home",
+            "/private/var/_nomadlogin"
+        ]
+        _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+        
+        // Saving that password to the password location
+        do {
+            try password.write(toFile: passwordLocation, atomically: true, encoding: String.Encoding.ascii)
+        } catch {
+            os_log("Error writing password to: %{public}@", log: createUserLog, type: .debug, passwordLocation)
+            return false
+        }
+        return true
+    }
+    
+    fileprivate func GetSecureTokenUserList() -> [String] {
+        let launchPath = "/usr/bin/fdesetup"
+        let args = [
+            "list"
+        ]
+        let secureTokenListRaw = cliTask(launchPath, arguments: args, waitForTermination: true)
+        let partialList = secureTokenListRaw.components(separatedBy: "\n")
+        var secureTokenUsers = [String]()
+        for entry in partialList {
+            secureTokenUsers.append(entry.components(separatedBy: ",")[0])
+        }
+        
+        return secureTokenUsers
     }
 }
