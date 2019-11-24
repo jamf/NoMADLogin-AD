@@ -257,26 +257,26 @@ class CreateUser: NoLoMechanism {
             if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
                 os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
                 addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
-            }
             
-            if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
-                // Now that the admin user is given a token we need to remove the service account
-                os_log("Enable Only First user Enabled, deleting the service account", log: createUserLog, type: .debug)
+                if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
+                    // Now that the user is given a token we need to remove the service account
+                    os_log("Enable Only First user Enabled, deleting the service account", log: createUserLog, type: .debug)
+                    
+                    // Nuking the account in unrecoverable fashion. If the secure token operation were to fail above the following deletion command will also fail and leave us in a recoverable state
+                    let launchPath = "/usr/sbin/sysadminctl"
+                    let args = [
+                        "-deleteUser",
+                        "\(String(describing: secureTokenCreds["username"]))",
+                        "-secure"
+                    ]
+                    _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+                } else {
+                    os_log("Rotating the service account password", log: createUserLog, type: .debug)
                 
-                // Nuking the account in unrecoverable fashion. If the secure token operation were to fail above the following deletion command will also fail and leave us in a recoverable state
-                let launchPath = "/usr/sbin/sysadminctl"
-                let args = [
-                    "-deleteUser",
-                    "\(String(describing: secureTokenCreds["username"]))",
-                    "-secure"
-                ]
-                _ = cliTask(launchPath, arguments: args, waitForTermination: true)
-            } else {
-                os_log("Rotating the service account password", log: createUserLog, type: .debug)
-            
-                // Rotating the Secure Token passphrase
-                let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
-                _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]), secureTokenManagementPasswordLocation)
+                    // Rotating the Secure Token passphrase
+                    let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+                    _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]), secureTokenManagementPasswordLocation)
+                }
             }
             
         // This else if is to maintain historic functionality that the first user logging in with EnableFDE enabled will be given a Secure Token
