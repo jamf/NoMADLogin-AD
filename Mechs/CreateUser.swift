@@ -254,8 +254,10 @@ class CreateUser: NoLoMechanism {
         os_log("Starting SecureToken Operations", log: createUserLog, type: .debug)
         if #available(OSX 10.13.4, *), getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
             
-            os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
-            addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+            if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
+                os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
+                addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+            }
             
             if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
                 // Now that the admin user is given a token we need to remove the service account
