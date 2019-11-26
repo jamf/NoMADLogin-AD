@@ -19,6 +19,16 @@ For those of you that are new to NoLo, the basic features are:
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
 
+## Staged Changes
+* `ManageSecureTokens` a Boolean to determine if the SecureToken management capabilites should be enabled. This utilizes a service account which can be modified from default using the below optional preferences.
+* `SecureTokenManagementEnableOnlyAdminUsers` a Boolean to determine if the SecureToken service account should only enable administrative users created with NoMAD Login.
+* `SecureTokenManagementOnlyEnableFirstUser` a Boolean to determine if the NoMAD Login should only enable the first user that is eligable for a SecureToken, and delete the service account afterwards.
+* `SecureTokenManagementFullName` a String to define a custom Full Name for the SecureToken service account, default is `NoMAD Login`
+* `SecureTokenManagementUID` an Integer or String to define a custom UID for the SecureToken service account, default is `400`
+* `SecureTokenManagementPasswordLocation` a String to define a custom password storage location for the SecureToken service account password, default is `/var/db/.nomadLoginSecureTokenPassword`
+* `SecureTokenManagementPasswordLength` an Integer to define a custom SecureToken service account password length, default is `16`
+* `SecureTokenManagementUsername` a String to define a custom username for the SecureToken service account, default is `_nomadlogin`
+
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
 * `PowerControlDisabled` a Boolean that determines if the powercontrol options should be disabled/hidden in the SignIn UI
