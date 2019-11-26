@@ -87,6 +87,8 @@ enum Preferences: String {
     case SecureTokenManagementOnlyEnableFirstUser
     /// Full Name of the Secure Token Management user as a `String`
     case SecureTokenManagementFullName
+    /// The UID to use for the Management Account as a `Int` or `String`
+    case SecureTokenManagementUID
     /// The location to save and read the Secure Token management password as a `String`
     case SecureTokenManagementPasswordLocation
     /// Length fo the SecureToken Management User's password as an `Int`

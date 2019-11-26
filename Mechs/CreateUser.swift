@@ -557,18 +557,18 @@ class CreateUser: NoLoMechanism {
             secureTokenUserCreated = true
         }
         
-        if secureTokenUsers.contains(getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin") || secureTokenUserCreated {
+        if secureTokenUsers.contains(secureTokenManagementUsername) || secureTokenUserCreated {
             // The Secure Token management account has a token
             
             // Assigning the username to the return variable
-            secureTokenCreds["username"] = getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin"
+            secureTokenCreds["username"] = secureTokenManagementUsername
             
             // Getting the secureToken creds from the saved file
             os_log("Retrieving password from %{public}@", log: createUserLog, type: .debug, secureTokenManagementPasswordLocation)
             secureTokenCreds["password"] = String(data: FileManager.default.contents(atPath: secureTokenManagementPasswordLocation)!, encoding: .ascii)!
             
         } else {
-            // The Secure Token management account does not have a token, but their are tokens already given
+            // The Secure Token management account does not have a token, but there are tokens already given
             os_log("Secure Token management unable to get credentials", log: createUserLog, type: .debug)
         }
         return secureTokenCreds
@@ -610,7 +610,7 @@ class CreateUser: NoLoMechanism {
                 "-password",
                 "\(password)",
                 "-UID",
-                "400",
+                getManagedPreference(key: .SecureTokenManagementUID) as? String ?? "NoMAD Login",
                 "-fullName",
                 getManagedPreference(key: .SecureTokenManagementFullName) as? String ?? "NoMAD Login",
                 "-home",
@@ -628,6 +628,7 @@ class CreateUser: NoLoMechanism {
                 "1"
             ]
             _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+            
         }
         
         // Saving that password to the password location
