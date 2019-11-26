@@ -326,7 +326,7 @@ class CreateUser: NoLoMechanism {
                 os_log("Calling UIDTool", log: createUserLog, type: .debug)
                 let uid = cliTask(uidToolpath, arguments: [nomadUser ?? "NONE" ], waitForTermination: true)
                 if uid != "" {
-                    os_log("Found custom uid, using: \(uid)", log: createUserLog, type: .debug)
+                    os_log("Found custom uid, using: %{public}@", log: createUserLog, type: .debug, uid)
                     return uid.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 }
             }
