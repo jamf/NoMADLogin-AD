@@ -5,9 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.3.
-
-We would like to give a **huge** thanks to new contributor Joseph Rafferty. A lot of his pull requests really helped get the 1.2 release out the door.
+The current production version of NoLoAD is 1.3.1
 
 For those of you that are new to NoLo, the basic features are:
 
@@ -21,11 +19,22 @@ For those of you that are new to NoLo, the basic features are:
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
 
-## Staged Development Changes
+## Staged Changes
+* `ManageSecureTokens` a Boolean to determine if the SecureToken management capabilites should be enabled. This utilizes a service account which can be modified from default using the below optional preferences.
+* `SecureTokenManagementEnableOnlyAdminUsers` a Boolean to determine if the SecureToken service account should only enable administrative users created with NoMAD Login.
+* `SecureTokenManagementOnlyEnableFirstUser` a Boolean to determine if the NoMAD Login should only enable the first user that is eligable for a SecureToken, and delete the service account afterwards.
+* `SecureTokenManagementFullName` a String to define a custom Full Name for the SecureToken service account, default is `NoMAD Login`
+* `SecureTokenManagementUID` an Integer or String to define a custom UID for the SecureToken service account, default is `400`
+* `SecureTokenManagementPasswordLocation` a String to define a custom password storage location for the SecureToken service account password, default is `/var/db/.nomadLoginSecureTokenPassword`
+* `SecureTokenManagementPasswordLength` an Integer to define a custom SecureToken service account password length, default is `16`
+* `SecureTokenManagementUsername` a String to define a custom username for the SecureToken service account, default is `_nomadlogin`
+
+## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
 * `PowerControlDisabled` a Boolean that determines if the powercontrol options should be disabled/hidden in the SignIn UI
 * Updated the new user home directory creation to fully populate all expected folders in prep for Catalina
 * `DisableFDEAutoLogin` now respected under the `com.apple.loginwindow` preference domain
+* Fixed an issue with the German localization of the home directory
 
 ## What's new in 1.3.0
 * `BackgroundImageAlpha` an Integer from 0-10 which determines the alpha value for the background image in 10% increments, i.e. a value of `3` would be a 30% alpha
@@ -86,7 +95,7 @@ Getting started with NoLoAD is easy, but currently it takes a few steps.  It's a
 
 Installing is easy!
 
-1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.zip).
+1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.pkg).
 2. You can just run the installer package that includes the `authchanger` tool and be done with it. The only reason not to do this is if you have made other changes to the `system.login.console` rights.
 
 If you want to be more manual about the process for testing you can still use the older console scripts.

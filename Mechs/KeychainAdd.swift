@@ -158,6 +158,11 @@ class KeychainAdd : NoLoMechanism {
                 if err == 0 {
                     secApps.append(nomadTrust!)
                 }
+            } else if let customNoMADLocation = getManagedPreference(key: .CustomNoMADLocation) as? String {
+                err = SecTrustedApplicationCreateFromPath(customNoMADLocation, &nomadTrust)
+                if err == 0 {
+                    secApps.append(nomadTrust!)
+                }
             } else {
                 os_log("Checking for NoMAD anywhere on the device.", log: keychainAddLog, type: .error)
                 let ws = NSWorkspace.shared

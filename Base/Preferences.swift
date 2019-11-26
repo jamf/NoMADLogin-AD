@@ -23,7 +23,9 @@ enum Preferences: String {
     case CreateAdminUser
     /// List of groups that should have its members created as local administrators. Set as an Array of Strings of the group name.
     case CreateAdminIfGroupMember
-    /// Should existing mobile accounts be converted into plain local accounts? Set as a Bool`.
+    /// Should existing mobile accounts be converted into plain local accounts? Set as a `Bool`.
+    case CustomNoMADLocation
+    /// If defined it specifies the custom location of the appication to be given access to the keychain item. Set as a `String`
     case DemobilizeUsers
     /// Should we always have a password already set up before demobilizing
     case DemobilizeForcePasswordCheck
@@ -71,6 +73,8 @@ enum Preferences: String {
     case LoginLogoData
     /// Should NoLo display a macOS-style login screen instead of a window? Set as a `Bool`,
     case LoginScreen
+    /// If the create User mech should manage the SecureTokens with a service account
+    case ManageSecureTokens
     /// If Notify should add additional logging
     case NotifyLogStyle
     /// should we migrate users?
@@ -85,8 +89,20 @@ enum Preferences: String {
     case ScriptPath
     /// Arguments for the script, if any
     case ScriptArgs
-    /// Tool to use for UID numbers
-    case UIDTool
+    /// Should NoMAD Login enable all users that login with with a secure token as a `Bool`
+    case SecureTokenManagementEnableOnlyAdminUsers
+    /// Should NoMAD Login only enable the first admin user that login with with a secure token as a `Bool`
+    case SecureTokenManagementOnlyEnableFirstUser
+    /// Full Name of the Secure Token Management user as a `String`
+    case SecureTokenManagementFullName
+    /// The UID to use for the Management Account as a `Int` or `String`
+    case SecureTokenManagementUID
+    /// The location to save and read the Secure Token management password as a `String`
+    case SecureTokenManagementPasswordLocation
+    /// Length fo the SecureToken Management User's password as an `Int`
+    case SecureTokenManagementPasswordLength
+    /// Username to use to for the securetoken management account as a `String`
+    case SecureTokenManagementUsername
     /// Use the CN from AD as the full name
     case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield
