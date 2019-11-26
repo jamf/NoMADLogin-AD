@@ -92,7 +92,7 @@ class UserInputUI : NSWindowController {
     }
     
     func run() {
-        
+                
         // build an array to make this easy
         
         let itemTitleList = [ itemOneTitle, itemTwoTitle, itemThreeTitle, itemFourTitle]

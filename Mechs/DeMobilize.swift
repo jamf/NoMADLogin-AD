@@ -61,15 +61,18 @@ class DeMobilize : NoLoMechanism {
             return
         }
         
-        // sanity check to ensure we have valid information and a local user
-        os_log("Checking for password", log: demobilizeLog, type: .debug)
-        if passwordContext == nil {
-            os_log("Something went wrong, there is no password in user data", log: demobilizeLog, type: .error)
-            // nothing to see here, most likely auth failed earlier on
-            // we're just here for auditing purposes
-            _ = allowLogin()
-            return
+        if (getManagedPreference(key: Preferences.DemobilizeForcePasswordCheck) as? Bool ?? false) {
+            // sanity check to ensure we have valid information and a local user
+            os_log("Checking for password", log: demobilizeLog, type: .debug)
+            if passwordContext == nil {
+                os_log("Something went wrong, there is no password in user data", log: demobilizeLog, type: .error)
+                // nothing to see here, most likely auth failed earlier on
+                // we're just here for auditing purposes
+                _ = allowLogin()
+                return
+            }
         }
+
         
         // get local user record
         guard let userRecord = getLocalRecord(shortName) else {

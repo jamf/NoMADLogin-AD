@@ -12,6 +12,14 @@ import Cocoa
 @objc class UserInput : NoLoMechanism {
     
     @objc func run() {
+        
+        // check if we should skip this or not
+        
+        if FileManager.default.fileExists(atPath: "/tmp/.skipUserInput") {
+            _ = allowLogin()
+            return
+        }
+        
         // run the UI if we have the settings
         if let inputSettings = getManagedPreference(key: .UserInputUI) as? [ String : AnyObject ] {
             
