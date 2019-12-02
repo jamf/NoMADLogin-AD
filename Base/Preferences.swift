@@ -57,6 +57,8 @@ enum Preferences: String {
     case KeychainCreate
     /// Should NoLo reset the Keychain if the login pass doesn't match. `Bool` value.
     case KeychainReset
+    /// Public key as base64 String to be used for LAPS operations
+    case LAPSPublicKey
     /// Force LDAP lookups to use SSL connections. Requires certificate trust be established. Set as a `Bool`.
     case LDAPOverSSL
     /// Force specific LDAP servers instead of finding them via DNS
