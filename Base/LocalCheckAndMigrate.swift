@@ -58,7 +58,8 @@ class LocalCheckAndMigrate : ContextAndHintHandling, DSQueryable {
                 if (getManagedPreference(key: .PasswordOverwriteSilent) as? Bool ?? false) {
                     // set the hint and return complete
                     os_log("Setting password to be overwritten.", log: uiLog, type: .default)
-                    setHint(type: .passwordOverride, hint: "true")
+                    setHint(type: .passwordOverwrite, hint: true)
+                    os_log("Hint set", log: uiLog, type: .debug)
                     return .complete
                 } else {
                     return .syncPassword

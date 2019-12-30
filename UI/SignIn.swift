@@ -734,6 +734,7 @@ extension SignIn: NoMADUserSessionDelegate {
             
             // check for any migration and local auth requirements
             
+            localCheck.mech = self.mech
             switch localCheck.run(userToCheck: user.shortName, passToCheck: passString) {
                 
             case .fullMigration:
