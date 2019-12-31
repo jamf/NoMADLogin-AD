@@ -91,14 +91,69 @@ class CreateUser: NoLoMechanism {
             let _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
         } else {
-            // no user to create
-            os_log("Skipping local account creation", log: createUserLog, type: .default)
+            
+            // Checking to see if we are doing a silent overwrite
+            let passwordOverwrite = getHint(type: .passwordOverwrite) as? Bool ?? false
+            if passwordOverwrite {
+                os_log("Password Overwrite enabled and triggered, starting evaluation", log: createUserLog, type: .debug)
+                
+                // Checking to see if we can get secureToken Creds
+                var secureTokenCreds = ["username":"", "password":""]
+                if getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
+                    secureTokenCreds = GetSecureTokenCreds()
+                }
+                let secureTokenCredsHeld = (secureTokenCreds["username"] != "")
+                    
+                // Checking Secure Token system status
+                let secureTokenUsers = GetSecureTokenUserList()
+                if secureTokenUsers.contains(nomadUser!){
+                    if secureTokenUsers.count == 1 {
+                        os_log("%{public}@ is the only SecureToken enabled user, unable to update the user", log: createUserLog, type: .debug, nomadUser!)
+                    } else {
+                        // System is in a state where we can do secure token operations
+                        if secureTokenCredsHeld {
+                            // We can do secureToken operations
+                            os_log("SecureToken operations needed", log: createUserLog, type: .debug)
+                            
+                            // Save off the OD record
+                            
+                            // Delete the user but keep home directory
+                            
+                            // Re-create user with OD record and new password
+                            
+                            // Give the user a secure token
+                            
+                            // Rotate token creds
+                            
+                        } else {
+                            os_log("User has a SecureToken and we do not, unable to update the user", log: createUserLog, type: .debug)
+                            // we can't do secureToken operations
+                        }
+                    }
+                } else {
+                    // User does not have a secureToken
+                    os_log("%{public}@ does not have token, resetting password", log: createUserLog, type: .debug, nomadUser!)
+                    
+                    // rotating the password nice and simple
+                    let launchPath = "/usr/bin/dscl"
+                    let args = [
+                        ".",
+                        "-passwd",
+                        "/Users/\(nomadUser!)",
+                        "\(nomadPass!)"
+                    ]
+                    let output = cliTask(launchPath, arguments: args, waitForTermination: true)
+                    os_log("Password Reset Result: %{public}@", log: createUserLog, type: .debug, output)
+                }
+            } else {
+                // no user to create
+                os_log("Skipping local account creation", log: createUserLog, type: .default)
+            }
             
             // Set the login timestamp if requested
             setTimestampFor(nomadUser as? String ?? "")
-            
-            os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
         }
+        os_log("Allowing login", log: createUserLog, type: .debug)
         let _ = allowLogin()
         os_log("CreateUser mech complete", log: createUserLog, type: .debug)
     }
