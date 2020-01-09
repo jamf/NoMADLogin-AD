@@ -13,6 +13,10 @@ enum Preferences: String {
     case ADDomain
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
     case AdditionalADDomains
+    /// Allow network select button on login window
+    case AllowNetworkSelection
+    /// Allow network text
+    case AllowNetworkText
     /// A filesystem path to a background image as a `String`.
     case BackgroundImage
     /// An image to display as the background image as a Base64 encoded `String`.

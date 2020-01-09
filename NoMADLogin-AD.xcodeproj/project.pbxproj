@@ -22,6 +22,12 @@
 		1AA58F04216611C400431201 /* UserInputUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EEB2166101100431201 /* UserInputUI.xib */; };
 		1AACDAE02217B72B006D8A65 /* NoLoUserInput Sample.mobileconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */; };
 		1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */; };
+		6023663223C6A33C005A8FA0 /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6023663023C6A2A9005A8FA0 /* WifiManager.swift */; };
+		6023663323C6A33F005A8FA0 /* WifiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6023662F23C6A2A9005A8FA0 /* WifiView.swift */; };
+		6023663423C6A344005A8FA0 /* WifiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6023663123C6A2B7005A8FA0 /* WifiView.xib */; };
+		6023663B23C6A38A005A8FA0 /* NonBleedingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6023663623C6A386005A8FA0 /* NonBleedingView.swift */; };
+		6023663C23C6A38D005A8FA0 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6023663A23C6A386005A8FA0 /* NibLoadable.swift */; };
+		6023664123C6A607005A8FA0 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6023664023C6A607005A8FA0 /* Bundle.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
@@ -79,6 +85,14 @@
 		1AA58EFC216610C700431201 /* RunScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScript.swift; sourceTree = "<group>"; };
 		1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "NoLoUserInput Sample.mobileconfig"; sourceTree = "<group>"; };
 		1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLoWindow.swift; sourceTree = "<group>"; };
+		6023662F23C6A2A9005A8FA0 /* WifiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiView.swift; sourceTree = "<group>"; };
+		6023663023C6A2A9005A8FA0 /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
+		6023663123C6A2B7005A8FA0 /* WifiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WifiView.xib; sourceTree = "<group>"; };
+		6023663623C6A386005A8FA0 /* NonBleedingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonBleedingView.swift; sourceTree = "<group>"; };
+		6023663823C6A386005A8FA0 /* ErrorPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresentable.swift; sourceTree = "<group>"; };
+		6023663923C6A386005A8FA0 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		6023663A23C6A386005A8FA0 /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		6023664023C6A607005A8FA0 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -157,6 +171,43 @@
 			path = ConfigSamples;
 			sourceTree = "<group>";
 		};
+		6023662E23C6A2A9005A8FA0 /* Wifi */ = {
+			isa = PBXGroup;
+			children = (
+				6023663123C6A2B7005A8FA0 /* WifiView.xib */,
+				6023662F23C6A2A9005A8FA0 /* WifiView.swift */,
+				6023663023C6A2A9005A8FA0 /* WifiManager.swift */,
+			);
+			path = Wifi;
+			sourceTree = "<group>";
+		};
+		6023663523C6A386005A8FA0 /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				6023663623C6A386005A8FA0 /* NonBleedingView.swift */,
+				6023663723C6A386005A8FA0 /* ErrorView */,
+				6023663A23C6A386005A8FA0 /* NibLoadable.swift */,
+			);
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		6023663723C6A386005A8FA0 /* ErrorView */ = {
+			isa = PBXGroup;
+			children = (
+				6023663823C6A386005A8FA0 /* ErrorPresentable.swift */,
+				6023663923C6A386005A8FA0 /* ErrorView.swift */,
+			);
+			path = ErrorView;
+			sourceTree = "<group>";
+		};
+		6023663F23C6A5F7005A8FA0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6023664023C6A607005A8FA0 /* Bundle.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		9C97401C1FC5DE4500D9EAE6 /* evaluate-mechanisms */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,6 +222,9 @@
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
+				6023663F23C6A5F7005A8FA0 /* Extensions */,
+				6023663523C6A386005A8FA0 /* ReusableViews */,
+				6023662E23C6A2A9005A8FA0 /* Wifi */,
 				1AACDADE2217B71C006D8A65 /* ConfigSamples */,
 				9C2F03601FEB0B9A0036C08C /* README.md */,
 				1AA58EEC2166104400431201 /* Notify */,
@@ -321,6 +375,7 @@
 				1AA58F02216611BD00431201 /* EULAUI.xib in Resources */,
 				1AA58F04216611C400431201 /* UserInputUI.xib in Resources */,
 				1AA58EFE216611AF00431201 /* NoLoNotify.xib in Resources */,
+				6023663423C6A344005A8FA0 /* WifiView.xib in Resources */,
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
 			);
@@ -340,13 +395,18 @@
 				9CBDCFAE1FC5CDB600CF73F4 /* LogOnly.swift in Sources */,
 				1AA58F00216611B700431201 /* NoLoNotify.swift in Sources */,
 				9C63B74B203DE22300516AF7 /* SierraFixes.swift in Sources */,
+				6023664123C6A607005A8FA0 /* Bundle.swift in Sources */,
 				9CA733FC202E491E00EA1FE6 /* PowerControl.swift in Sources */,
+				6023663B23C6A38A005A8FA0 /* NonBleedingView.swift in Sources */,
+				6023663C23C6A38D005A8FA0 /* NibLoadable.swift in Sources */,
 				1AA58F01216611BA00431201 /* EULAUI.swift in Sources */,
 				1AA58EFF216611B400431201 /* Tracker.swift in Sources */,
 				1AA58F03216611C100431201 /* UserInputUI.swift in Sources */,
 				9C8A2609207D917900204336 /* DataExtension.swift in Sources */,
+				6023663223C6A33C005A8FA0 /* WifiManager.swift in Sources */,
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
+				6023663323C6A33F005A8FA0 /* WifiView.swift in Sources */,
 				1AA58EF9216610B300431201 /* UserInput.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,

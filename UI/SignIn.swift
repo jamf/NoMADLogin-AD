@@ -25,6 +25,7 @@ class SignIn: NSWindowController {
     var backgroundWindow: NSWindow!
     var effectWindow: NSWindow!
     var passChanged = false
+    let wifiManager = WifiManager()
     @objc var visible = true
     
     //MARK: - IB outlets
@@ -40,6 +41,8 @@ class SignIn: NSWindowController {
     @IBOutlet weak var newPassword: NSSecureTextField!
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
     @IBOutlet weak var alertText: NSTextField!
+    @IBOutlet weak var networkSelection: NSButton!
+    @IBOutlet weak var networkText: NSTextField!
     
     //MARK: - UI Methods
     override func windowDidLoad() {
@@ -241,6 +244,9 @@ class SignIn: NSWindowController {
                 imageView.alphaValue = 0.0
             }
         }
+        
+        networkSelection.isHidden = !(getManagedPreference(key: .AllowNetworkSelection) as? Bool ?? false)
+        networkText.isHidden = !(getManagedPreference(key: .AllowNetworkText) as? Bool ?? false)
     }
 
     fileprivate func showResetUI() {
@@ -494,6 +500,27 @@ class SignIn: NSWindowController {
         setHint(type: .noMADUser, hint: SpecialUsers.noloShutdown.rawValue)
         completeLogin(authResult: .allow)
     }
+    
+    //MARK: - Wireless Setup
+    
+    @IBAction func showNetworkConnection(_ sender: Any) {
+        guard let windowContentView = self.window?.contentView, let wifiView = WifiView.createFromNib(in: .mainLogin) else {
+            os_log("Error showing network selection.", log: uiLog, type: .debug)
+            return
+        }
+
+        wifiView.frame = windowContentView.frame
+        let completion = {
+            os_log("Finished working with wireless networks", log: uiLog, type: .debug)
+        }
+        wifiView.set(completionHandler: completion)
+        windowContentView.addSubview(wifiView)
+    }
+    
+    @IBAction func clickText(_ sender: Any) {
+        os_log("Clicked Network Text", log: uiLog, type: .debug)
+    }
+    
 }
 
 

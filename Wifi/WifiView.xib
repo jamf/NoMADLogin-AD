@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="zbN-Kh-Zkk" customClass="WifiView" customModule="JamfConnectLogin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="563" height="429"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="a38-Q6-XXH" customClass="NonBleedingView" customModule="JamfConnectLogin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="563" height="429"/>
+                </customView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="rp9-AW-xOQ" customClass="NonBleedingView" customModule="JamfConnectLogin" customModuleProvider="target">
+                    <rect key="frame" x="61" y="100" width="442" height="204"/>
+                    <subviews>
+                        <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KQ8-e0-MTT">
+                            <rect key="frame" x="193" y="134" width="232" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="227" id="Z1d-Vk-dii"/>
+                            </constraints>
+                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Oov-SI-67j" id="GGp-qk-E2o">
+                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <menu key="menu" id="EVd-nr-34a">
+                                    <items>
+                                        <menuItem title="Item 1" state="on" id="Oov-SI-67j"/>
+                                        <menuItem title="Item 2" id="lTe-Oi-s0U"/>
+                                        <menuItem title="Item 3" id="MyY-j5-Rm0"/>
+                                    </items>
+                                </menu>
+                            </popUpButtonCell>
+                        </popUpButton>
+                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2tJ-IN-r5A">
+                            <rect key="frame" x="336" y="29" width="92" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="80" id="WMI-Tq-sHM"/>
+                            </constraints>
+                            <buttonCell key="cell" type="push" title="Join" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cAX-Yz-eSi">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="connectButton:" target="zbN-Kh-Zkk" id="Tsc-dd-Wma"/>
+                            </connections>
+                        </button>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="giz-Xq-15Y">
+                            <rect key="frame" x="14" y="12" width="51" height="16"/>
+                            <textFieldCell key="cell" lineBreakMode="clipping" title="Status:" id="kpD-eC-NoI">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CRA-vi-zDV">
+                            <rect key="frame" x="67" y="12" width="347" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="343" id="rMQ-4f-9WA"/>
+                            </constraints>
+                            <textFieldCell key="cell" lineBreakMode="clipping" title="Loading..." id="pIX-BF-Zr1">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VDD-7c-1vi">
+                            <rect key="frame" x="83" y="139" width="96" height="17"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Network name:" id="P0Q-eo-1vz">
+                                <font key="font" usesAppearanceFont="YES"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cm9-r2-EIO">
+                            <rect key="frame" x="6" y="161" width="38" height="37"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="26" id="470-Sh-Sbj"/>
+                                <constraint firstAttribute="width" constant="26" id="HTL-2N-ULi"/>
+                            </constraints>
+                            <buttonCell key="cell" type="round" bezelStyle="circular" image="NSStopProgressTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" inset="2" id="jkx-6f-YWy">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="controlContent" size="11"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="dismissButton:" target="zbN-Kh-Zkk" id="avX-Zm-epa"/>
+                            </connections>
+                        </button>
+                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ofh-CA-NRH">
+                            <rect key="frame" x="189" y="162" width="233" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="221" id="o99-CA-9jA"/>
+                            </constraints>
+                            <buttonCell key="cell" type="push" title="Find Networks" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="G2O-jb-u2C">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="searchButton:" target="zbN-Kh-Zkk" id="5mz-Le-jCd"/>
+                            </connections>
+                        </button>
+                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="11" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kVg-5t-aD9">
+                            <rect key="frame" x="22" y="71" width="400" height="55"/>
+                            <subviews>
+                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="UoO-pU-3Gq" customClass="NonBleedingView" customModule="JamfConnectLogin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="33" width="400" height="22"/>
+                                    <subviews>
+                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Z2-Bu-Svb">
+                                            <rect key="frame" x="174" y="0.0" width="226" height="22"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Username" drawsBackground="YES" id="2rs-8Z-aX8">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgX-UM-eGb">
+                                            <rect key="frame" x="35" y="2" width="124" height="17"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Network Username:" id="xzs-7x-W8P">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="22" id="0mi-uy-Z14"/>
+                                        <constraint firstAttribute="width" constant="400" id="MGr-bh-Daa"/>
+                                    </constraints>
+                                </customView>
+                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="E6i-hs-med" customClass="NonBleedingView" customModule="JamfConnectLogin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="22"/>
+                                    <subviews>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qUl-NH-gJc">
+                                            <rect key="frame" x="35" y="0.0" width="123" height="17"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Network Password:" id="qoN-yd-Lm8">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y1R-9W-xx2">
+                                            <rect key="frame" x="173" y="0.0" width="227" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Password" drawsBackground="YES" usesSingleLineMode="YES" id="5Nu-vx-g3X">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <allowedInputSourceLocales>
+                                                    <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                                </allowedInputSourceLocales>
+                                            </secureTextFieldCell>
+                                        </secureTextField>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="22" id="1rc-i4-Qzn"/>
+                                        <constraint firstAttribute="width" constant="400" id="FQT-Lw-tPi"/>
+                                    </constraints>
+                                </customView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="400" id="7ay-ce-HMv"/>
+                                <constraint firstItem="UoO-pU-3Gq" firstAttribute="leading" secondItem="kVg-5t-aD9" secondAttribute="leading" id="cLx-n7-45Z"/>
+                                <constraint firstAttribute="trailing" secondItem="UoO-pU-3Gq" secondAttribute="trailing" id="iUP-Ca-ClS"/>
+                                <constraint firstAttribute="trailing" secondItem="E6i-hs-med" secondAttribute="trailing" id="kzf-6v-ke6"/>
+                                <constraint firstItem="E6i-hs-med" firstAttribute="leading" secondItem="kVg-5t-aD9" secondAttribute="leading" id="pNS-lf-2nU"/>
+                            </constraints>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
+                        <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n2C-tb-kAJ">
+                            <rect key="frame" x="33" y="81" width="404" height="34"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <textFieldCell key="cell" alignment="center" title="We're not supporting open networks right now. Connection is not possible." id="zIP-7r-5H1">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="tu8-US-nDP">
+                            <rect key="frame" x="318" y="38" width="16" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        </progressIndicator>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="CRA-vi-zDV" secondAttribute="trailing" constant="30" id="41Y-i6-ISZ"/>
+                        <constraint firstItem="cm9-r2-EIO" firstAttribute="leading" secondItem="rp9-AW-xOQ" secondAttribute="leading" constant="12" id="5FR-nK-UAR"/>
+                        <constraint firstItem="CRA-vi-zDV" firstAttribute="leading" secondItem="giz-Xq-15Y" secondAttribute="trailing" constant="6" id="7TK-6E-ezi"/>
+                        <constraint firstAttribute="width" constant="442" id="8I3-XY-WEQ"/>
+                        <constraint firstItem="kVg-5t-aD9" firstAttribute="top" secondItem="KQ8-e0-MTT" secondAttribute="bottom" constant="11" id="ANH-Y1-Lsg"/>
+                        <constraint firstAttribute="trailing" secondItem="2tJ-IN-r5A" secondAttribute="trailing" constant="20" id="F0O-HG-tso"/>
+                        <constraint firstAttribute="trailing" secondItem="kVg-5t-aD9" secondAttribute="trailing" constant="20" id="KZH-Ic-44h"/>
+                        <constraint firstItem="cm9-r2-EIO" firstAttribute="top" secondItem="rp9-AW-xOQ" secondAttribute="top" constant="10" id="YYj-7Y-Tla"/>
+                        <constraint firstAttribute="trailing" secondItem="Ofh-CA-NRH" secondAttribute="trailing" constant="26" id="ZW7-aC-4YH"/>
+                        <constraint firstAttribute="bottom" secondItem="giz-Xq-15Y" secondAttribute="bottom" constant="12" id="cJu-ds-nJQ"/>
+                        <constraint firstAttribute="bottom" secondItem="CRA-vi-zDV" secondAttribute="bottom" constant="12" id="dDe-VX-m0U"/>
+                        <constraint firstAttribute="height" constant="204" id="hLh-Sf-ZEh"/>
+                        <constraint firstItem="KQ8-e0-MTT" firstAttribute="top" secondItem="Ofh-CA-NRH" secondAttribute="bottom" constant="11" id="iXr-QR-Gyi"/>
+                        <constraint firstItem="CRA-vi-zDV" firstAttribute="top" secondItem="2tJ-IN-r5A" secondAttribute="bottom" constant="8" id="kDB-e0-kaA"/>
+                        <constraint firstItem="Ofh-CA-NRH" firstAttribute="top" secondItem="rp9-AW-xOQ" secondAttribute="top" constant="14" id="ki1-It-bFr"/>
+                        <constraint firstAttribute="trailing" secondItem="KQ8-e0-MTT" secondAttribute="trailing" constant="20" id="n8L-4P-Pc6"/>
+                        <constraint firstItem="kVg-5t-aD9" firstAttribute="leading" secondItem="rp9-AW-xOQ" secondAttribute="leading" constant="22" id="p3S-02-Ses"/>
+                        <constraint firstItem="giz-Xq-15Y" firstAttribute="leading" secondItem="rp9-AW-xOQ" secondAttribute="leading" constant="16" id="xAI-c7-dVt"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="rp9-AW-xOQ" firstAttribute="centerY" secondItem="zbN-Kh-Zkk" secondAttribute="centerY" constant="12.5" id="1Oh-0C-9hB"/>
+                <constraint firstAttribute="bottom" secondItem="a38-Q6-XXH" secondAttribute="bottom" id="MSc-Zw-Zim"/>
+                <constraint firstItem="rp9-AW-xOQ" firstAttribute="centerX" secondItem="zbN-Kh-Zkk" secondAttribute="centerX" id="OGD-SG-btM"/>
+                <constraint firstAttribute="trailing" secondItem="a38-Q6-XXH" secondAttribute="trailing" id="OM1-Zk-WHf"/>
+                <constraint firstItem="a38-Q6-XXH" firstAttribute="top" secondItem="zbN-Kh-Zkk" secondAttribute="top" id="cge-Nx-6kr"/>
+                <constraint firstItem="a38-Q6-XXH" firstAttribute="leading" secondItem="zbN-Kh-Zkk" secondAttribute="leading" id="ddS-kd-VGK"/>
+            </constraints>
+            <connections>
+                <outlet property="backgroundView" destination="a38-Q6-XXH" id="Wy8-Gu-Eor"/>
+                <outlet property="dismissButton" destination="cm9-r2-EIO" id="sJX-Zv-JPI"/>
+                <outlet property="mainView" destination="rp9-AW-xOQ" id="LQr-kL-n4x"/>
+                <outlet property="networkConnectButton" destination="2tJ-IN-r5A" id="d3Y-cG-zaI"/>
+                <outlet property="networkConnectionSpinner" destination="tu8-US-nDP" id="kxk-YD-nMV"/>
+                <outlet property="networkOpenStatusLabel" destination="n2C-tb-kAJ" id="RGX-Pq-mOl"/>
+                <outlet property="networkPassword" destination="Y1R-9W-xx2" id="niu-1Q-OtI"/>
+                <outlet property="networkPasswordView" destination="E6i-hs-med" id="vNv-lw-eSF"/>
+                <outlet property="networkSearch" destination="Ofh-CA-NRH" id="t81-Th-Hbz"/>
+                <outlet property="networkUsername" destination="2Z2-Bu-Svb" id="zbe-Gq-mgZ"/>
+                <outlet property="networkUsernameView" destination="UoO-pU-3Gq" id="hJc-h8-zh4"/>
+                <outlet property="networkWifiPopup" destination="KQ8-e0-MTT" id="FaK-2Z-slg"/>
+                <outlet property="networkstatusLabel" destination="CRA-vi-zDV" id="7Lh-fg-Mv7"/>
+            </connections>
+            <point key="canvasLocation" x="181.5" y="207.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSStopProgressTemplate" width="11" height="11"/>
+    </resources>
+</document>
