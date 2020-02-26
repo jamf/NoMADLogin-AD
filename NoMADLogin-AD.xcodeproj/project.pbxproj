@@ -67,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		017F5D1622022A0700042737 /* NoMAD_ADAuth.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = NoMAD_ADAuth.framework.dSYM; sourceTree = "<group>"; };
+		01DD14572406C834007A3EEC /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		1AA58EEA2166101100431201 /* UserInputUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputUI.swift; sourceTree = "<group>"; };
 		1AA58EEB2166101100431201 /* UserInputUI.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInputUI.xib; sourceTree = "<group>"; };
 		1AA58EED2166104400431201 /* NoLoNotify.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoLoNotify.xib; sourceTree = "<group>"; };
@@ -171,6 +172,7 @@
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
+				01DD14572406C834007A3EEC /* .gitignore */,
 				1AACDADE2217B71C006D8A65 /* ConfigSamples */,
 				9C2F03601FEB0B9A0036C08C /* README.md */,
 				1AA58EEC2166104400431201 /* Notify */,
