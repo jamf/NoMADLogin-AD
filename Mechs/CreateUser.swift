@@ -78,10 +78,8 @@ class CreateUser: NoLoMechanism {
                        isAdmin: isAdmin,
                        customAttributes: customAttributes)
             
-            os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
-            createHomeDirFor(nomadUser!)
-            os_log("Fixup home permissions for: %{public}@", log: createUserLog, type: .debug, nomadUser!)
-            let _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
+            createHomeDirFor(nomadUser!, uid)
+
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
         } else {
             // no user to create
@@ -285,27 +283,20 @@ class CreateUser: NoLoMechanism {
         return newUID
     }
 
-    //TODO: Convert to throws
     /// Finds the local homefolder template that corresponds to the locale of the system and copies it into place.
     ///
     /// - Parameter user: The shortname of the user to create a home for as a `String`.
-    func createHomeDirFor(_ user: String) {
+    func createHomeDirFor(_ user: String, _ uid: String) {
+        os_log("Creating local homefolder for %{public}", log: createUserLog, type: .default, user)
         os_log("Find system locale...", log: createUserLog, type: .debug)
-        let currentLanguage = Locale.current.languageCode ?? "Non_localized"
-        os_log("System language is: %{public}@", log: createUserLog, type: .debug, currentLanguage)
-        let templateName = templateForLang(currentLanguage)
-        let sourceURL = URL(fileURLWithPath: "/System/Library/User Template/" + templateName)
-        let downloadsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
-        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Documents")
-        do {
-            os_log("Copying template to /Users", log: createUserLog, type: .debug)
-            try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
-            os_log("Copying non-localized folders to new home", log: createUserLog, type: .debug)
-            try FileManager.default.copyItem(at: downloadsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Downloads"))
-            try FileManager.default.copyItem(at: documentsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Documents"))
-        } catch {
-            os_log("Home template copy failed with: %{public}@", log: createUserLog, type: .error, error.localizedDescription)
-        }
+        os_log("System language is: %{public}", log: createUserLog, type: .debug, String(describing: Locale.current.languageCode))
+
+        // Use a macOS tool to create the homefolder and localize it.
+        _ = cliTask("/usr/sbin/createhomedir -L -c -u \(user)", arguments: nil, waitForTermination: true)
+
+        // Make sure that the permissions are set properly on the new homedir.
+        os_log("Fixup home permissions for: %{public}@", log: createUserLog, type: .debug, user)
+        _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
     }
     
     /// Looks at the Apple provided User Pictures directory, recurses it, and delivers a random picture path.
@@ -321,89 +312,7 @@ class CreateUser: NoLoMechanism {
         let pics = picDirs.flatMap {(try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: [URLResourceKey.isRegularFileKey], options: .skipsHiddenFiles)) ?? []}
         return pics[Int(arc4random_uniform(UInt32(pics.count)))].path
     }
-    
-    /// Given an connonical ISO language code, find and return the macOS home folder template name that is appropriate.
-    ///
-    /// - Parameter code: The `languageCode` of the current user `Locale`.
-    ///             You can find the current language with `Locale.current.languageCode`
-    /// - Returns: A `String` that is the name of the localized home folder template on macOS. If the language code doesn't
-    ///             map to one of the default macOS home templates the `Non_localized` name will be returned.
-    func templateForLang(_ code: String) -> String {
-        let templateName = ".lproj"
-        switch code {
-        case "es":
-            return "Spanish" + templateName
-        case "nl":
-            return "Dutch" + templateName
-        case "en":
-            return "English" + templateName
-        case "fr":
-            return "French" + templateName
-        case "it":
-            return "Italian" + templateName
-        case "ja":
-            return "Japanese" + templateName
-        case "ar":
-            return "ar" + templateName
-        case "ca":
-            return "ca" + templateName
-        case "cs":
-            return "cs" + templateName
-        case "da":
-            return "da" + templateName
-        case "el":
-            return "el" + templateName
-        case "es-419":
-            return "es_419" + templateName
-        case "fi":
-            return "fi" + templateName
-        case "he":
-            return "he" + templateName
-        case "hi":
-            return "hi" + templateName
-        case "hr":
-            return  "hr" + templateName
-        case "hu":
-            return "hu" + templateName
-        case "id":
-            return "id" + templateName
-        case "ko":
-            return "ko" + templateName
-        case "ms":
-            return "ms" + templateName
-        case "nb":
-            return "no" + templateName
-        case "pl":
-            return "pl" + templateName
-        case "pt":
-            return "pt" + templateName
-        case "pt-PT":
-            return "pt_PT" + templateName
-        case "ro":
-            return "ro" + templateName
-        case "ru":
-            return "ru" + templateName
-        case "sk":
-            return "sk" + templateName
-        case "sv":
-            return "sv" + templateName
-        case "th":
-            return "th" + templateName
-        case "tr":
-            return "tr" + templateName
-        case "uk":
-            return "uk" + templateName
-        case "vi":
-            return "vi" + templateName
-        case "zh-Hans":
-            return "zh_CN" + templateName
-        case "zh-Hant":
-            return "zh_TW" + templateName
-        default:
-            return "Non_localized"
-        }
-    }
-    
+
     fileprivate func setTimestampFor(_ nomadUser: String) {
         // Add network sign in stamp
         if let signInTime = getHint(type: .networkSignIn) {
