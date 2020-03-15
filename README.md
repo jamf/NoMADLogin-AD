@@ -5,7 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.3.1
+The current production version of NoLoAD is 1.4.0
 
 For those of you that are new to NoLo, the basic features are:
 
@@ -19,7 +19,8 @@ For those of you that are new to NoLo, the basic features are:
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
 
-## Staged Changes
+## What's new in 1.4.0
+* `PasswordOverwriteSilent` a Boolean to determine if the password should be silently overwritten when the AD authentication succeeds, should be used in conjunction with `DenyLocal`.
 * `ManageSecureTokens` a Boolean to determine if the SecureToken management capabilites should be enabled. This utilizes a service account which can be modified from default using the below optional preferences.
 * `SecureTokenManagementEnableOnlyAdminUsers` a Boolean to determine if the SecureToken service account should only enable administrative users created with NoMAD Login.
 * `SecureTokenManagementOnlyEnableFirstUser` a Boolean to determine if the NoMAD Login should only enable the first user that is eligable for a SecureToken, and delete the service account afterwards.
@@ -28,6 +29,8 @@ For those of you that are new to NoLo, the basic features are:
 * `SecureTokenManagementPasswordLocation` a String to define a custom password storage location for the SecureToken service account password, default is `/var/db/.nomadLoginSecureTokenPassword`
 * `SecureTokenManagementPasswordLength` an Integer to define a custom SecureToken service account password length, default is `16`
 * `SecureTokenManagementUsername` a String to define a custom username for the SecureToken service account, default is `_nomadlogin`
+* Added an overwrite button to the sync password screen in the event the user does not remember their password, which bootstraps into the `PasswordOverwriteSilent` workflow - Reqest from @Ehlers299
+* Fixed an extraneous password check in the user demobilization mechanism that would cause demobilizations when the user is logging in at the FV2 window to not function
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
@@ -97,14 +100,9 @@ Installing is easy!
 
 1. Download [NoMAD Login AD](https://files.nomad.menu/NoMAD-Login-AD.pkg).
 2. You can just run the installer package that includes the `authchanger` tool and be done with it. The only reason not to do this is if you have made other changes to the `system.login.console` rights.
+3. Define your `ADDomain` in the `menu.nomad.login.ad` preference domain.
 
-If you want to be more manual about the process for testing you can still use the older console scripts.
-
-1. Copy the NoMADLoginAD.bundle to the /Library/Security/SecurityAgentPlugins folder.
-2. Open a Terminal window in the evaluate-mechanisms folder of the NoLoAD archive.
-3. Run `sudo ./loadAD.bash` to load in the code bundle. All this script does is run the security command to load in the `console-ad` file to AuthorizationDB.
-
-Now you should be able to logout and find yourself staring at the majesty of NoMAD Login.
+Now you should be able to logout and find yourself staring at the majesty of NoMAD Login!
 
 ### Building from source:
 Take a look in our Wiki to see how to [get started with Carthage and Xcode](https://gitlab.com/orchardandgrove-oss/NoMADLogin-AD/wikis/Development/Building-From-Source).
@@ -119,13 +117,7 @@ Enticing you to stay now is the ability to customize the login experience with y
 ## I want to get off this crazy ride!
 When you decide that you've had enough it's easy to go back to the standard login window.
 
-The easy way is to simply run `/usr/local/bin authchanger -reset`.
-
-If you are testing with the console scripts, or just feel like doing it this way...
-1. Open a Terminal window in the evaluate-mechanisms folder of the NoLoAD archive.
-2. Run `sudo ./resetDB.bash` to reload the default `system.login.console` mechanisms into the AuthorizationDB.
-3. If you've had to do this from a SSH session behind the NoLoAD login window you can simply run `sudo killall loginwindow` in order to restart the login window to the defaults.
-
+The easy way is to simply run `/usr/local/bin authchanger -reset`, followed by `killall -HUP loginwindow` to reload the login window.
 
 # Thanks
 Thanks to all of you for trying NoMAD Login AD! Please let us know about issues and features in the issue tracker. You can also find us on Slack in [nomad](https://macadmins.slack.com/messages/C1Y2Y14QG) and [nomad-login](https://macadmins.slack.com/messages/C88MFDLV8).
