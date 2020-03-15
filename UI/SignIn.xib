@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15504" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,7 +15,8 @@
                 <outlet property="loginStack" destination="gGp-dd-t9H" id="OVU-WY-L3G"/>
                 <outlet property="migrateBox" destination="hI6-5h-MOb" id="Mv6-i7-QBf"/>
                 <outlet property="migrateCancel" destination="mXJ-FZ-oQn" id="Bti-u0-eDK"/>
-                <outlet property="migrateOK" destination="MRU-Zy-0c3" id="zJf-PA-fQm"/>
+                <outlet property="migrateOK" destination="MRU-Zy-0c3" id="jgA-ys-if9"/>
+                <outlet property="migrateOverwrite" destination="9o3-U9-TbJ" id="Ogi-hb-fPr"/>
                 <outlet property="migratePassword" destination="mra-bd-koW" id="BzV-YK-YFe"/>
                 <outlet property="migrateSpinner" destination="PgS-XP-xbK" id="Nug-sV-S6p"/>
                 <outlet property="migrateText" destination="pPy-FW-G31" id="6CN-vA-g7i"/>
@@ -37,7 +38,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="F0z-JX-Cv5" customClass="NoLoWindow" customModule="NoMADLoginAD" customModuleProvider="target">
             <rect key="contentRect" x="276" y="219" width="521" height="511"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="1577"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="521" height="511"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -320,6 +321,9 @@ DQ
 DQ
 </string>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationOK:" target="-1" id="MTf-aO-2CS"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mXJ-FZ-oQn">
                                     <rect key="frame" x="29" y="20" width="82" height="32"/>
@@ -331,6 +335,9 @@ DQ
 Gw
 </string>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationCancel:" target="-1" id="6ne-ki-HKB"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f9a-vo-hSE">
                                     <rect key="frame" x="111" y="20" width="123" height="32"/>
@@ -374,6 +381,17 @@ Gw
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9o3-U9-TbJ">
+                                    <rect key="frame" x="124" y="20" width="96" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="Overwrite" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vNV-i4-lZw">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="clickMigrationOverwrite:" target="-1" id="Oii-ks-c2k"/>
+                                    </connections>
+                                </button>
                             </subviews>
                         </view>
                         <color key="fillColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -404,10 +422,10 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-668.5" y="101.5"/>
+            <point key="canvasLocation" x="121" y="96"/>
         </window>
         <stackView hidden="YES" autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="LF9-Yw-kgb" userLabel="Sleep Stack View">
-            <rect key="frame" x="0.0" y="1" width="61" height="48"/>
+            <rect key="frame" x="0.0" y="0.0" width="61" height="48"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="fU9-Oo-l9U">
@@ -445,6 +463,7 @@ Gw
                 <real value="3.4028234663852886e+38"/>
                 <real value="3.4028234663852886e+38"/>
             </customSpacing>
+            <point key="canvasLocation" x="140" y="141"/>
         </stackView>
     </objects>
     <resources>

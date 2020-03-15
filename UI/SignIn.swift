@@ -57,6 +57,7 @@ class SignIn: NSWindowController, DSQueryable {
     @IBOutlet weak var migrateUsers: NSPopUpButton!
     @IBOutlet weak var migratePassword: NSSecureTextField!
     @IBOutlet weak var migrateOK: NSButton!
+    @IBOutlet weak var migrateOverwrite: NSButton!
     @IBOutlet weak var migrateCancel: NSButton!
     @IBOutlet weak var MigrateNo: NSButton!
     @IBOutlet weak var migrateSpinner: NSProgressIndicator!
@@ -538,6 +539,9 @@ class SignIn: NSWindowController, DSQueryable {
         self.usernameLabel.isHidden = true
         
         // show migration box
+        self.migrateOverwrite.isHidden = false
+        let overwriteRed: [NSAttributedString.Key : Any] = [.foregroundColor: NSColor.red]
+        self.migrateOverwrite.attributedTitle = NSMutableAttributedString(string: self.migrateOverwrite.title, attributes: overwriteRed)
         self.migrateBox.isHidden = false
         self.migrateSpinner.isHidden = false
         
@@ -641,6 +645,14 @@ class SignIn: NSWindowController, DSQueryable {
     
     @IBAction func clickMigrationNo(_ sender: Any) {
         // user doesn't want to migrate, so create a new account
+        completeLogin(authResult: .allow)
+    }
+    
+    @IBAction func clickMigrationOverwrite(_ sender: Any) {
+        // user wants to overwrite their current password
+        os_log("Password Overwrite selected", log: uiLog, type: .default)
+        localCheck.mech = self.mech
+        setHint(type: .passwordOverwrite, hint: true)
         completeLogin(authResult: .allow)
     }
 
