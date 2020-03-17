@@ -103,8 +103,9 @@ enum Preferences: String {
     case SecureTokenManagementPasswordLength
     /// Username to use to for the securetoken management account as a `String`
     case SecureTokenManagementUsername
-    /// Use the CN from AD as the full name
+    /// Tool to use for UID numbers
     case UIDTool
+    /// Use the CN from AD as the full name
     case UseCNForFullName
     /// A string to show as the placeholder in the Username textfield
     case UseCNForFullNameFallback
