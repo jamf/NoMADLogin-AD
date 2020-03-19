@@ -28,7 +28,7 @@ class DeMobilize : NoLoMechanism {
     
     let kAuthAuthority = "dsAttrTypeNative:authentication_authority"
     
-    let removeAttrs = [
+    var removeAttrs = [
         "dsAttrTypeStandard:CopyTimestamp",
         "dsAttrTypeStandard:AltSecurityIdentities",
         "dsAttrTypeStandard:OriginalAuthenticationAuthority",
@@ -71,6 +71,12 @@ class DeMobilize : NoLoMechanism {
                 _ = allowLogin()
                 return
             }
+        }
+        
+        if (getManagedPreference(key: Preferences.DemobilizeSaveAltSecurityIdentities) as? Bool ?? false) {
+            // Removing the AltSecurityIdentities from the removal attributes
+            os_log("Saving the AltSecurityIdentities attribute", log: demobilizeLog, type: .debug)
+            removeAttrs.remove(at: 1)
         }
 
         

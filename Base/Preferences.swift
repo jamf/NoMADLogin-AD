@@ -29,6 +29,8 @@ enum Preferences: String {
     case DemobilizeUsers
     /// Should we always have a password already set up before demobilizing
     case DemobilizeForcePasswordCheck
+    /// Should we preserve the AltSecurityIdentities OD attribute during demobilization
+    case DemobilizeSaveAltSecurityIdentities
     /// Dissallow local auth, and always do network authentication
     case DenyLocal
     /// Users to allow locally when DenyLocal is on

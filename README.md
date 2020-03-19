@@ -31,6 +31,7 @@ For those of you that are new to NoLo, the basic features are:
 * `SecureTokenManagementUsername` a String to define a custom username for the SecureToken service account, default is `_nomadlogin`
 * Added an overwrite button to the sync password screen in the event the user does not remember their password, which bootstraps into the `PasswordOverwriteSilent` workflow - Reqest from @Ehlers299
 * Fixed an extraneous password check in the user demobilization mechanism that would cause demobilizations when the user is logging in at the FV2 window to not function
+* `DemobilizeSaveAltSecurityIdentities` a Boolean to determine if the `AltSecurityIdentities` user record attribute should be preserved, useful when moving from mobile accounts with smart card mapping implemented.
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
