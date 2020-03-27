@@ -95,7 +95,6 @@
 		9CA733FB202E491E00EA1FE6 /* PowerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerControl.swift; sourceTree = "<group>"; };
 		9CA733FD202E553C00EA1FE6 /* EnableFDE.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnableFDE.swift; sourceTree = "<group>"; };
 		9CBDCF9B1FC4CEE300CF73F4 /* NoMADLoginAD.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoMADLoginAD.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBDCFA71FC5CDB500CF73F4 /* NoMADLoginAD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoMADLoginAD-Bridging-Header.h"; sourceTree = "<group>"; };
 		9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUser.swift; sourceTree = "<group>"; };
 		9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogOnly.swift; sourceTree = "<group>"; };
@@ -198,7 +197,6 @@
 		9CBDCF9D1FC4CEE300CF73F4 /* NoMADLogin-AD */ = {
 			isa = PBXGroup;
 			children = (
-				9CBDCF9E1FC4CEE300CF73F4 /* Info.plist */,
 			);
 			path = "NoMADLogin-AD";
 			sourceTree = "<group>";

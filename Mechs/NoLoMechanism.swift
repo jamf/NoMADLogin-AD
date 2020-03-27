@@ -335,6 +335,72 @@ class NoLoMechanism: NSObject {
         
         return true
     }
+    
+    /// Remove a user record and associated home folder
+    ///
+    /// - Parameter name: short name of the user to delete
+    /// - Returns: true on success
+    class func removeUserAndHome(name: String) -> Bool {
+        
+        // first get the user record
+        
+        os_log("Checking for local username", log: noLoMechlog, type: .debug)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return true
+        }
+        
+        os_log("Record search returned", log: noLoMechlog, type: .info)
+        
+        if records.isEmpty {
+            os_log("No user found to delete, success!", log: noLoMechlog, type: .debug)
+            return true
+        } else if records.count > 1 {
+            os_log("Multiple users found, failing local user removal", log: noLoMechlog, type: .info)
+            return false
+        }
+        
+        os_log("Attempting to delete home", log: noLoMechlog, type: .info)
+        
+        if let homePaths = records.first?.value(forKey: kODAttributeTypeNFSHomeDirectory) as? [String] {
+            
+            os_log("Home path found, attempting to delete", log: noLoMechlog, type: .info)
+
+            let fm = FileManager.default
+            
+            if let homePath = homePaths.first {
+                if fm.fileExists(atPath: homePath) {
+                    os_log("Home is: %{public}@", log: noLoMechlog, type: .info, homePath)
+
+                    
+                } else {
+                    os_log("No home to remove", log: noLoMechlog, type: .default)
+                }
+            }
+        }
+        
+        // now to delete the user
+        
+        os_log("Attempting to delete user", log: noLoMechlog, type: .info)
+
+        do {
+            try records.first?.delete()
+        } catch {
+            os_log("Unable to delete user", log: noLoMechlog, type: .default)
+            return false
+        }
+        
+        os_log("Deleted guest account and home", log: noLoMechlog, type: .default)
+        
+        return true
+    }
 }
 
 
