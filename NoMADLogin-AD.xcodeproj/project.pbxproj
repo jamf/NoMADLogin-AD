@@ -527,7 +527,7 @@
 					"@loader_path/../Resources",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 1.4.0a11;
+				MARKETING_VERSION = 1.4.0a12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -568,7 +568,7 @@
 					"@loader_path/../Resources",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 1.4.0a11;
+				MARKETING_VERSION = 1.4.0a12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
