@@ -63,6 +63,12 @@ class CreateUser: NoLoMechanism {
         }
         
         if nomadPass != nil && !NoLoMechanism.checkForLocalUser(name: nomadUser!) {
+            
+            var secureTokenCreds = [String:String]()
+            if getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
+                secureTokenCreds = GetSecureTokenCreds()
+            }
+            
             guard let uid = findFirstAvaliableUID() else {
                 os_log("Could not find an avaliable UID", log: createUserLog, type: .debug)
                 return
@@ -104,7 +110,8 @@ class CreateUser: NoLoMechanism {
                        gid: "20",
                        canChangePass: true,
                        isAdmin: isAdmin,
-                       customAttributes: customAttributes)
+                       customAttributes: customAttributes,
+                       secureTokenCreds: secureTokenCreds)
             
             os_log("Creating local homefolder for %{public}@", log: createUserLog, type: .debug, nomadUser!)
             createHomeDirFor(nomadUser!)
@@ -112,20 +119,93 @@ class CreateUser: NoLoMechanism {
             let _ = cliTask("/usr/sbin/diskutil resetUserPermissions / \(uid)", arguments: nil, waitForTermination: true)
             os_log("Account creation complete, allowing login", log: createUserLog, type: .debug)
         } else {
-            // no user to create
-            os_log("Skipping local account creation", log: createUserLog, type: .default)
+            
+            // Checking to see if we are doing a silent overwrite
+            if getHint(type: .passwordOverwrite) as? Bool ?? false {
+                os_log("Password Overwrite enabled and triggered, starting evaluation", log: createUserLog, type: .debug)
+                
+                // Checking to see if we can get secureToken Creds
+                var secureTokenCreds = ["username":"", "password":""]
+                if getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
+                    secureTokenCreds = GetSecureTokenCreds()
+                }
+                let secureTokenCredsHeld = (secureTokenCreds["username"] != "")
+                    
+                // Checking Secure Token system status
+                let secureTokenUsers = GetSecureTokenUserList()
+                if secureTokenUsers.contains(nomadUser!){
+                    
+                    // Doing more checks
+                    if secureTokenUsers.count == 1 {
+                        os_log("%{public}@ is the only SecureToken enabled user, unable to update the user", log: createUserLog, type: .debug, nomadUser!)
+                    } else {
+                        // System is in a state where we can do secure token operations
+                        if secureTokenCredsHeld {
+                            // We can do secureToken operations
+                            os_log("SecureToken operations needed", log: createUserLog, type: .debug)
+                            
+                            do {
+                                // Save off the OD record
+                                os_log("Getting and saving the ODRecord", log: createUserLog, type: .debug)
+                                let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                                let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: nomadUser!, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
+                                let records = try query.resultsAllowingPartial(false) as! [ODRecord]
+                                let user = records.first!
+                                let userInfo = try user.recordDetails(forAttributes: nil)
+                                
+                                // Delete the user but keep home directory
+                                os_log("Deleteing the ODRecord to wipe the secureToken", log: createUserLog, type: .debug)
+                                try user.delete()
+                                
+                                // Re-create user with OD record and new password
+                                os_log("re-creating the ODRecord", log: createUserLog, type: .debug)
+                                let newUser = try node.createRecord(withRecordType: kODRecordTypeUsers, name: nomadUser!, attributes: userInfo)
+                                try newUser.changePassword(nil, toPassword: nomadPass!)
+                                
+                                // Give the user a secure token
+                                addSecureToken(nomadUser!, nomadPass!, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+                                
+                                // Rotate token creds
+                                let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+                                _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]!), secureTokenManagementPasswordLocation)
+                            } catch {
+                                os_log("Password Overwrite Silent with SecureToken Failed", log: createUserLog, type: .debug)
+                            }
+                            
+                        } else {
+                            os_log("User has a SecureToken and we do not, unable to update the user", log: createUserLog, type: .debug)
+                            // we can't do secureToken operations
+                        }
+                    }
+                } else {
+                    // User does not have a secureToken
+                    os_log("%{public}@ does not have token, resetting password", log: createUserLog, type: .debug, nomadUser!)
+                    
+                    // changing the with OpenDirectory
+                    do {
+                        let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                        let user = try node.record(withRecordType: kODRecordTypeUsers, name: nomadUser!, attributes: kODAttributeTypeRecordName)
+                        try user.changePassword(nil, toPassword: nomadPass!)
+                        
+                    } catch {
+                        os_log("Password Overwrite Silent without SecureToken Failed")
+                    }
+                }
+            } else {
+                // no user to create
+                os_log("Skipping local account creation", log: createUserLog, type: .default)
+            }
             
             // Set the login timestamp if requested
             setTimestampFor(nomadUser as? String ?? "")
-            
-            os_log("Account creation skipped, allowing login", log: createUserLog, type: .debug)
         }
+        os_log("Allowing login", log: createUserLog, type: .debug)
         let _ = allowLogin()
         os_log("CreateUser mech complete", log: createUserLog, type: .debug)
     }
     
     // mark utility functions
-    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String]) {
+    func createUser(shortName: String, first: String, last: String, pass: String?, uid: String, gid: String, canChangePass: Bool, isAdmin: Bool, customAttributes: [String:String], secureTokenCreds: [String:String]) {
         var newRecord: ODRecord?
         os_log("Creating new local account for: %{public}@", log: createUserLog, type: .default, shortName)
         os_log("New user attributes. first: %{public}@, last: %{public}@, uid: %{public}@, gid: %{public}@, canChangePass: %{public}@, isAdmin: %{public}@, customAttributes: %{public}@", log: createUserLog, type: .debug, first, last, uid, gid, canChangePass.description, isAdmin.description, customAttributes)
@@ -149,9 +229,11 @@ class CreateUser: NoLoMechanism {
         // Adds kODAttributeTypeJPEGPhoto as data, seems to be necessary for the profile pic to appear everywhere expected.
         // Does not necessarily have to be in JPEG format. TIF and PNG both tested okay
         // Apple seems to populate both kODAttributeTypePicture and kODAttributeTypeJPEGPhoto from the GUI user creator
-        let picURL = URL(fileURLWithPath: userPicture)
-        let picData = NSData(contentsOf: picURL)
-        let picString = picData?.description ?? ""
+        
+        // Removing to test for @nstrauss
+        // let picURL = URL(fileURLWithPath: userPicture)
+        // let picData = NSData(contentsOf: picURL)
+        // let picString = picData?.description ?? ""
 
         var attrs: [AnyHashable:Any] = [
             kODAttributeTypeFullName: [first + " " + last],
@@ -161,13 +243,21 @@ class CreateUser: NoLoMechanism {
             kODAttributeTypePrimaryGroupID: [gid],
             kODAttributeTypeAuthenticationHint: [""],
             kODAttributeTypePicture: [userPicture],
-            kODAttributeTypeJPEGPhoto: [picString],
+            //kODAttributeTypeJPEGPhoto: [picString],
             kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
         
+        if #available(macOS 10.15, *) {
+            os_log("Replacing default bash shell with zsh for Catalina and above", log: createUserLog, type: .debug)
+            attrs[kODAttributeTypeUserShell] = ["/bin/zsh"]
+        }
+        
         if getManagedPreference(key: .UseCNForFullName) as? Bool ?? false {
             attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
+        } else if getManagedPreference(key: .UseCNForFullNameFallback) as? Bool ?? false && "\(first) \(last)" == " " {
+            attrs[kODAttributeTypeFullName] = [getHint(type: .noMADFull) as? String ?? ""]
         }
+        
         
         if let signInTime = getHint(type: .networkSignIn) {
             attrs[kODAttributeNetworkSignIn] = [signInTime]
@@ -254,17 +344,53 @@ class CreateUser: NoLoMechanism {
                 
                 os_log("Adding user to administrators group", log: createUserLog, type: .debug)
                 try adminGroup?.addMemberRecord(newRecord)
+        
             } catch {
                 let errorText = error.localizedDescription
                 os_log("Unable to add user to administrators group: %{public}@", log: createUserLog, type: .error, errorText)
             }
+        }
+        
+        // Doing Secure Token Operations
+        os_log("Starting SecureToken Operations", log: createUserLog, type: .debug)
+        if #available(OSX 10.13.4, *), getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
             
-            if isFdeEnabled() == false {
-                if #available(OSX 10.14, *) {
-                    addSecureToken(shortName, pass)
+            if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
+                os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
+                addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+            
+                if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
+                    // Now that the user is given a token we need to remove the service account
+                    os_log("Enable Only First user Enabled, deleting the service account", log: createUserLog, type: .debug)
+                    
+                    // Nuking the account in unrecoverable fashion. If the secure token operation were to fail above the following deletion command will also fail and leave us in a recoverable state
+                    let launchPath = "/usr/sbin/sysadminctl"
+                    let args = [
+                        "-deleteUser",
+                        "\(String(describing: secureTokenCreds["username"]))",
+                        "-secure"
+                    ]
+                    _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+                } else {
+                    os_log("Rotating the service account password", log: createUserLog, type: .debug)
+                
+                    // Rotating the Secure Token passphrase
+                    let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+                    _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]!), secureTokenManagementPasswordLocation)
                 }
             }
             
+        // This else if is to maintain historic functionality that the first user logging in with EnableFDE enabled will be given a Secure Token
+        } else if getManagedPreference(key: .EnableFDE) as? Bool ?? false {
+            os_log("Historic EnableFDE function enabled, Assigning the user a token then deleting the service account", log: createUserLog, type: .debug)
+            addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+            let launchPath = "/usr/sbin/sysadminctl"
+            let args = [
+                "-deleteUser",
+                "\(String(describing: secureTokenCreds["username"]))",
+                "-secure"
+            ]
+            _ = cliTask(launchPath, arguments: args, waitForTermination: true)
         }
         
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
@@ -294,6 +420,19 @@ class CreateUser: NoLoMechanism {
     func findFirstAvaliableUID() -> String? {
         var newUID = ""
         os_log("Checking for avaliable UID", log: createUserLog, type: .debug)
+        
+        if let uidToolpath = getManagedPreference(key: .UIDTool) as? String {
+            os_log("Checking UIDTool", log: createUserLog, type: .debug)
+            if FileManager.default.isExecutableFile(atPath: uidToolpath) {
+                os_log("Calling UIDTool", log: createUserLog, type: .debug)
+                let uid = cliTask(uidToolpath, arguments: [nomadUser ?? "NONE" ], waitForTermination: true)
+                if uid != "" {
+                    os_log("Found custom uid, using: %{public}@", log: createUserLog, type: .debug, uid)
+                    return uid.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                }
+            }
+        }
+        
         for potentialUID in 501... {
             do {
                 let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
@@ -309,7 +448,7 @@ class CreateUser: NoLoMechanism {
                 return nil
             }
         }
-        os_log("Found first avaliable UID: %{public}@", log: createUserLog, type: .default, newUID)
+        os_log("Found first available UID: %{public}@", log: createUserLog, type: .default, newUID)
         return newUID
     }
 
@@ -323,14 +462,18 @@ class CreateUser: NoLoMechanism {
         os_log("System language is: %{public}@", log: createUserLog, type: .debug, currentLanguage)
         let templateName = templateForLang(currentLanguage)
         let sourceURL = URL(fileURLWithPath: "/System/Library/User Template/" + templateName)
-        let downloadsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Downloads")
-        let documentsURL = URL(fileURLWithPath: "/System/Library/User Template/Non_localized/Documents")
+        let homeDirLocations = ["Desktop", "Downloads", "Documents", "Movies", "Music", "Pictures", "Public"]
         do {
-            os_log("Copying template to /Users", log: createUserLog, type: .debug)
+            os_log("Initializing the user home directory", log: createUserLog, type: .debug)
             try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
+            
             os_log("Copying non-localized folders to new home", log: createUserLog, type: .debug)
-            try FileManager.default.copyItem(at: downloadsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Downloads"))
-            try FileManager.default.copyItem(at: documentsURL, to: URL(fileURLWithPath: "/Users/" + user + "/Documents"))
+            for location in homeDirLocations {
+                try FileManager.default.copyItem(at: URL(fileURLWithPath: "/System/Library/User Template/Non_localized/\(location)"), to: URL(fileURLWithPath: "/Users/" + user + "/\(location)"))
+            }
+            
+            os_log("Copying language template", log: createUserLog, type: .debug)
+            try FileManager.default.copyItem(at: sourceURL, to: URL(fileURLWithPath: "/Users/" + user))
         } catch {
             os_log("Home template copy failed with: %{public}@", log: createUserLog, type: .error, error.localizedDescription)
         }
@@ -369,6 +512,8 @@ class CreateUser: NoLoMechanism {
             return "French" + templateName
         case "it":
             return "Italian" + templateName
+        case "de":
+            return "German" + templateName
         case "ja":
             return "Japanese" + templateName
         case "ar":
@@ -443,7 +588,7 @@ class CreateUser: NoLoMechanism {
         }
     }
     
-    fileprivate func addSecureToken(_ shortName: String, _ pass: String?) {
+    fileprivate func addSecureToken(_ username: String, _ userPass: String?,_ adminUsername: String,_ adminPassword: String?) {
         //MARK: 10.14 fix
         // check for 10.14
         // check for no existing local users?
@@ -460,17 +605,17 @@ class CreateUser: NoLoMechanism {
         
         var args = [
             "-secureTokenOn",
-            shortName,
+            username,
             "-password",
-            pass ?? "",
+            userPass ?? "",
             "-adminUser",
-            shortName,
+            adminUsername,
             "-adminPassword",
-            pass ?? ""
+            adminPassword ?? ""
         ]
         
         let result = cliTask(launchPath, arguments: args, waitForTermination: true)
-        os_log("sysdaminctl result: @{public}%", log: createUserLog, type: .debug, result)
+        os_log("sysdaminctl result: %{public}@", log: createUserLog, type: .debug, result)
         args = [
             "********",
             "********",
@@ -496,5 +641,139 @@ class CreateUser: NoLoMechanism {
         } else {
             return true
         }
+    }
+    
+    fileprivate func GetSecureTokenCreds() -> [String:String] {
+        
+        os_log("Starting SecureToken Credential acquisition process", log: createUserLog, type: .debug)
+        
+        // Initializing the return variables
+        var secureTokenCreds = ["username":"",
+                                "password":""]
+        
+        // Getting the list of secure token enabled users
+        let secureTokenUsers = GetSecureTokenUserList()
+        os_log("SecureToken Authorized Users: %{public}@", log: createUserLog, type: .debug, secureTokenUsers.joined(separator: ", "))
+        
+        // Reading the managed perferences
+        let secureTokenManagementUsername = getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin"
+        let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+        var secureTokenUserCreated = false
+        
+        // Doing base analysis
+        if secureTokenUsers.count == 0 {
+            // Nobody has the initial token
+            if !CreateSecureTokenManagementUser(secureTokenManagementUsername, secureTokenManagementPasswordLocation){
+                os_log("Unable to create SecureToken User", log: createUserLog, type: .debug)
+            }
+            let secureTokenManagementPassword = String(data: FileManager.default.contents(atPath: secureTokenManagementPasswordLocation)!, encoding: .ascii)!
+            addSecureToken(secureTokenManagementUsername, secureTokenManagementPassword, secureTokenManagementUsername, secureTokenManagementPassword)
+            secureTokenUserCreated = true
+        }
+        
+        if secureTokenUsers.contains(secureTokenManagementUsername) || secureTokenUserCreated {
+            // The Secure Token management account has a token
+            
+            // Assigning the username to the return variable
+            secureTokenCreds["username"] = secureTokenManagementUsername
+            
+            // Getting the secureToken creds from the saved file
+            os_log("Retrieving password from %{public}@", log: createUserLog, type: .debug, secureTokenManagementPasswordLocation)
+            secureTokenCreds["password"] = String(data: FileManager.default.contents(atPath: secureTokenManagementPasswordLocation)!, encoding: .ascii)!
+            
+        } else {
+            // The Secure Token management account does not have a token, but there are tokens already given
+            os_log("Secure Token management unable to get credentials", log: createUserLog, type: .debug)
+        }
+        return secureTokenCreds
+    }
+    
+    fileprivate func CreateSecureTokenManagementUser(_ username: String,_ passwordLocation: String) -> Bool{
+        
+        // Generating a random password string and assigning that as the password to the user
+        let password = randomString(length: getManagedPreference(key: .SecureTokenManagementPasswordLength) as? Int ?? 16)
+        
+        // Checking if the account exists
+        if cliTask("/usr/bin/dscl", arguments: [".", "-list", "/Users"], waitForTermination: true).components(separatedBy: "\n").contains(username){
+            // User already exists, should rotate the password
+            os_log("Secure Token management account exists, rotating password", log: createUserLog, type: .debug)
+            
+            // Getting the old password
+            let oldPassword = String(data: FileManager.default.contents(atPath: passwordLocation)!, encoding: .ascii)!
+            
+            // rotating the password
+            let launchPath = "/usr/sbin/sysadminctl"
+            let args = [
+                "-resetPasswordFor",
+                "\(username)",
+                "-newPassword",
+                "\(password)",
+                "-adminUser",
+                "\(username)",
+                "-adminPassword",
+                "\(oldPassword)"
+            ]
+            _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+            
+        } else {
+            os_log("Secure Token management account being created", log: createUserLog, type: .debug)
+        
+            // Creating the user record with sysadminctl becuase it does the magic that allows it to delegate tokens vs manually creating via dscl
+            var launchPath = "/usr/sbin/sysadminctl"
+            var args = [
+                "-addUser",
+                "\(username)",
+                "-password",
+                "\(password)",
+                "-UID",
+                getManagedPreference(key: .SecureTokenManagementUID) as? String ?? "400",
+                "-fullName",
+                getManagedPreference(key: .SecureTokenManagementFullName) as? String ?? "NoMAD Login",
+                "-home",
+                "/private/var/_nomadlogin",
+                "-picture",
+                getManagedPreference(key: .SecureTokenManagementIconPath) as? String ?? "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle/Contents/Resources/NoMADFDEIcon.png"
+            ]
+            _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+            
+            // Making the user hiddem
+            launchPath = "/usr/bin/dscl"
+            args = [
+                ".",
+                "-create",
+                "/Users/\(username)",
+                "IsHidden",
+                "1"
+            ]
+            _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+            
+        }
+        
+        // Saving that password to the password location
+        do {
+            try password.write(toFile: passwordLocation, atomically: true, encoding: String.Encoding.ascii)
+            var attributes = [FileAttributeKey : Any]()
+            attributes[.posixPermissions] = 0o600
+            try FileManager.default.setAttributes(attributes, ofItemAtPath: passwordLocation)
+        } catch {
+            os_log("Error writing password to: %{public}@", log: createUserLog, type: .debug, passwordLocation)
+            return false
+        }
+        return true
+    }
+    
+    fileprivate func GetSecureTokenUserList() -> [String] {
+        let launchPath = "/usr/bin/fdesetup"
+        let args = [
+            "list"
+        ]
+        let secureTokenListRaw = cliTask(launchPath, arguments: args, waitForTermination: true)
+        let partialList = secureTokenListRaw.components(separatedBy: "\n")
+        var secureTokenUsers = [String]()
+        for entry in partialList {
+            secureTokenUsers.append(entry.components(separatedBy: ",")[0])
+        }
+        
+        return secureTokenUsers
     }
 }

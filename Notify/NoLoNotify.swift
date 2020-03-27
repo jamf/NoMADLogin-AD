@@ -182,7 +182,13 @@ class NoLoNotify : NSWindowController, TrackerDelegate {
                                     defer: true)
             
             effectWindow.contentView = effectView
-            effectWindow.alphaValue = 0.8
+            
+            if let backgroundImageAlpha = getManagedPreference(key: .BackgroundImageAlpha) as? Int {
+                effectWindow.alphaValue = CGFloat(Double(backgroundImageAlpha) * 0.1)
+            } else {
+                effectWindow.alphaValue = 0.8
+            }
+            
             effectWindow.orderFrontRegardless()
             effectWindow.canBecomeVisibleWithoutLogin = true
         }
@@ -407,6 +413,8 @@ class NoLoNotify : NSWindowController, TrackerDelegate {
     /// - Parameter authResult:`Authorizationresult` enum value that indicates if login should proceed.
     fileprivate func completeLogin(authResult: AuthorizationResult) {
         let _ = mech?.fPlugin.pointee.fCallbacks.pointee.SetResult((mech?.fEngine)!, authResult)
+        backgroundWindow.close()
+        effectWindow.close()
         NSApp.abortModal()
         self.window?.close()
     }

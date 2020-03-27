@@ -52,8 +52,8 @@ class RunScript : NoLoMechanism {
                             }
                         } else if arg == "<<Principal>>" {
                             
-                            if let setupAdminPass = getHint(type: .kerberos_principal) as? String {
-                                cleanArgs.append(setupAdminPass)
+                            if let principal = getHint(type: .kerberos_principal) as? String {
+                                cleanArgs.append(principal)
                             } else {
                                 cleanArgs.append(kArgError)
                             }

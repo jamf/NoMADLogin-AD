@@ -2,7 +2,8 @@
   "Mac" : [
     {
       "name" : "NoMAD_ADAuth",
-      "hash" : "d15a5ad01c1b4f6a6fcdbeccef7a3661649a3c6b7a5c65d690dd42812b9467bb"
+      "hash" : "bf57653fe97028fcc4280c60c119389a3cf4b10a596ae2fd743a20e4cb861248",
+      "swiftToolchainVersion" : "5.1.1 (swiftlang-1100.0.274.1 clang-1100.0.33.9)"
     }
   ],
   "watchOS" : [

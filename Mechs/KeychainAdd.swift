@@ -85,9 +85,27 @@ class KeychainAdd : NoLoMechanism {
         
         if err != noErr {
             os_log("Unable to unlock keychain reference.", log: keychainAddLog, type: .default)
-            
             // check if we should reset
-            if getManagedPreference(key: .KeychainReset) as? Bool == true {
+            
+            if let resetPass = getHint(type: .migratePass) as? String {
+                
+                os_log("Resetting keychain with migrated user/pass.", log: keychainAddLog)
+                
+                var myKeychain : SecKeychain?
+                
+                err = SecKeychainOpen(userKeychainPath, &myKeychain)
+                
+                err = SecKeychainChangePassword(myKeychain, UInt32(resetPass.count), resetPass, UInt32(userpass.count), userpass)
+                
+                if err != 0 {
+                    os_log("Unable to reset keychain with migrated user/pass.", log: keychainAddLog, type: .error)
+                    
+                    if (getManagedPreference(key: .KeychainReset) as? Bool ?? true ) {
+                        os_log("Resetting keychain password.", log: keychainAddLog, type: .info)
+                        clearKeychain(path: homeDir)
+                    }
+                }
+            } else if (getManagedPreference(key: .KeychainReset) as? Bool ?? true ) {
                 os_log("Resetting keychain password.", log: keychainAddLog, type: .info)
                 clearKeychain(path: homeDir)
             } else {
@@ -137,6 +155,11 @@ class KeychainAdd : NoLoMechanism {
             
             if fm.fileExists(atPath: "/Applications/NoMAD.app", isDirectory: nil) {
                 err = SecTrustedApplicationCreateFromPath("/Applications/NoMAD.app", &nomadTrust)
+                if err == 0 {
+                    secApps.append(nomadTrust!)
+                }
+            } else if let customNoMADLocation = getManagedPreference(key: .CustomNoMADLocation) as? String {
+                err = SecTrustedApplicationCreateFromPath(customNoMADLocation, &nomadTrust)
                 if err == 0 {
                     secApps.append(nomadTrust!)
                 }

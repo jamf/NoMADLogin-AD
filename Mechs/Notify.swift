@@ -15,6 +15,13 @@ class Notify : NoLoMechanism {
     
     @objc func run() {
         
+        // check if we should skip this or not
+        
+        if FileManager.default.fileExists(atPath: "/tmp/.skipNotify") {
+            _ = allowLogin()
+            return
+        }
+        
         NSApp.activate(ignoringOtherApps: true)
         let notifyWindow = NoLoNotify(windowNibName: NSNib.Name("NoLoNotify"))
         

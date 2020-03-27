@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+    <dict>
+        <key>PayloadOrganization</key>
+        <string>NoLo</string>
+        <key>PayloadDisplayName</key>
+        <string>NoLo sample</string>
+        <key>PayloadScope</key>
+        <string>System</string>
+        <key>PayloadType</key>
+        <string>Configuration</string>
+        <key>PayloadRemovalDisallowed</key>
+        <true/>
+        <key>PayloadIdentifier</key>
+        <string>4E9128EE-18BA-4669-891A-643F929AA7CB</string>
+        <key>PayloadContent</key>
+        <array>
+            <dict>
+                <key>PayloadEnabled</key>
+                <true/>
+                <key>PayloadIdentifier</key>
+                <string>C5EB392A-957E-491D-936D-8228052697B7</string>
+                <key>PayloadDescription</key>
+                <string>NoLo UserInput Settings</string>
+                <key>PayloadVersion</key>
+                <integer>1</integer>
+                <key>PayloadType</key>
+                <string>menu.nomad.login.ad</string>
+                <key>PayloadUUID</key>
+                <string>C5EB392A-957E-491D-936D-8228052697B7</string>
+                <key>PayloadDisplayName</key>
+                <string>NoLo Settings</string>
+                <key>PayloadOrganization</key>
+                <string>NoMAD</string>
+                <key>UserInputUI</key>
+                <dict>
+                    <key>TextFields</key>
+                    <array>
+                        <dict>
+                            <key>title</key>
+                            <string>User Name</string>
+                            <key>placeholder</key>
+                            <string>user@domain.com</string>
+                        </dict>
+                        <dict>
+                            <key>title</key>
+                            <string>Password</string>
+                            <key>placeholder</key>
+                            <string>something secure</string>
+                        </dict>
+                    </array>
+                    <key>PopUps</key>
+                    <array>
+                        <dict>
+                            <key>title</key>
+                            <string>Pop Up One</string>
+                            <key>items</key>
+                            <array>
+                                <string>Minneapolis</string>
+                                <string>Austin</string>
+                                <string>New York</string>
+                                <string>Los Angeles</string>
+                                <string>Peoria</string>
+                            </array>
+                        </dict>
+                    </array>
+                    <key>Button</key>
+                    <dict>
+                        <key>title</key>
+                        <string>Get r' Done</string>
+                    </dict>
+                </dict>
+            </dict>
+        </array>
+        <key>PayloadUUID</key>
+        <string>4E9128EE-18BA-4669-891A-643F929AA7CB</string>
+        <key>PayloadEnabled</key>
+        <true/>
+        <key>PayloadDescription</key>
+        <string></string>
+        <key>PayloadVersion</key>
+        <integer>1</integer>
+    </dict>
+</plist>

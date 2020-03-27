@@ -26,6 +26,8 @@ struct PluginRecord {
 
 typedef struct PluginRecord PluginRecord;
 
+extern OSStatus SecKeychainChangePassword(SecKeychainRef keychainRef, UInt32 oldPasswordLength, const void* oldPassword, UInt32 newPasswordLength, const void* newPassword);
+
 #pragma mark - Mechanism
 
 enum {
