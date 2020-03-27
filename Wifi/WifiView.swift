@@ -35,6 +35,7 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         configureAppearance()
+        networkSearch.becomeFirstResponder()
 
         networkWifiPopup.action = #selector(networkWifiPopupChangedValue)
         networkWifiPopup.target = self

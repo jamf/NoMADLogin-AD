@@ -599,6 +599,7 @@ extension SignIn: NoMADUserSessionDelegate {
             setHint(type: .noMADGroups, hint: user.groups)
             setHint(type: .noMADFull, hint: user.cn)
             setHint(type: .kerberos_principal, hint: user.userPrincipal)
+            setHint(type: .customAttributes, hint: user.customAttributes)
             
             // set the network auth time to be added to the user record
             setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
