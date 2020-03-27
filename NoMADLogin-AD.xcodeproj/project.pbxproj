@@ -20,7 +20,9 @@
 		1AA58F02216611BD00431201 /* EULAUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EF42166104400431201 /* EULAUI.xib */; };
 		1AA58F03216611C100431201 /* UserInputUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA58EEA2166101100431201 /* UserInputUI.swift */; };
 		1AA58F04216611C400431201 /* UserInputUI.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AA58EEB2166101100431201 /* UserInputUI.xib */; };
-		1AACDAE02217B72B006D8A65 /* NoLoUserInput Sample.mobileconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */; };
+		1AC401D8233813D00030EAF5 /* DS+AD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC401D7233813D00030EAF5 /* DS+AD.swift */; };
+		1AC401DA233814610030EAF5 /* DSQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC401D9233814610030EAF5 /* DSQueryable.swift */; };
+		1AC401DC2338148D0030EAF5 /* LocalCheckAndMigrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC401DB2338148D0030EAF5 /* LocalCheckAndMigrate.swift */; };
 		1AF15E8721B1F85E00D36F3E /* NoLoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
@@ -40,6 +42,8 @@
 		9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */; };
 		9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */; };
 		9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDF3A3320EBEE4000D69F43 /* EULA.swift */; };
+		B4805138242E415C006391CE /* NoMADFDEIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = B4805137242E415C006391CE /* NoMADFDEIcon.png */; };
+		B480513A242E457E006391CE /* NoLoUserInput Sample.mobileconfig in Resources */ = {isa = PBXBuildFile; fileRef = B4805139242E457E006391CE /* NoLoUserInput Sample.mobileconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,7 +81,9 @@
 		1AA58EF8216610B300431201 /* UserInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInput.swift; sourceTree = "<group>"; };
 		1AA58EFA216610C300431201 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		1AA58EFC216610C700431201 /* RunScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScript.swift; sourceTree = "<group>"; };
-		1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "NoLoUserInput Sample.mobileconfig"; sourceTree = "<group>"; };
+		1AC401D7233813D00030EAF5 /* DS+AD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DS+AD.swift"; sourceTree = "<group>"; };
+		1AC401D9233814610030EAF5 /* DSQueryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSQueryable.swift; sourceTree = "<group>"; };
+		1AC401DB2338148D0030EAF5 /* LocalCheckAndMigrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCheckAndMigrate.swift; sourceTree = "<group>"; };
 		1AF15E8621B1F85E00D36F3E /* NoLoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLoWindow.swift; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -107,6 +113,8 @@
 		9CBDCFB81FC5CE6000CF73F4 /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeMobilize.swift; sourceTree = "<group>"; };
 		9CDF3A3320EBEE4000D69F43 /* EULA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EULA.swift; sourceTree = "<group>"; };
+		B4805137242E415C006391CE /* NoMADFDEIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NoMADFDEIcon.png; sourceTree = "<group>"; };
+		B4805139242E457E006391CE /* NoLoUserInput Sample.mobileconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "NoLoUserInput Sample.mobileconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +160,7 @@
 		1AACDADE2217B71C006D8A65 /* ConfigSamples */ = {
 			isa = PBXGroup;
 			children = (
-				1AACDADF2217B72A006D8A65 /* NoLoUserInput Sample.mobileconfig */,
+				B4805139242E457E006391CE /* NoLoUserInput Sample.mobileconfig */,
 			);
 			path = ConfigSamples;
 			sourceTree = "<group>";
@@ -171,6 +179,7 @@
 		9CBDCF921FC4CEE300CF73F4 = {
 			isa = PBXGroup;
 			children = (
+				B480512F242E4006006391CE /* FDEIcon */,
 				1AACDADE2217B71C006D8A65 /* ConfigSamples */,
 				9C2F03601FEB0B9A0036C08C /* README.md */,
 				1AA58EEC2166104400431201 /* Notify */,
@@ -242,6 +251,9 @@
 				9C8A2608207D917900204336 /* DataExtension.swift */,
 				9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */,
 				9C468F802006A95400A475FC /* Preferences.swift */,
+				1AC401D7233813D00030EAF5 /* DS+AD.swift */,
+				1AC401D9233814610030EAF5 /* DSQueryable.swift */,
+				1AC401DB2338148D0030EAF5 /* LocalCheckAndMigrate.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -254,6 +266,14 @@
 				9CBDCFB71FC5CE6000CF73F4 /* SignIn.xib */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		B480512F242E4006006391CE /* FDEIcon */ = {
+			isa = PBXGroup;
+			children = (
+				B4805137242E415C006391CE /* NoMADFDEIcon.png */,
+			);
+			path = FDEIcon;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,7 +311,6 @@
 					9CBDCF9A1FC4CEE300CF73F4 = {
 						CreatedOnToolsVersion = 9.1;
 						LastSwiftMigration = 0910;
-						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -317,10 +336,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AACDAE02217B72B006D8A65 /* NoLoUserInput Sample.mobileconfig in Resources */,
 				1AA58F02216611BD00431201 /* EULAUI.xib in Resources */,
 				1AA58F04216611C400431201 /* UserInputUI.xib in Resources */,
 				1AA58EFE216611AF00431201 /* NoLoNotify.xib in Resources */,
+				B4805138242E415C006391CE /* NoMADFDEIcon.png in Resources */,
+				B480513A242E457E006391CE /* NoLoUserInput Sample.mobileconfig in Resources */,
 				9C9740191FC5DD6A00D9EAE6 /* Media.xcassets in Resources */,
 				9CBDCFB91FC5CE6100CF73F4 /* SignIn.xib in Resources */,
 			);
@@ -348,6 +368,8 @@
 				9CBDCFAF1FC5CDB600CF73F4 /* NoLoMechanism.swift in Sources */,
 				9CC74CC91FFED59B00EBCCD5 /* DeMobilize.swift in Sources */,
 				1AA58EF9216610B300431201 /* UserInput.swift in Sources */,
+				1AC401DA233814610030EAF5 /* DSQueryable.swift in Sources */,
+				1AC401DC2338148D0030EAF5 /* LocalCheckAndMigrate.swift in Sources */,
 				9CBDCFAD1FC5CDB600CF73F4 /* CreateUser.swift in Sources */,
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
@@ -356,6 +378,7 @@
 				9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */,
 				9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */,
 				9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */,
+				1AC401D8233813D00030EAF5 /* DS+AD.swift in Sources */,
 				9C468F812006A95400A475FC /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,7 +507,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 355;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
@@ -503,7 +527,7 @@
 					"@loader_path/../Resources",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.4.0a12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -524,8 +548,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 355;
 				DEVELOPMENT_TEAM = VRPY9KHGX6;
@@ -544,7 +568,7 @@
 					"@loader_path/../Resources",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.4.0a12;
 				PRODUCT_BUNDLE_IDENTIFIER = menu.nomad.login.ad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -16,6 +16,13 @@ class EULA : NoLoMechanism {
     @objc func run() {
         
         os_log("EULA mech starting", log: eulaLog, type: .debug)
+        
+        if FileManager.default.fileExists(atPath: "/tmp/.skipEULA") {
+            os_log("EULA set to skip via flag file", log: eulaLog, type: .debug)
+            _ = allowLogin()
+            return
+        }
+        
         guard getManagedPreference(key: .EULAText) != nil else {
             os_log("No EULA text was set", log: eulaLog, type: .debug)
             os_log("EULA mech complete", log: eulaLog, type: .debug)

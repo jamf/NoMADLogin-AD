@@ -10,9 +10,9 @@ import Cocoa
 import Security.AuthorizationPlugin
 import os.log
 import NoMAD_ADAuth
+import OpenDirectory
 
-
-class SignIn: NSWindowController {
+class SignIn: NSWindowController, DSQueryable {
     
     //MARK: - setup properties
     var mech: MechanismRecord?
@@ -25,6 +25,7 @@ class SignIn: NSWindowController {
     var backgroundWindow: NSWindow!
     var effectWindow: NSWindow!
     var passChanged = false
+    var originalPass: String?
     @objc var visible = true
     
     //MARK: - IB outlets
@@ -41,6 +42,29 @@ class SignIn: NSWindowController {
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
     @IBOutlet weak var alertText: NSTextField!
     @IBOutlet weak var powerControlStack: NSStackView!
+    
+    //MARK: - Shutdown and Restart
+    
+    @IBOutlet weak var restartButton: NSButton!
+    @IBOutlet weak var restartText: NSTextField!
+    @IBOutlet weak var shutdownButton: NSButton!
+    @IBOutlet weak var shutdownText: NSTextField!
+    
+    //MARK: - Migrate Box IB outlets
+    var migrate = false
+    @IBOutlet weak var migrateBox: NSBox!
+    @IBOutlet weak var migrateText: NSTextField!
+    @IBOutlet weak var migrateUsers: NSPopUpButton!
+    @IBOutlet weak var migratePassword: NSSecureTextField!
+    @IBOutlet weak var migrateOK: NSButton!
+    @IBOutlet weak var migrateOverwrite: NSButton!
+    @IBOutlet weak var migrateCancel: NSButton!
+    @IBOutlet weak var MigrateNo: NSButton!
+    @IBOutlet weak var migrateSpinner: NSProgressIndicator!
+    @IBOutlet weak var usernameLabel: NSTextField!
+    var migrateUserRecord : ODRecord?
+    let localCheck = LocalCheckAndMigrate()
+    var didUpdateFail = false
     
     //MARK: - UI Methods
     override func windowDidLoad() {
@@ -261,10 +285,10 @@ class SignIn: NSWindowController {
         oldPassword.becomeFirstResponder()
     }
 
-    fileprivate func authFail() {
+    fileprivate func authFail(_ message: String?=nil) {
         session = nil
         password.stringValue = ""
-        alertText.stringValue = "Authentication Failed"
+        alertText.stringValue = message ?? "Authentication Failed"
         loginStartedUI()
     }
 
@@ -345,6 +369,7 @@ class SignIn: NSWindowController {
         session.useSSL = isSSLRequired
         session.userPass = passString
         session.delegate = self
+        session.recursiveGroupLookup = getManagedPreference(key: .RecursiveGroupLookup) as? Bool ?? false
         
         if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
             os_log("Ignoring AD sites", log: uiLog, type: .debug)
@@ -501,6 +526,137 @@ class SignIn: NSWindowController {
         setHint(type: .noMADUser, hint: SpecialUsers.noloShutdown.rawValue)
         completeLogin(authResult: .allow)
     }
+    
+    //MARK: - Migration Methods
+    
+    fileprivate func showPasswordSync() {
+        // hide other possible boxes
+        self.migrateBox.isHidden = true
+        self.loginStack.isHidden = true
+        self.signIn.isHidden = true
+        self.signIn.isEnabled = true
+        self.MigrateNo.isHidden = true
+        self.migrateUsers.isHidden = true
+        self.usernameLabel.isHidden = true
+        
+        // show migration box
+        self.migrateOverwrite.isHidden = false
+        let overwriteRed: [NSAttributedString.Key : Any] = [.foregroundColor: NSColor.red]
+        self.migrateOverwrite.attributedTitle = NSMutableAttributedString(string: self.migrateOverwrite.title, attributes: overwriteRed)
+        self.migrateBox.isHidden = false
+        self.migrateSpinner.isHidden = false
+        
+        if self.didUpdateFail == true {
+            self.migrateText.stringValue = "Invalid password. Try again."
+        } else {
+            self.migrateText.stringValue = getManagedPreference(key: .MessagePasswordSync) as? String ?? "Active Directory password does not match local password. Please enter your previous local password to update it."
+        }
+    }
+    
+    fileprivate func showMigration() {
+        
+        //RunLoop.main.perform {
+        // hide other possible boxes
+        os_log("Showing migration box", log: uiLog, type: .default)
+        
+        self.loginStack.isHidden = true
+        self.signIn.isHidden = true
+        self.signIn.isEnabled = true
+        
+        // show migration box
+        self.migrateBox.isHidden = false
+        self.migrateSpinner.isHidden = false
+        self.migrateUsers.addItems(withTitles: self.localCheck.migrationUsers ?? [""])
+        //}
+    }
+    
+    @IBAction func clickMigrationOK(_ sender: Any) {
+        RunLoop.main.perform {
+            self.migrateSpinner.isHidden = false
+            self.migrateSpinner.startAnimation(nil)
+        }
+        
+        let migrateUIPass = self.migratePassword.stringValue
+        if migrateUIPass.isEmpty {
+            os_log("No password was entered", log: uiLog, type: .error)
+            RunLoop.main.perform {
+                self.migrateSpinner.isHidden = true
+                self.migrateSpinner.stopAnimation(nil)
+            }
+            return
+        }
+        
+        // Take a look to see if we are syncing passwords. Until the next refactor the easiest way to tell is if the picklist is hidden.
+        if self.migrateUsers.isHidden {
+            do {
+                os_log("Password doesn't match existing local. Try to change local pass to match.", log: uiLog, type: .default)
+                let localUser = try getLocalRecord(shortName)
+                try localUser.changePassword(migrateUIPass, toPassword: passString)
+                didUpdateFail = false
+                passChanged = false
+                os_log("Password sync worked, allowing login", log: uiLog, type: .default)
+                setHint(type: .migratePass, hint: migrateUIPass)
+                completeLogin(authResult: .allow)
+                return
+            } catch {
+                os_log("Unable to sync local password to Network password. Reload and try again", log: uiLog, type: .error)
+                didUpdateFail = true
+                showPasswordSync()
+                return
+            }
+        }
+        guard let migrateToUser = self.migrateUsers.selectedItem?.title else {
+            os_log("Could not select user to migrate from pick list.", log: uiLog, type: .error)
+            return
+        }
+        do {
+            os_log("Getting user record for %{public}@", log: uiLog, type: .default, migrateToUser)
+            migrateUserRecord = try getLocalRecord(migrateToUser)
+            os_log("Checking existing password for %{public}@", log: uiLog, type: .default, migrateToUser)
+            if migrateUIPass != passString {
+                os_log("No match. Upating local password for %{public}@", log: uiLog, type: .default, migrateToUser)
+                try migrateUserRecord?.changePassword(migrateUIPass, toPassword: passString)
+            } else {
+                os_log("Okta and local passwords matched for %{public}@", log: uiLog, type: .default, migrateToUser)
+            }
+            // Mark the record to add an alias if required
+            os_log("Setting hints for %{public}@", log: uiLog, type: .default, migrateToUser)
+            self.setHint(type: .migrateUser, hint: migrateToUser)
+            self.setHint(type: .migratePass, hint: migrateUIPass)
+            os_log("Allowing login", log: uiLog, type: .default, migrateToUser)
+            completeLogin(authResult: .allow)
+        } catch {
+            os_log("Migration failed with: %{public}@", log: uiLog, type: .error, error.localizedDescription)
+            return
+        }
+        
+        // if we are here, the password didn't work
+        os_log("Unable to migrate user.", log: uiLog, type: .error)
+        self.migrateSpinner.isHidden = true
+        self.migrateSpinner.stopAnimation(nil)
+        self.migratePassword.stringValue = ""
+        self.completeLogin(authResult: .deny)
+    }
+    
+    @IBAction func clickMigrationCancel(_ sender: Any) {
+        passChanged = false
+        didUpdateFail = false
+        completeLogin(authResult: .deny)
+    }
+    
+    @IBAction func clickMigrationNo(_ sender: Any) {
+        // user doesn't want to migrate, so create a new account
+        completeLogin(authResult: .allow)
+    }
+    
+    @IBAction func clickMigrationOverwrite(_ sender: Any) {
+        // user wants to overwrite their current password
+        os_log("Password Overwrite selected", log: uiLog, type: .default)
+        localCheck.mech = self.mech
+        setHint(type: .passwordOverwrite, hint: true)
+        completeLogin(authResult: .allow)
+    }
+
 }
 
 
@@ -528,6 +684,17 @@ extension SignIn: NoMADUserSessionDelegate {
             os_log("Password is expired or requires change.", log: uiLog, type: .default)
             showResetUI()
             return
+        case .OffDomain:
+            os_log("AD authentication failed, off domain.", log: uiLog, type: .default)
+            if getManagedPreference(key: .LocalFallback) as? Bool ?? false {
+                os_log("Local fallback enabled, passing off to local authentication", log: uiLog, type: .default)
+                setRequiredHintsAndContext()
+                completeLogin(authResult: .allow)
+                return
+            } else {
+                authFail()
+                return
+            }
         default:
             os_log("NoMAD Login Authentication failed with: %{public}@", log: uiLog, type: .error, description)
             authFail()
@@ -537,6 +704,10 @@ extension SignIn: NoMADUserSessionDelegate {
 
 
     func NoMADAuthenticationSucceded() {
+        
+        if getManagedPreference(key: .RecursiveGroupLookup) as? Bool ?? false {
+            session?.recursiveGroupLookup = true
+        }
         
         if passChanged {
             // need to ensure the right password is stashed
@@ -571,24 +742,57 @@ extension SignIn: NoMADUserSessionDelegate {
         }
         
         if allowedLogin {
-            os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
-            setRequiredHintsAndContext()
-            setHint(type: .noMADFirst, hint: user.firstName)
-            setHint(type: .noMADLast, hint: user.lastName)
-            setHint(type: .noMADDomain, hint: domainName)
-            setHint(type: .noMADGroups, hint: user.groups)
-            setHint(type: .noMADFull, hint: user.cn)
-            setHint(type: .kerberos_principal, hint: user.userPrincipal)
             
-            // set the network auth time to be added to the user record
-            setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
+            setHints(user: user)
             
-            completeLogin(authResult: .allow)
+            // check for any migration and local auth requirements
+            
+            localCheck.mech = self.mech
+            switch localCheck.run(userToCheck: user.shortName, passToCheck: passString) {
+                
+            case .fullMigration:
+                showMigration()
+            case .syncPassword:
+                // first check to see if we can resolve this ourselves
+                os_log("Sync password called.", log: uiLog)
+                
+                if originalPass != nil {
+                    os_log("Attempting to sync local pass.", log: uiLog, type: .default)
+                    if localCheck.syncPass(oldPass: originalPass!) {
+                        // password changed clean
+                        completeLogin(authResult: .allow)
+                        return
+                    } else {
+                        // unable to change the pass, let user fix
+                        showPasswordSync()
+                    }
+                } else {
+                    showPasswordSync()
+                }
+            case .errorSkipMigration, .skipMigration, .userMatchSkipMigration, .complete:
+                completeLogin(authResult: .allow)
+            }
         } else {
             authFail()
             alertText.stringValue = "Not authorized to login."
+            showResetUI()
         }
     }
+    
+    fileprivate func setHints(user: ADUserRecord) {
+        os_log("NoMAD Login Looking up info for: %{public}@", log: uiLog, type: .default, user.shortName)
+        setRequiredHintsAndContext()
+        setHint(type: .noMADFirst, hint: user.firstName)
+        setHint(type: .noMADLast, hint: user.lastName)
+        setHint(type: .noMADDomain, hint: domainName)
+        setHint(type: .noMADGroups, hint: user.groups)
+        setHint(type: .noMADFull, hint: user.cn)
+        setHint(type: .kerberos_principal, hint: user.userPrincipal)
+        
+        // set the network auth time to be added to the user record
+        setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
+    }
+
 }
 
 

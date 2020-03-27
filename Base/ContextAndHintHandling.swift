@@ -7,6 +7,8 @@
 //
 
 enum HintType: String {
+    case migratePass
+    case migrateUser
     case networkSignIn
     case noMADUser
     case noMADDomain
@@ -18,6 +20,7 @@ enum HintType: String {
     case uid
     case gid
     case kerberos_principal
+    case passwordOverwrite // stomp on the password
 }
 
 // attribute statics
@@ -40,15 +43,15 @@ extension ContextAndHintHandling {
     ///   - type: A value from `HintType` representing the NoMad Login value to set.
     ///   - hint: The hint value to set. Can be `String` or `[String]`
     func setHint(type: HintType, hint: Any) {
-        guard (hint is String || hint is [String]) else {
-            NSLog("NoMAD Login Set hint failed: data type of hint is not supported")
+        guard (hint is String || hint is [String] || hint is Bool) else {
+            os_log("NoMAD Login Set hint failed: data type of hint is not supported", log: uiLog, type: .debug)
             return
         }
         let data = NSKeyedArchiver.archivedData(withRootObject: hint)
         var value = AuthorizationValue(length: data.count, data: UnsafeMutableRawPointer(mutating: (data as NSData).bytes.bindMemory(to: Void.self, capacity: data.count)))
         let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetHintValue((mech?.fEngine)!, type.rawValue, &value))!
         guard err == errSecSuccess else {
-            NSLog("NoMAD Login Set hint failed with: %@", err)
+            os_log("NoMAD Login Set hint failed with: %{public}@", log: uiLog, type: .debug, err)
             return
         }
     }
@@ -58,13 +61,13 @@ extension ContextAndHintHandling {
         var err: OSStatus = noErr
         err = (mech?.fPlugin.pointee.fCallbacks.pointee.GetHintValue((mech?.fEngine)!, type.rawValue, &value))!
         if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve hint value: \(type)")
+            os_log("Couldn't retrieve hint value: %{public}@", log: uiLog, type: .debug, type.rawValue)
             return nil
         }
         let outputdata = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
         guard let result = NSKeyedUnarchiver.unarchiveObject(with: outputdata)
             else {
-                NSLog("NoMADLogin: couldn't unpack hint value \(type)")
+                os_log("Couldn't unpack hint value: %{public}@", log: uiLog, type: .debug, type.rawValue)
                 return nil
         }
         return result
@@ -81,7 +84,7 @@ extension ContextAndHintHandling {
         var value = AuthorizationValue(length: (data?.count)!, data: UnsafeMutableRawPointer(mutating: (data! as NSData).bytes.bindMemory(to: Void.self, capacity: (data?.count)!)))
         let err = (mech?.fPlugin.pointee.fCallbacks.pointee.SetContextValue((mech?.fEngine)!, type, .extractable, &value))!
         guard err == errSecSuccess else {
-            NSLog("NoMAD Login Set context value failed with: %@", err)
+            os_log("Set context value failed with: %{public}@", log: uiLog, type: .debug, err)
             return
         }
     }
@@ -91,14 +94,14 @@ extension ContextAndHintHandling {
         var flags = AuthorizationContextFlags()
         let err = mech?.fPlugin.pointee.fCallbacks.pointee.GetContextValue((mech?.fEngine)!, type, &flags, &value)
         if err != errSecSuccess {
-            NSLog("NoMADLogin: couldn't retrieve context value: \(type)")
+            os_log("Couldn't retrieve context value: %{public}@", log: uiLog, type: .debug, type)
             return nil
         }
         if type == "longname" {
             return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
         } else {
             let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-            NSLog("\(type): \(String(describing: item))")
+            os_log("get context error: %{public}@", log: uiLog, type: .debug, item.description)
         }
 
         return nil
