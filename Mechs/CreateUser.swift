@@ -93,8 +93,7 @@ class CreateUser: NoLoMechanism {
         } else {
             
             // Checking to see if we are doing a silent overwrite
-            let passwordOverwrite = getHint(type: .passwordOverwrite) as? Bool ?? false
-            if passwordOverwrite {
+            if getHint(type: .passwordOverwrite) as? Bool ?? false {
                 os_log("Password Overwrite enabled and triggered, starting evaluation", log: createUserLog, type: .debug)
                 
                 // Checking to see if we can get secureToken Creds
@@ -142,7 +141,7 @@ class CreateUser: NoLoMechanism {
                                 let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
                                 _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]!), secureTokenManagementPasswordLocation)
                             } catch {
-                                os_log("Something got mad fucked", log: createUserLog, type: .debug)
+                                os_log("Password Overwrite Silent with SecureToken Failed", log: createUserLog, type: .debug)
                             }
                             
                         } else {
@@ -154,16 +153,15 @@ class CreateUser: NoLoMechanism {
                     // User does not have a secureToken
                     os_log("%{public}@ does not have token, resetting password", log: createUserLog, type: .debug, nomadUser!)
                     
-                    // rotating the password nice and simple
-                    let launchPath = "/usr/bin/dscl"
-                    let args = [
-                        ".",
-                        "-passwd",
-                        "/Users/\(nomadUser!)",
-                        "\(nomadPass!)"
-                    ]
-                    let output = cliTask(launchPath, arguments: args, waitForTermination: true)
-                    os_log("Password Reset Result: %{public}@", log: createUserLog, type: .debug, output)
+                    // changing the with OpenDirectory
+                    do {
+                        let node = try ODNode.init(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+                        let user = try node.record(withRecordType: kODRecordTypeUsers, name: nomadUser!, attributes: kODAttributeTypeRecordName)
+                        try user.changePassword(nil, toPassword: nomadPass!)
+                        
+                    } catch {
+                        os_log("Password Overwrite Silent without SecureToken Failed")
+                    }
                 }
             } else {
                 // no user to create
@@ -704,7 +702,9 @@ class CreateUser: NoLoMechanism {
                 "-fullName",
                 getManagedPreference(key: .SecureTokenManagementFullName) as? String ?? "NoMAD Login",
                 "-home",
-                "/private/var/_nomadlogin"
+                "/private/var/_nomadlogin",
+                "-picture",
+                getManagedPreference(key: .SecureTokenManagementIconPath) as? String ?? "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle/Contents/Resources/NoMADFDEIcon.png"
             ]
             _ = cliTask(launchPath, arguments: args, waitForTermination: true)
             
@@ -724,6 +724,9 @@ class CreateUser: NoLoMechanism {
         // Saving that password to the password location
         do {
             try password.write(toFile: passwordLocation, atomically: true, encoding: String.Encoding.ascii)
+            var attributes = [FileAttributeKey : Any]()
+            attributes[.posixPermissions] = 0o600
+            try FileManager.default.setAttributes(attributes, ofItemAtPath: passwordLocation)
         } catch {
             os_log("Error writing password to: %{public}@", log: createUserLog, type: .debug, passwordLocation)
             return false

@@ -93,6 +93,8 @@ enum Preferences: String {
     case ScriptArgs
     /// Should NoMAD Login enable all users that login with with a secure token as a `Bool`
     case SecureTokenManagementEnableOnlyAdminUsers
+    /// Path of the icon to be used for the Secure Token management user as `String`
+    case SecureTokenManagementIconPath
     /// Should NoMAD Login only enable the first admin user that login with with a secure token as a `Bool`
     case SecureTokenManagementOnlyEnableFirstUser
     /// Full Name of the Secure Token Management user as a `String`

@@ -23,6 +23,7 @@ For those of you that are new to NoLo, the basic features are:
 * `PasswordOverwriteSilent` a Boolean to determine if the password should be silently overwritten when the AD authentication succeeds, should be used in conjunction with `DenyLocal`.
 * `ManageSecureTokens` a Boolean to determine if the SecureToken management capabilites should be enabled. This utilizes a service account which can be modified from default using the below optional preferences.
 * `SecureTokenManagementEnableOnlyAdminUsers` a Boolean to determine if the SecureToken service account should only enable administrative users created with NoMAD Login.
+* `SecureTokenManagementIconPath` a String to determine the path of the icon to be used for the user, default is `/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle/Contents/Resources/NoMADFDEIcon.png`
 * `SecureTokenManagementOnlyEnableFirstUser` a Boolean to determine if the NoMAD Login should only enable the first user that is eligable for a SecureToken, and delete the service account afterwards.
 * `SecureTokenManagementFullName` a String to define a custom Full Name for the SecureToken service account, default is `NoMAD Login`
 * `SecureTokenManagementUID` an Integer or String to define a custom UID for the SecureToken service account, default is `400`
