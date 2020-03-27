@@ -316,11 +316,32 @@ class SignIn: NSWindowController, DSQueryable {
             return
         }
         
+        loginStartedUI()
+
+        if getManagedPreference(key: .GuestUser) as? Bool ?? false {
+            
+            os_log("Checking for guest account", log: uiLog, type: .default)
+            
+            let guestUsers = getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["guest"]
+            if guestUsers.contains(username.stringValue) {
+                os_log("Guest user engaging", log: uiLog, type: .default)
+                setHint(type: .guestUser, hint: "true")
+                shortName = username.stringValue
+                passString = UUID.init().uuidString
+                setHint(type: .noMADDomain, hint: "GUEST")
+                setHint(type: .noMADFirst, hint: getManagedPreference(key: .GuestUserFirst) as? String ?? "Guest")
+                setHint(type: .noMADLast, hint: getManagedPreference(key: .GuestUserLast) as? String ?? "User")
+                setHint(type: .noMADFull, hint: (getManagedPreference(key: .GuestUserFirst) as? String ?? "Guest") + (getManagedPreference(key: .GuestUserLast) as? String ?? "User"))
+                setRequiredHintsAndContext()
+                completeLogin(authResult: .allow)
+                return
+            }
+        }
+        
         // clear any alerts
         
         alertText.stringValue = ""
         
-        loginStartedUI()
         prepareAccountStrings()
         if NoLoMechanism.checkForLocalUser(name: shortName) {
             os_log("Verify local user login for %{public}@", log: uiLog, type: .default, shortName)
