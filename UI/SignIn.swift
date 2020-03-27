@@ -369,6 +369,7 @@ class SignIn: NSWindowController, DSQueryable {
         session.useSSL = isSSLRequired
         session.userPass = passString
         session.delegate = self
+        session.recursiveGroupLookup = getManagedPreference(key: .RecursiveGroupLookup) as? Bool ?? false
         
         if let ignoreSites = getManagedPreference(key: .IgnoreSites) as? Bool {
             os_log("Ignoring AD sites", log: uiLog, type: .debug)
