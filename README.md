@@ -33,6 +33,15 @@ For those of you that are new to NoLo, the basic features are:
 * Added an overwrite button to the sync password screen in the event the user does not remember their password, which bootstraps into the `PasswordOverwriteSilent` workflow - Reqest from @Ehlers299
 * Fixed an extraneous password check in the user demobilization mechanism that would cause demobilizations when the user is logging in at the FV2 window to not function
 * `DemobilizeSaveAltSecurityIdentities` a Boolean to determine if the `AltSecurityIdentities` user record attribute should be preserved, useful when moving from mobile accounts with smart card mapping implemented.
+* `DemobilizeForcePasswordCheck` a Boolean to determine if a password input at the NoMAD login window will be required to demobilize, default is `false`
+* `RecursiveGroupLookup` a Boolean to determine if group membership lookups should be done recursively, default is `false`
+* `MigrateUsersHide` an array of Strings of the names of users that should be hidden from user migration canidates during selection
+* `GuestUser` a Boolean to determine if guest users should be allowed to login, default is `false`
+* `GuestUserAccounts` an array of Strings of names that can be entered into the username field to trigger a guest user creation, default is `["Guest", "guest"]`
+* `GuestUserAccountPasswordPath` a String to define the path to write out the guest users randomly generated password, defaults is to not write it out
+* `GuestUserFirst` a String to define the first name of the guest user account
+* `GuestUserLast` a String to define the last name of the guest user account
+* `AllowNetworkSelection` a Boolean to define if the network selection is hidden, default is `true`
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank

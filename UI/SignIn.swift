@@ -329,7 +329,7 @@ class SignIn: NSWindowController, DSQueryable {
             
             os_log("Checking for guest account", log: uiLog, type: .default)
             
-            let guestUsers = getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["guest"]
+            let guestUsers = getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["Guest", "guest"]
             if guestUsers.contains(username.stringValue) {
                 os_log("Guest user engaging", log: uiLog, type: .default)
                 setHint(type: .guestUser, hint: "true")
