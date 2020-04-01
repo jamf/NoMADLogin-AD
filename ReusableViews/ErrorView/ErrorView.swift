@@ -37,20 +37,20 @@ class ErrorView: NSView, NibLoadable {
     
     func add(to view: NSView) {
         guard !isErrorVisible(in: view) else {
-            logger.ui.debug(message: "Attempt to add ErrorView. Deny: view \(view.debugDescription) already contains one.")
+            os_log("Attempt to add ErrorView. Deny: view %{public}@ already contains one", log: uiLog, type: .debug, view.debugDescription)
             return
         }
         view.addSubview(self)
         if view.subviews.contains(self) {
-            logger.ui.debug(message: "ErrorView added to main window")
+            os_log("ErrorView added to main window", log: uiLog, type: .debug)
         } else {
-            logger.ui.debug(message: "ErrorView NOT added to main window")
+            os_log("ErrorView NOT added to main window", log: uiLog, type: .debug)
         }
         if view.subviews.last == self {
-            logger.ui.debug(message: "ErrorView is LAST subview of main window")
+            os_log("ErrorView is LAST subview of main window", log: uiLog, type: .debug)
         }
         if view.subviews.first == self {
-            logger.ui.debug(message: "ErrorView is FIRST subview of main window")
+            os_log("ErrorView is FIRST subview of main window.", log: uiLog, type: .debug)
         }
         view.setAccessibilityTopLevelUIElement(self)
     }
@@ -59,7 +59,7 @@ class ErrorView: NSView, NibLoadable {
     func isErrorVisible(in view: NSView) -> Bool {
         for subview in view.subviews {
             if subview.isKind(of: ErrorView.self) {
-                logger.ui.debug(message: "View \(view.debugDescription) contains ErrorView instance")
+                os_log("View %{public}@ contains ErrorView instance", log: uiLog, type: .debug, view.debugDescription)
                 return true
             }
         }

@@ -20,8 +20,8 @@ extension ErrorPresentable {
             guard   let errorView = ErrorView.createFromNib(in: .mainLogin),
                     let windowContentView = self.window?.contentView
                     else {
-                logger.ui.debug(message: "Could not create ErrorView from nib or window's content view is nil.")
-                logger.ui.debug(message: "ErrorView adding error. Window's content view: \(self.window?.contentView.debugDescription ?? "Nil")")
+                os_log("Could not create ErrorView from nib or window's content view is nil", log: uiLog, type: .debug)
+                os_log("ErrorView adding error. Window's content view: %{public}@ contains ErrorView instance", log: uiLog, type: .debug, self.window?.contentView.debugDescription ?? "Nil")
                 return
             }
             errorView.frame = windowContentView.frame
@@ -40,8 +40,10 @@ extension ErrorPresentable {
     }
 
     func getErrorMessage(withDescription description: String?) -> String {
-        let errorDescription = "\(LoginStrings.errorDescription.localized): \(description ?? LoginStrings.unknown.localized)"
-        let errorMessage = "\(LoginStrings.errorContactAdministrator.localized)\n\n\(errorDescription)"
+        // Login Strings not present in NoMAD Login - Port issue
+        //let errorDescription = "\(LoginStrings.errorDescription.localized): \(description ?? LoginStrings.unknown.localized)"
+        //let errorMessage = "\(LoginStrings.errorContactAdministrator.localized)\n\n\(errorDescription)"
+        let errorMessage = "An error has occured, please contat your systems administrator.\n\nDescription \(description ?? "Unknown")"
         return errorMessage
     }
 }
