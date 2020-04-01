@@ -24,3 +24,4 @@ let runScriptLog = OSLog(subsystem: "menu.nomad.login.ad", category: "RunScript"
 let notifyLog = OSLog(subsystem: "menu.nomad.login.ad", category: "Notify")
 let settingsLog = OSLog(subsystem: "menu.nomad.login.ad", category: "Settings")
 let userinputLog = OSLog(subsystem: "menu.nomad.login.ad", category: "UserInput")
+let wifiLog = OSLog(subsystem: "menu.nomad.login.ad", category: "WiFi")

@@ -25,6 +25,9 @@ class SignIn: NSWindowController, DSQueryable {
     var backgroundWindow: NSWindow!
     var effectWindow: NSWindow!
     var passChanged = false
+    let wifiManager = WifiManager()
+    let sysInfo = SystemInfoHelper().info()
+    var sysInfoIndex = 0
     var originalPass: String?
     @objc var visible = true
     
@@ -41,6 +44,8 @@ class SignIn: NSWindowController, DSQueryable {
     @IBOutlet weak var newPassword: NSSecureTextField!
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
     @IBOutlet weak var alertText: NSTextField!
+    @IBOutlet weak var networkSelection: NSButton!
+    @IBOutlet weak var systemInfo: NSTextField!
     @IBOutlet weak var powerControlStack: NSStackView!
     
     //MARK: - Shutdown and Restart
@@ -267,6 +272,8 @@ class SignIn: NSWindowController, DSQueryable {
             }
         }
         
+        networkSelection.isHidden = !(getManagedPreference(key: .AllowNetworkSelection) as? Bool ?? false)
+        systemInfo.stringValue = sysInfo[sysInfoIndex]
         // Checking if the shutdown and restart options should be hidden in the UI
         if getManagedPreference(key: .PowerControlDisabled) as? Bool == true {
             os_log("Disabling and hiding the power control mechanisms", log: uiLog, type: .debug)
@@ -677,7 +684,30 @@ class SignIn: NSWindowController, DSQueryable {
         setHint(type: .passwordOverwrite, hint: true)
         completeLogin(authResult: .allow)
     }
+    
+    @IBAction func showNetworkConnection(_ sender: Any) {
+        guard let windowContentView = self.window?.contentView, let wifiView = WifiView.createFromNib(in: .mainLogin) else {
+            os_log("Error showing network selection.", log: uiLog, type: .debug)
+            return
+        }
 
+        wifiView.frame = windowContentView.frame
+        let completion = {
+            os_log("Finished working with wireless networks", log: uiLog, type: .debug)
+        }
+        wifiView.set(completionHandler: completion)
+        windowContentView.addSubview(wifiView)
+    }
+
+    @IBAction func clickInfo(_ sender: Any) {
+        if sysInfo.count < sysInfoIndex {
+            sysInfoIndex += 1
+        } else {
+            sysInfoIndex = 0
+        }
+        
+        systemInfo.stringValue = sysInfo[sysInfoIndex]
+    }
 }
 
 

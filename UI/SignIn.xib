@@ -21,6 +21,7 @@
                 <outlet property="migrateSpinner" destination="PgS-XP-xbK" id="Nug-sV-S6p"/>
                 <outlet property="migrateText" destination="pPy-FW-G31" id="6CN-vA-g7i"/>
                 <outlet property="migrateUsers" destination="6A4-bf-pxo" id="v5u-Pv-OOx"/>
+                <outlet property="networkSelection" destination="reX-Tn-xaD" id="4nA-rk-Qr8"/>
                 <outlet property="newPassword" destination="oSe-dI-fep" id="SEH-66-qCR"/>
                 <outlet property="newPasswordConfirmation" destination="czU-dA-foI" id="tmr-OM-1N8"/>
                 <outlet property="oldPassword" destination="dYF-nq-lV9" id="eF6-IC-GU7"/>
@@ -29,6 +30,7 @@
                 <outlet property="passwordChangeStack" destination="RLo-4d-Xte" id="fRB-o1-ghd"/>
                 <outlet property="powerControlStack" destination="UUS-jL-biV" id="Efd-lZ-Yyk"/>
                 <outlet property="signIn" destination="7fI-fi-xA6" id="Vek-BT-qmg"/>
+                <outlet property="systemInfo" destination="6PG-ZK-u2B" id="Mag-Wy-Ugo"/>
                 <outlet property="username" destination="bz7-9V-hj9" id="SmY-n9-wt5"/>
                 <outlet property="usernameLabel" destination="JHf-oe-K0v" id="6Wu-06-N0v"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="NDA-Gg-a3e"/>
@@ -38,7 +40,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="F0z-JX-Cv5" customClass="NoLoWindow" customModule="NoMADLoginAD" customModuleProvider="target">
             <rect key="contentRect" x="276" y="219" width="521" height="511"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="1577"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="521" height="511"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -396,6 +398,29 @@ Gw
                         </view>
                         <color key="fillColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </box>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="reX-Tn-xaD">
+                        <rect key="frame" x="415" y="2" width="92" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Wireless" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IdF-Fg-10F">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showNetworkConnection:" target="-2" id="noJ-rP-MJM"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6PG-ZK-u2B">
+                        <rect key="frame" x="119" y="9" width="283" height="16"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Label" id="HkL-Ub-lKd">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="clickInfo:" target="-2" id="o7A-r6-uzo"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="UUS-jL-biV" firstAttribute="trailing" secondItem="RLo-4d-Xte" secondAttribute="trailing" id="8Se-CL-h1U"/>
@@ -422,7 +447,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="121" y="96"/>
+            <point key="canvasLocation" x="120.5" y="95.5"/>
         </window>
         <stackView hidden="YES" autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="LF9-Yw-kgb" userLabel="Sleep Stack View">
             <rect key="frame" x="0.0" y="0.0" width="61" height="48"/>
