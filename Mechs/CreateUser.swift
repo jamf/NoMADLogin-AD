@@ -121,7 +121,7 @@ class CreateUser: NoLoMechanism {
         } else {
             
             // Checking to see if we are doing a silent overwrite
-            if getHint(type: .passwordOverwrite) as? Bool ?? false {
+            if getHint(type: .passwordOverwrite) as? Bool ?? false && !(getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["Guest", "guest"]).contains(nomadUser!){
                 os_log("Password Overwrite enabled and triggered, starting evaluation", log: createUserLog, type: .debug)
                 
                 // Checking to see if we can get secureToken Creds
@@ -353,7 +353,7 @@ class CreateUser: NoLoMechanism {
         
         // Doing Secure Token Operations
         os_log("Starting SecureToken Operations", log: createUserLog, type: .debug)
-        if #available(OSX 10.13.4, *), getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false {
+        if #available(OSX 10.13.4, *), getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false && !(getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["Guest", "guest"]).contains(nomadUser!){
             
             if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
                 os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)

@@ -35,6 +35,7 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         configureAppearance()
+        networkSearch.performClick(nil)
         networkSearch.becomeFirstResponder()
 
         networkWifiPopup.action = #selector(networkWifiPopupChangedValue)
@@ -56,13 +57,13 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
         self.networkWifiPopup.removeAllItems()
 
         guard let allNetworks = networks else {
-            os_log("Unable to find any networks")
+            os_log("Unable to find any networks", log: wifiLog, type: .debug)
             self.networkWifiPopup.addItem(withTitle: "No networks")
             return
         }
 
         if allNetworks.count == 0 {
-            os_log("Unable to find any networks")
+            os_log("Unable to find any networks", log: wifiLog, type: .debug)
             self.networkWifiPopup.addItem(withTitle: "No networks")
         }
 

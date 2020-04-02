@@ -45,7 +45,7 @@ class SignIn: NSWindowController, DSQueryable {
     @IBOutlet weak var newPasswordConfirmation: NSSecureTextField!
     @IBOutlet weak var alertText: NSTextField!
     @IBOutlet weak var networkSelection: NSButton!
-    @IBOutlet weak var systemInfo: NSTextField!
+    @IBOutlet weak var systemInfo: NSButton!
     @IBOutlet weak var powerControlStack: NSStackView!
     
     //MARK: - Shutdown and Restart
@@ -273,7 +273,6 @@ class SignIn: NSWindowController, DSQueryable {
         }
         
         networkSelection.isHidden = !(getManagedPreference(key: .AllowNetworkSelection) as? Bool ?? false)
-        systemInfo.stringValue = sysInfo[sysInfoIndex]
         // Checking if the shutdown and restart options should be hidden in the UI
         if getManagedPreference(key: .PowerControlDisabled) as? Bool == true {
             os_log("Disabling and hiding the power control mechanisms", log: uiLog, type: .debug)
@@ -700,13 +699,14 @@ class SignIn: NSWindowController, DSQueryable {
     }
 
     @IBAction func clickInfo(_ sender: Any) {
-        if sysInfo.count < sysInfoIndex {
+        if sysInfo.count > sysInfoIndex + 1 {
             sysInfoIndex += 1
         } else {
             sysInfoIndex = 0
         }
         
-        systemInfo.stringValue = sysInfo[sysInfoIndex]
+        systemInfo.title = sysInfo[sysInfoIndex]
+        os_log("System information toggled", log: uiLog, type: .debug)
     }
 }
 
