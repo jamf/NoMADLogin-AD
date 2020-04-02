@@ -685,6 +685,7 @@ class SignIn: NSWindowController, DSQueryable {
     }
     
     @IBAction func showNetworkConnection(_ sender: Any) {
+        username.isHidden = true
         guard let windowContentView = self.window?.contentView, let wifiView = WifiView.createFromNib(in: .mainLogin) else {
             os_log("Error showing network selection.", log: uiLog, type: .debug)
             return
@@ -693,6 +694,8 @@ class SignIn: NSWindowController, DSQueryable {
         wifiView.frame = windowContentView.frame
         let completion = {
             os_log("Finished working with wireless networks", log: uiLog, type: .debug)
+            self.username.isHidden = false
+            self.username.becomeFirstResponder()
         }
         wifiView.set(completionHandler: completion)
         windowContentView.addSubview(wifiView)
