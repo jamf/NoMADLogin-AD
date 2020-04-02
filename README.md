@@ -42,6 +42,7 @@ For those of you that are new to NoLo, the basic features are:
 * `GuestUserFirst` a String to define the first name of the guest user account
 * `GuestUserLast` a String to define the last name of the guest user account
 * `AllowNetworkSelection` a Boolean to define if the network selection is hidden, default is `true`
+* System information has been added as a hidden button in the lower left hand corner of the the NoMAD Login Window
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
