@@ -85,6 +85,12 @@ class SignIn: NSWindowController, DSQueryable {
         os_log("Become first responder", log: uiLog, type: .debug)
         username.becomeFirstResponder()
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self,
+                                       selector: #selector(updateWindowAfterResize),
+                                       name: NSApplication.didChangeScreenParametersNotification,
+                                       object: nil)
     }
 
 
@@ -156,6 +162,17 @@ class SignIn: NSWindowController, DSQueryable {
             self.effectWindow.close()
             self.visible = false
         })
+    }
+    
+    @objc fileprivate func updateWindowAfterResize() {
+        os_log("Reconfiguring login window after screen change", log: uiLog, type: .debug)
+        loginApperance()
+        
+        os_log("create background windows", log: uiLog, type: .debug)
+        createBackgroundWindow()
+
+        os_log("Become first responder", log: uiLog, type: .debug)
+        username.becomeFirstResponder()
     }
     
     fileprivate func shakeOff() {
