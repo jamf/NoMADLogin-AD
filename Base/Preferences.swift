@@ -15,6 +15,10 @@ enum Preferences: String {
     case AdditionalADDomains
     /// list of domains to show in the domain pull down
     case AdditionalADDomainList
+    /// add user's NT domain name as an alias to newly created accounts
+    case AliasNTName
+    /// add user's UPN as an alias to newly created accounts
+    case AliasUPN
     /// Allow network select button on login window
     case AllowNetworkSelection
     /// Allow network text

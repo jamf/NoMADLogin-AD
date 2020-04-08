@@ -393,6 +393,22 @@ class CreateUser: NoLoMechanism {
             _ = cliTask(launchPath, arguments: args, waitForTermination: true)
         }
         
+        os_log("Checking for aliases to add...", log: createUserLog, type: .debug)
+        
+        if getManagedPreference(key: .AliasUPN) as? Bool ?? false {
+            if let upn = getHint(type: .kerberos_principal) as? String {
+                os_log("Adding UPN as an alias: %{public}@", log: createUserLog, type: .debug, upn)
+                let result = NoLoMechanism.addAlias(name: shortName, alias: upn)
+                os_log("Adding UPN result: %{public}@", log: createUserLog, type: .debug, result.description)
+            }
+        }
+        
+        if let ntName = getHint(type: .ntName) as? String {
+            os_log("Adding NTName as an alias: %{public}@", log: createUserLog, type: .debug, ntName)
+            let result = NoLoMechanism.addAlias(name: shortName, alias: ntName)
+            os_log("Adding NTName result: %{public}@", log: createUserLog, type: .debug, result.description)
+        }
+        
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)
     }
     

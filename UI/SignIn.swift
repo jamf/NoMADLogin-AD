@@ -501,7 +501,7 @@ class SignIn: NSWindowController, DSQueryable {
             }
 
             if let optionalDomains = getManagedPreference(key: .AdditionalADDomains) as? [String] {
-                guard optionalDomains.contains(providedDomainName) else {
+                guard optionalDomains.contains(providedDomainName.lowercased()) else {
                     os_log("Optional domain name not allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
                     return
                 }
@@ -791,6 +791,11 @@ extension SignIn: NoMADUserSessionDelegate {
             passChanged = false
         }
         
+        if getManagedPreference(key: .AliasNTName) as? Bool ?? false {
+            os_log("Adding NT User Name to lookup", log: uiLog, type: .debug)
+            session?.customAttributes = [ "msDS-PrincipalName"]
+        }
+        
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
         session?.userInfo()
     }
@@ -815,6 +820,11 @@ extension SignIn: NoMADUserSessionDelegate {
                     os_log("User is a member of %{public}@ group. Setting allowedLogin = true ", log: uiLog, type: .debug, group)
                 }
             }
+        }
+        
+        if let ntName = user.customAttributes?["msDS-PrincipalName"] as? String {
+            os_log("Found NT User Name: %{public}@", log: uiLog, type: .debug, ntName)
+            setHint(type: .ntName, hint: ntName)
         }
         
         if allowedLogin {
@@ -864,6 +874,12 @@ extension SignIn: NoMADUserSessionDelegate {
         setHint(type: .noMADGroups, hint: user.groups)
         setHint(type: .noMADFull, hint: user.cn)
         setHint(type: .kerberos_principal, hint: user.userPrincipal)
+        
+        if getManagedPreference(key: .AliasNTName) as? Bool ?? false {
+            if let ntName = user.customAttributes?["msDS-PrincipalName"] as? String {
+                setHint(type: .ntName, hint: ntName)
+            }
+        }
         
         // set the network auth time to be added to the user record
         setHint(type: .networkSignIn, hint: String(describing: Date.init().description))
