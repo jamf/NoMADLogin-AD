@@ -238,6 +238,11 @@ class SignIn: NSWindowController, DSQueryable {
             username.placeholderString = usernamePlaceholder
         }
         
+        if let domainList = getManagedPreference(key: .AdditionalADDomainList) as? [String] {
+            domain.isHidden = false
+            domain.addItems(withTitles: domainList)
+        }
+        
         self.window?.isMovable = false
         self.window?.canBecomeVisibleWithoutLogin = true
 

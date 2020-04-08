@@ -13,6 +13,8 @@ enum Preferences: String {
     case ADDomain
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
     case AdditionalADDomains
+    /// list of domains to show in the domain pull down
+    case AdditionalADDomainList
     /// Allow network select button on login window
     case AllowNetworkSelection
     /// Allow network text
