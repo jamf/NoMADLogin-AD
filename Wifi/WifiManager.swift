@@ -66,6 +66,16 @@ class WifiManager: CWEventDelegate {
         }
         return result
     }
+    func findNetworkWithSSID(ssid: String) -> Set<CWNetwork>? {
+        var result: Set<CWNetwork> = []
+        do {
+            result = try currentInterface?.scanForNetworks(withName: ssid) ?? []
+        } catch let err {
+            self.error = err
+            return nil
+        }
+        return result
+    }
 
     func findNetworksToSSID() -> Set<String>? {
 

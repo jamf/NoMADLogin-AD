@@ -21,6 +21,11 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
     @IBOutlet weak var networkOpenStatusLabel: NSTextField!
     @IBOutlet weak var dismissButton: NSButton!
     @IBOutlet weak var networkConnectionSpinner: NSProgressIndicator!
+    @IBOutlet weak var addSSIDMenuButton: NSButton!
+    @IBOutlet weak var addSSIDButton: NSButton!
+    @IBOutlet weak var addSSIDText: NSTextField!
+    @IBOutlet weak var addSSIDLabel: NSTextField!
+    
 
     @IBOutlet weak var networkUsernameView: NonBleedingView!
     @IBOutlet weak var networkPasswordView: NonBleedingView!
@@ -175,6 +180,35 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
 
     @IBAction func searchButton(_ sender: Any) {
         connectNetwork()
+    }
+    
+    @IBAction func addSSIDMenuButton(_ sender: Any){
+        // Hiding the other UI
+        networkUsernameView.isHidden = true
+        networkPasswordView.isHidden = true
+        
+        // Making the add SSID options appear
+        addSSIDText.isHidden = false
+        addSSIDLabel.isHidden = false
+        addSSIDButton.isHidden = false
+    }
+    
+    @IBAction func addSSIDButton(_ sender: Any){
+        
+        // Searching for a WiFi of that name
+        let results = wifiManager.findNetworkWithSSID(ssid: addSSIDText.stringValue)
+        
+        // Adding the SSID to the network list
+        networks.formUnion(results ?? [])
+        
+        // Making the other views accessible again
+        networkUsernameView.isHidden = false
+        networkPasswordView.isHidden = false
+        
+        // Hiding the add SSID options
+        addSSIDText.isHidden = true
+        addSSIDLabel.isHidden = true
+        addSSIDButton.isHidden = true
     }
 
     // In order to prevent a NSView from bleeding it's mouse events to the parent, one must implement the empty methods.
