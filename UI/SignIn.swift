@@ -494,11 +494,16 @@ class SignIn: NSWindowController, DSQueryable {
                 let ntDomain = username.stringValue.components(separatedBy: "\\").first?.uppercased(),
                 let user = username.stringValue.components(separatedBy: "\\").last,
                 let convertedDomain =  ntDomains[ntDomain] {
-                shortName = user
-                providedDomainName = convertedDomain
+                    shortName = user
+                    providedDomainName = convertedDomain
             } else {
                 os_log("NT Domain mapping failed, wishing the user luck on authentication", log: uiLog, type: .default)
             }
+        }
+        
+        if domainName != "" && providedDomainName.lowercased() == domainName.lowercased() {
+            os_log("ADDomain being used", log: uiLog, type: .default)
+            domainName = providedDomainName.uppercased()
         }
 
         if !providedDomainName.isEmpty {
