@@ -398,15 +398,17 @@ class CreateUser: NoLoMechanism {
         if getManagedPreference(key: .AliasUPN) as? Bool ?? false {
             if let upn = getHint(type: .kerberos_principal) as? String {
                 os_log("Adding UPN as an alias: %{public}@", log: createUserLog, type: .debug, upn)
-                let result = NoLoMechanism.addAlias(name: shortName, alias: upn)
+                let result = NoLoMechanism.addAlias(name: shortName, alias: upn.lowercased())
                 os_log("Adding UPN result: %{public}@", log: createUserLog, type: .debug, result.description)
             }
         }
         
-        if let ntName = getHint(type: .ntName) as? String {
-            os_log("Adding NTName as an alias: %{public}@", log: createUserLog, type: .debug, ntName)
-            let result = NoLoMechanism.addAlias(name: shortName, alias: ntName)
-            os_log("Adding NTName result: %{public}@", log: createUserLog, type: .debug, result.description)
+        if getManagedPreference(key: .AliasNTName) as? Bool ?? false {
+            if let ntName = getHint(type: .ntName) as? String {
+                os_log("Adding NTName as an alias: %{public}@", log: createUserLog, type: .debug, ntName)
+                let result = NoLoMechanism.addAlias(name: shortName, alias: ntName)
+                os_log("Adding NTName result: %{public}@", log: createUserLog, type: .debug, result.description)
+            }
         }
         
         os_log("User creation complete for: %{public}@", log: createUserLog, type: .debug, shortName)

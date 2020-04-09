@@ -240,6 +240,7 @@ class SignIn: NSWindowController, DSQueryable {
         
         if let domainList = getManagedPreference(key: .AdditionalADDomainList) as? [String] {
             domain.isHidden = false
+            domain.removeAllItems()
             domain.addItems(withTitles: domainList)
         }
         
@@ -481,15 +482,23 @@ class SignIn: NSWindowController, DSQueryable {
             providedDomainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
         }
         
-        if !domain.isHidden {
+        if !domain.isHidden && !username.stringValue.contains("@") && !username.stringValue.contains("\\") {
             os_log("Using domain from picker", log: uiLog, type: .default)
             domainName = (domain.selectedItem?.title.uppercased())!
             return
         }
-
-        if providedDomainName == domainName {
-            os_log("Provided domain matches  managed domain", log: uiLog, type: .default)
-            return
+        
+        if username.stringValue.contains("\\") {
+            os_log("User entered an NT Domain name, doing lookup", log: uiLog, type: .default)
+            if let ntDomains = getManagedPreference(key: .NTtoADDomainMappings) as? [String:String],
+                let ntDomain = username.stringValue.components(separatedBy: "\\").first?.uppercased(),
+                let user = username.stringValue.components(separatedBy: "\\").last,
+                let convertedDomain =  ntDomains[ntDomain] {
+                shortName = user
+                providedDomainName = convertedDomain
+            } else {
+                os_log("NT Domain mapping failed, wishing the user luck on authentication", log: uiLog, type: .default)
+            }
         }
 
         if !providedDomainName.isEmpty {
@@ -511,6 +520,12 @@ class SignIn: NSWindowController, DSQueryable {
             }
 
             os_log("Optional domain not name allowed by AdditionalADDomains policy (false or not defined)", log: uiLog, type: .default)
+        }
+        
+        if providedDomainName == "",
+            let managedDomain = getManagedPreference(key: .ADDomain) as? String {
+            os_log("Defaulting to managed domain as there is nothign else", log: uiLog, type: .default)
+            domainName = managedDomain
         }
 
         os_log("Using domain from managed domain", log: uiLog, type: .default)
@@ -768,7 +783,7 @@ extension SignIn: NoMADUserSessionDelegate {
                 completeLogin(authResult: .allow)
                 return
             } else {
-                authFail()
+                authFail();
                 return
             }
         default:
@@ -789,11 +804,6 @@ extension SignIn: NoMADUserSessionDelegate {
             // need to ensure the right password is stashed
             passString = newPassword.stringValue
             passChanged = false
-        }
-        
-        if getManagedPreference(key: .AliasNTName) as? Bool ?? false {
-            os_log("Adding NT User Name to lookup", log: uiLog, type: .debug)
-            session?.customAttributes = [ "msDS-PrincipalName"]
         }
         
         os_log("Authentication succeded, requesting user info", log: uiLog, type: .default)
@@ -821,7 +831,7 @@ extension SignIn: NoMADUserSessionDelegate {
                 }
             }
         }
-        
+    
         if let ntName = user.customAttributes?["msDS-PrincipalName"] as? String {
             os_log("Found NT User Name: %{public}@", log: uiLog, type: .debug, ntName)
             setHint(type: .ntName, hint: ntName)
@@ -874,12 +884,7 @@ extension SignIn: NoMADUserSessionDelegate {
         setHint(type: .noMADGroups, hint: user.groups)
         setHint(type: .noMADFull, hint: user.cn)
         setHint(type: .kerberos_principal, hint: user.userPrincipal)
-        
-        if getManagedPreference(key: .AliasNTName) as? Bool ?? false {
-            if let ntName = user.customAttributes?["msDS-PrincipalName"] as? String {
-                setHint(type: .ntName, hint: ntName)
-            }
-        }
+        setHint(type: .ntName, hint: user.ntName)
         
         // set the network auth time to be added to the user record
         setHint(type: .networkSignIn, hint: String(describing: Date.init().description))

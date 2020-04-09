@@ -99,6 +99,8 @@ enum Preferences: String {
     case ManageSecureTokens
     /// If Notify should add additional logging
     case NotifyLogStyle
+    /// NT Domain to AD domain mappings
+    case NTtoADDomainMappings
     /// should we migrate users?
     case Migrate
     /// should we hide users when we migrate?
