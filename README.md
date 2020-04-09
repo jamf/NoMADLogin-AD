@@ -41,7 +41,7 @@ For those of you that are new to NoLo, the basic features are:
 * `GuestUserAccountPasswordPath` a String to define the path to write out the guest users randomly generated password, defaults is to not write it out
 * `GuestUserFirst` a String to define the first name of the guest user account
 * `GuestUserLast` a String to define the last name of the guest user account
-* `AllowNetworkSelection` a Boolean to define if the network selection is hidden, default is `true`
+* `AllowNetworkSelection` a Boolean to define if the network selection is hidden, default is `false`
 * System information has been added as a hidden button in the lower left hand corner of the the NoMAD Login Window
 
 ## What's new in 1.3.1
