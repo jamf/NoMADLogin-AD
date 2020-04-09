@@ -617,8 +617,7 @@ public class NoMADSession : NSObject {
         
         if ldaptype == .AD {
             
-            var attributes = ["pwdLastSet", "msDS-UserPasswordExpiryTimeComputed", "userAccountControl", "homeDirectory", "displayName", "memberOf", "mail", "userPrincipalName", "dn", "givenName", "sn", "cn", "msDS-ResultantPSO"] // passwordSetDate, computedExpireDateRaw, userPasswordUACFlag, userHomeTemp, userDisplayName, groupTemp
-            // "maxPwdAge" // passwordExpirationLength
+        var attributes = ["pwdLastSet", "msDS-UserPasswordExpiryTimeComputed", "userAccountControl", "homeDirectory", "displayName", "memberOf", "mail", "userPrincipalName", "dn", "givenName", "sn", "cn", "msDS-ResultantPSO", "msDS-PrincipalName"] // passwordSetDate, computedExpireDateRaw, userPasswordUACFlag, userHomeTemp, userDisplayName, groupTemp
             
             if customAttributes?.count ?? 0 > 0 {
                 attributes.append(contentsOf: customAttributes!)
@@ -641,6 +640,7 @@ public class NoMADSession : NSObject {
                 let dn = ldapResult["dn"] ?? ""
                 let cn = ldapResult["cn"] ?? ""
                 let pso = ldapResult["msDS-ResultantPSO"] ?? ""
+                let ntName = ldapResult["msDS-PrincipalName"] ?? ""
                 
                 var customAttributeResults : [String:Any]?
                 
@@ -671,8 +671,8 @@ public class NoMADSession : NSObject {
                 userHome = userHome.replacingOccurrences(of: " ", with: "%20")
                 
                 // pack up user record
-                
-                userRecord = ADUserRecord(userPrincipal: userPrincipal,firstName: firstName, lastName: lastName, fullName: userDisplayName, shortName: userPrincipalShort, upn: UPN, email: userEmail, groups: groups, homeDirectory: userHome, passwordSet: tempPasswordSetDate, passwordExpire: userPasswordExpireDate, uacFlags: Int(userPasswordUACFlag), passwordAging: passwordAging, computedExireDate: userPasswordExpireDate, updatedLast: Date(), domain: domain, cn: cn, pso: pso, passwordLength: getComplexity(pso: pso ?? ""), customAttributes: customAttributeResults)
+
+                userRecord = ADUserRecord(userPrincipal: userPrincipal,firstName: firstName, lastName: lastName, fullName: userDisplayName, shortName: userPrincipalShort, upn: UPN, email: userEmail, groups: groups, homeDirectory: userHome, passwordSet: tempPasswordSetDate, passwordExpire: userPasswordExpireDate, uacFlags: Int(userPasswordUACFlag), passwordAging: passwordAging, computedExireDate: userPasswordExpireDate, updatedLast: Date(), domain: domain, cn: cn, pso: pso, passwordLength: getComplexity(pso: pso), ntName: ntName, customAttributes: customAttributeResults)
                 
             } else {
                 myLogger.logit(.base, message: "Unable to find user.")
@@ -733,13 +733,13 @@ public class NoMADSession : NSObject {
                 continue
             }
 
-            var attribute = ldifLines[lineIndex].split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false).map(String.init)
+            let attribute = ldifLines[lineIndex].split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false).map(String.init)
             if attribute.count == 2 {
                 
                 // Get the attribute name (before ;),
                 // then add to attributes array if it doesn't exist.
                 var attributeName = attribute[0].trim()
-                if let index = attributeName.firstIndex(of: ";") {
+                if let index = attributeName.index(of: ";") {
                     attributeName = String(attributeName[..<index])
                 }
                 if !attributes.contains(attributeName) {
@@ -913,7 +913,7 @@ public class NoMADSession : NSObject {
             let kerbPrefs = UserDefaults.init(suiteName: "com.apple.Kerberos")
 
             // get the list defaults, or create an empty dictionary if there are none
-            var kerbDefaults = kerbPrefs?.dictionary(forKey: "libdefaults") ?? [String:AnyObject]()
+            let kerbDefaults = kerbPrefs?.dictionary(forKey: "libdefaults") ?? [String:AnyObject]()
             
             // test to see if the domain_defaults key already exists, if not build it
             if kerbDefaults["default_realm"] != nil {
@@ -936,7 +936,7 @@ public class NoMADSession : NSObject {
                 // build a dictionary and add the KDC into it then write it back to defaults
                 let realm = NSMutableDictionary()
                 //realm.setValue(myLDAPServers.currentServer, forKey: "kdc")
-                realm.setValue(currentServer, forKey: "kpasswd_server")
+                realm.setValue(currentServer, forKey: "kpasswd")
                 kerbRealms[kerberosRealm] = realm
                 kerbPrefs?.set(kerbRealms, forKey: "realms")
                 return true
@@ -944,6 +944,63 @@ public class NoMADSession : NSObject {
         } else {
             myLogger.logit(LogLevel.base, message: "Couldn't find kpasswd server that matches current LDAP server. Letting system chose.")
             return false
+        }
+    }
+    
+    // Remove a default realm from the Kerb pref file
+    
+    fileprivate func cleanKerbPrefs(clearLibDefaults: Bool=false) {
+        
+        // get the defaults for com.apple.Kerberos
+        
+        let kerbPrefs = UserDefaults.init(suiteName: "com.apple.Kerberos")
+        
+        // get the list of domains, or create an empty dictionary if there are none
+        
+        var kerbRealms = kerbPrefs?.dictionary(forKey: "realms")  ?? [String:AnyObject]()
+        
+        // test to see if the realm already exists, if it's already gone we are good
+        
+        if kerbRealms[kerberosRealm] == nil {
+            myLogger.logit(.debug, message: "No realm in com.apple.Kerberos defaults.")
+        } else {
+            myLogger.logit(.debug, message: "Removing realm from Kerberos Preferences.")
+            // remove the realm from the realms list
+            kerbRealms.removeValue(forKey: kerberosRealm)
+            // save the dictionary back to the pref file
+            kerbPrefs?.set(kerbRealms, forKey: "realms")
+            
+            if clearLibDefaults {
+                var libDefaults = kerbPrefs?.dictionary(forKey: "libdefaults")  ?? [String:AnyObject]()
+                libDefaults.removeValue(forKey: "default_realm")
+                kerbPrefs?.set(libDefaults, forKey: "libdefaults")
+            }
+        }
+    }
+    
+    // Create a minimal com.apple.Kerberos file so we don't barf on password change
+    
+    fileprivate func createBasicKerbPrefs(realm: String?) {
+        
+        let realm = realm ?? kerberosRealm
+        
+        // get the defaults for com.apple.Kerberos
+        
+        let kerbPrefs = UserDefaults.init(suiteName: "com.apple.Kerberos")
+
+        // get the list defaults, or create an empty dictionary if there are none
+        
+        let kerbDefaults = kerbPrefs?.dictionary(forKey: "libdefaults") ?? [String:AnyObject]()
+        
+        // test to see if the domain_defaults key already exists, if not build it
+        
+        if kerbDefaults["default_realm"] != nil {
+            myLogger.logit(.debug, message: "Existing default realm. Skipping adding default realm to Kerberos prefs.")
+        } else {
+            // build a dictionary and add the KDC into it then write it back to defaults
+            let libDefaults = NSMutableDictionary()
+            libDefaults.setValue(realm, forKey: "default_realm")
+            kerbPrefs?.set(libDefaults, forKey: "libdefaults")
         }
     }
     
@@ -993,63 +1050,6 @@ public class NoMADSession : NSObject {
             } else {
                 return Int(final)
             }
-        }
-    }
-    
-    // Remove a default realm from the Kerb pref file
-    
-    fileprivate func cleanKerbPrefs(clearLibDefaults: Bool=false) {
-        
-        // get the defaults for com.apple.Kerberos
-        
-        let kerbPrefs = UserDefaults.init(suiteName: "com.apple.Kerberos")
-        
-        // get the list of domains, or create an empty dictionary if there are none
-        
-        var kerbRealms = kerbPrefs?.dictionary(forKey: "realms")  ?? [String:AnyObject]()
-        
-        // test to see if the realm already exists, if it's already gone we are good
-        
-        if kerbRealms[kerberosRealm] == nil {
-            myLogger.logit(.debug, message: "No realm in com.apple.Kerberos defaults.")
-        } else {
-            myLogger.logit(.debug, message: "Removing realm from Kerberos Preferences.")
-            // remove the realm from the realms list
-            kerbRealms.removeValue(forKey: kerberosRealm)
-            // save the dictionary back to the pref file
-            kerbPrefs?.set(kerbRealms, forKey: "realms")
-            
-            if clearLibDefaults {
-                var libDefaults = kerbPrefs?.dictionary(forKey: "libdefaults")  ?? [String:AnyObject]()
-                libDefaults.removeValue(forKey: "default_realm")
-                kerbPrefs?.set(libDefaults, forKey: "libdefaults")
-            }
-        }
-    }
-    
-    // Create a minimal com.apple.Kerberos file so we don't barf on password change
-    
-    fileprivate func createBasicKerbPrefs(realm: String?) {
-        
-        let realm = realm ?? kerberosRealm
-        
-        // get the defaults for com.apple.Kerberos
-        
-        let kerbPrefs = UserDefaults.init(suiteName: "com.apple.Kerberos")
-
-        // get the list defaults, or create an empty dictionary if there are none
-        
-        var kerbDefaults = kerbPrefs?.dictionary(forKey: "libdefaults") ?? [String:AnyObject]()
-        
-        // test to see if the domain_defaults key already exists, if not build it
-        
-        if kerbDefaults["default_realm"] != nil {
-            myLogger.logit(.debug, message: "Existing default realm. Skipping adding default realm to Kerberos prefs.")
-        } else {
-            // build a dictionary and add the KDC into it then write it back to defaults
-            let libDefaults = NSMutableDictionary()
-            libDefaults.setValue(realm, forKey: "default_realm")
-            kerbPrefs?.set(libDefaults, forKey: "libdefaults")
         }
     }
 }

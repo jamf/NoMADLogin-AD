@@ -85,6 +85,12 @@ class SignIn: NSWindowController, DSQueryable {
         os_log("Become first responder", log: uiLog, type: .debug)
         username.becomeFirstResponder()
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self,
+                                       selector: #selector(updateWindowAfterResize),
+                                       name: NSApplication.didChangeScreenParametersNotification,
+                                       object: nil)
     }
 
 
@@ -158,6 +164,17 @@ class SignIn: NSWindowController, DSQueryable {
         })
     }
     
+    @objc fileprivate func updateWindowAfterResize() {
+        os_log("Reconfiguring login window after screen change", log: uiLog, type: .debug)
+        loginApperance()
+        
+        os_log("create background windows", log: uiLog, type: .debug)
+        createBackgroundWindow()
+
+        os_log("Become first responder", log: uiLog, type: .debug)
+        username.becomeFirstResponder()
+    }
+    
     fileprivate func shakeOff() {
         let origin = NSMakePoint((window?.frame.origin.x)!, (window?.frame.origin.y)!)
         let left = NSMakePoint(origin.x - 10, origin.y)
@@ -219,6 +236,12 @@ class SignIn: NSWindowController, DSQueryable {
         if let usernamePlaceholder = getManagedPreference(key: .UsernameFieldPlaceholder) as? String {
             os_log("Username Field Placeholder preferences found.", log: uiLog, type: .debug)
             username.placeholderString = usernamePlaceholder
+        }
+        
+        if let domainList = getManagedPreference(key: .AdditionalADDomainList) as? [String] {
+            domain.isHidden = false
+            domain.removeAllItems()
+            domain.addItems(withTitles: domainList)
         }
         
         self.window?.isMovable = false
@@ -459,15 +482,28 @@ class SignIn: NSWindowController, DSQueryable {
             providedDomainName = username.stringValue.components(separatedBy: "@").last!.uppercased()
         }
         
-        if !domain.isHidden {
+        if !domain.isHidden && !username.stringValue.contains("@") && !username.stringValue.contains("\\") {
             os_log("Using domain from picker", log: uiLog, type: .default)
             domainName = (domain.selectedItem?.title.uppercased())!
             return
         }
-
-        if providedDomainName == domainName {
-            os_log("Provided domain matches  managed domain", log: uiLog, type: .default)
-            return
+        
+        if username.stringValue.contains("\\") {
+            os_log("User entered an NT Domain name, doing lookup", log: uiLog, type: .default)
+            if let ntDomains = getManagedPreference(key: .NTtoADDomainMappings) as? [String:String],
+                let ntDomain = username.stringValue.components(separatedBy: "\\").first?.uppercased(),
+                let user = username.stringValue.components(separatedBy: "\\").last,
+                let convertedDomain =  ntDomains[ntDomain] {
+                    shortName = user
+                    providedDomainName = convertedDomain
+            } else {
+                os_log("NT Domain mapping failed, wishing the user luck on authentication", log: uiLog, type: .default)
+            }
+        }
+        
+        if domainName != "" && providedDomainName.lowercased() == domainName.lowercased() {
+            os_log("ADDomain being used", log: uiLog, type: .default)
+            domainName = providedDomainName.uppercased()
         }
 
         if !providedDomainName.isEmpty {
@@ -479,7 +515,7 @@ class SignIn: NSWindowController, DSQueryable {
             }
 
             if let optionalDomains = getManagedPreference(key: .AdditionalADDomains) as? [String] {
-                guard optionalDomains.contains(providedDomainName) else {
+                guard optionalDomains.contains(providedDomainName.lowercased()) else {
                     os_log("Optional domain name not allowed by AdditionalADDomains whitelist policy", log: uiLog, type: .default)
                     return
                 }
@@ -489,6 +525,12 @@ class SignIn: NSWindowController, DSQueryable {
             }
 
             os_log("Optional domain not name allowed by AdditionalADDomains policy (false or not defined)", log: uiLog, type: .default)
+        }
+        
+        if providedDomainName == "",
+            let managedDomain = getManagedPreference(key: .ADDomain) as? String {
+            os_log("Defaulting to managed domain as there is nothign else", log: uiLog, type: .default)
+            domainName = managedDomain
         }
 
         os_log("Using domain from managed domain", log: uiLog, type: .default)
@@ -746,7 +788,7 @@ extension SignIn: NoMADUserSessionDelegate {
                 completeLogin(authResult: .allow)
                 return
             } else {
-                authFail()
+                authFail();
                 return
             }
         default:
@@ -793,6 +835,11 @@ extension SignIn: NoMADUserSessionDelegate {
                     os_log("User is a member of %{public}@ group. Setting allowedLogin = true ", log: uiLog, type: .debug, group)
                 }
             }
+        }
+    
+        if let ntName = user.customAttributes?["msDS-PrincipalName"] as? String {
+            os_log("Found NT User Name: %{public}@", log: uiLog, type: .debug, ntName)
+            setHint(type: .ntName, hint: ntName)
         }
         
         if allowedLogin {
@@ -842,6 +889,7 @@ extension SignIn: NoMADUserSessionDelegate {
         setHint(type: .noMADGroups, hint: user.groups)
         setHint(type: .noMADFull, hint: user.cn)
         setHint(type: .kerberos_principal, hint: user.userPrincipal)
+        setHint(type: .ntName, hint: user.ntName)
         
         // set the network auth time to be added to the user record
         setHint(type: .networkSignIn, hint: String(describing: Date.init().description))

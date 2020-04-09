@@ -297,6 +297,50 @@ class NoLoMechanism: NSObject {
         }
     }
     
+    /// Adds a new alias to an existing local record
+    ///
+    /// - Parameters:
+    ///   - name: the shortname of the user to check as a `String`.
+    ///   - alias: The password of the user to check as a `String`.
+    /// - Returns: `true` if user:pass combo is valid, false if not.
+    class func addAlias(name: String, alias: String) -> Bool {
+        os_log("Checking for local username", log: noLoMechlog, type: .error)
+        var records = [ODRecord]()
+        let odsession = ODSession.default()
+        do {
+            let node = try ODNode.init(session: odsession, type: ODNodeType(kODNodeTypeLocalNodes))
+            let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: ODMatchType(kODMatchEqualTo), queryValues: name, returnAttributes: kODAttributeTypeAllAttributes, maximumResults: 0)
+            records = try query.resultsAllowingPartial(false) as! [ODRecord]
+        } catch {
+            let errorText = error.localizedDescription
+            os_log("ODError while trying to check for local user: %{public}@", log: noLoMechlog, type: .error, errorText)
+            return false
+        }
+        
+        let isLocal = records.isEmpty ? false : true
+        os_log("Results of local user check  %{public}@", log: noLoMechlog, type: .error, isLocal.description)
+        
+        if !isLocal {
+            return isLocal
+        }
+        
+        // now to update the alias
+        do {
+                if let currentAlias = try records.first?.values(forAttribute: kODAttributeTypeRecordName) as? [String] {
+                    if !currentAlias.contains(alias) {
+                      try records.first?.addValue(alias, toAttribute: kODAttributeTypeRecordName)
+                    }
+                } else {
+                    try records.first?.addValue(alias, toAttribute: kODAttributeTypeRecordName)
+                }
+        } catch {
+            os_log("Unable to add alias to record")
+            return false
+        }
+        
+        return true
+    }
+    
     /// Updates a timestamp on a local account
     ///
     /// - Parameters:

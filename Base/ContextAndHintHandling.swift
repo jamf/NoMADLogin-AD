@@ -22,6 +22,7 @@ enum HintType: String {
     case gid
     case kerberos_principal
     case passwordOverwrite // stomp on the password
+    case ntName
 }
 
 // attribute statics

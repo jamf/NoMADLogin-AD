@@ -13,6 +13,12 @@ enum Preferences: String {
     case ADDomain
     /// Allows appending of other domains at the loginwindow. Set as a `Bool` to allow any, or as an Array of Strings to whitelist
     case AdditionalADDomains
+    /// list of domains to show in the domain pull down
+    case AdditionalADDomainList
+    /// add user's NT domain name as an alias to newly created accounts
+    case AliasNTName
+    /// add user's UPN as an alias to newly created accounts
+    case AliasUPN
     /// Allow network select button on login window
     case AllowNetworkSelection
     /// Allow network text
@@ -93,6 +99,8 @@ enum Preferences: String {
     case ManageSecureTokens
     /// If Notify should add additional logging
     case NotifyLogStyle
+    /// NT Domain to AD domain mappings
+    case NTtoADDomainMappings
     /// should we migrate users?
     case Migrate
     /// should we hide users when we migrate?
