@@ -47,6 +47,8 @@ enum Preferences: String {
     case DenyLocalExcluded
     /// List of groups that should have it's members allowed to sign in. Set as an Array of Strings of the group name
     case DenyLoginUnlessGroupMember
+    /// Defines which system inforation should be showed by default. Set as `String`.
+    case DefaultSystemInformation
     /// Should FDE be enabled at first login on APFS disks? Set as a `Bool`.
     case EnableFDE
     /// Should the PRK be saved to disk for the MDM Escrow Service to collect? Set as a `Bool`.

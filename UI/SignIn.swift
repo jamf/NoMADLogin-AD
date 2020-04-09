@@ -301,6 +301,23 @@ class SignIn: NSWindowController, DSQueryable {
             os_log("Disabling and hiding the power control mechanisms", log: uiLog, type: .debug)
             powerControlStack.isHidden = true
         }
+        
+        if let defaultSysInfo = getManagedPreference(key: .DefaultSystemInformation) as? String {
+            switch defaultSysInfo {
+            case "SystemVersion":
+                systemInfo.title = sysInfo[0]
+            case "Serial":
+                systemInfo.title = sysInfo[1]
+            case "MAC":
+                systemInfo.title = sysInfo[2]
+            case "Hostname":
+                systemInfo.title = sysInfo[3]
+            case "IP":
+                systemInfo.title = sysInfo[4]
+            default:
+                break
+            }
+        }
     }
 
     fileprivate func showResetUI() {
