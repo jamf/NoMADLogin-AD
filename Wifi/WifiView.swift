@@ -196,10 +196,13 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
     @IBAction func addSSIDButton(_ sender: Any){
         
         // Searching for a WiFi of that name
-        let results = wifiManager.findNetworkWithSSID(ssid: addSSIDText.stringValue)
+        let results = wifiManager.findNetworkWithSSID(ssid: addSSIDText.stringValue) ?? []
         
         // Adding the SSID to the network list
-        networks.formUnion(results ?? [])
+        for network in results {
+            self.networkWifiPopup.addItem(withTitle: network.ssid ?? "")
+        }
+        networks.formUnion(results)
         
         // Making the other views accessible again
         networkUsernameView.isHidden = false
