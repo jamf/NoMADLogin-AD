@@ -52,7 +52,9 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
 
     override func resizeSubviews(withOldSize oldSize: NSSize) {
         super.resizeSubviews(withOldSize: oldSize)
-        fadeInBackgroundView()
+        if !(getManagedPreference(key: .LoginScreen) as? Bool ?? false) {
+            fadeInBackgroundView()
+        }
     }
 
     @objc func connectNetwork() {
