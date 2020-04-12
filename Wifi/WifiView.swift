@@ -78,6 +78,8 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
                  self.networks.insert(network)
             }
         }
+        
+        self.networkWifiPopup.selectItem(withTitle: wifiManager.getCurrentSSID() ?? "")
 
         configCurrentNetwork()
         configureUIForSelectedNetwork()
@@ -200,7 +202,8 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
         
         // Adding the SSID to the network list
         for network in results {
-            self.networkWifiPopup.addItem(withTitle: network.ssid ?? "")
+            self.networkWifiPopup.addItem(withTitle: network.ssid ?? "Unknown SSID")
+            self.networkWifiPopup.selectItem(withTitle: network.ssid ?? "Unknown SSID")
         }
         networks.formUnion(results)
         
@@ -212,6 +215,9 @@ class WifiView: NSView, NibLoadable, WifiManagerDelegate {
         addSSIDText.isHidden = true
         addSSIDLabel.isHidden = true
         addSSIDButton.isHidden = true
+        
+        // Updating the network changed UI
+        self.configureUIForSelectedNetwork()
     }
 
     // In order to prevent a NSView from bleeding it's mouse events to the parent, one must implement the empty methods.
