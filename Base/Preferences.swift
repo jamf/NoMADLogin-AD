@@ -107,11 +107,11 @@ enum Preferences: String {
     case Migrate
     /// should we hide users when we migrate?
     case MigrateUsersHide
-    /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
+    /// If the powercontrol options should be disabled in the SignIn UI
     case PowerControlDisabled
     /// should we recursively looku groups at login
     case RecursiveGroupLookup
-    /// If the powercontrol options should be disabled in the SignIn UI
+    /// Path to script to run, currently only one script path can be used, if you want to run this multiple times, keep the logic in your script
     case ScriptPath
     /// Arguments for the script, if any
     case ScriptArgs
