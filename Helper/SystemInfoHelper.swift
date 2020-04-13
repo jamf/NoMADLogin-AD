@@ -18,6 +18,7 @@ class SystemInfoHelper {
         info.append(ProcessInfo.processInfo.operatingSystemVersionString)
         info.append("Serial: \(getSerial())")
         info.append("MAC: \(getMAC())")
+        info.append(Host.current().localizedName!)
         info.append(ProcessInfo.processInfo.hostName)
         
         let ipAddresses = getIFAddresses()
