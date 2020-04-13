@@ -50,6 +50,7 @@ For those of you that are new to NoLo, the basic features are:
 * `AliasNTName` Bool to define if the user's NT style name is added as an alias to the local account during account creation.
 * `AliasUPN` Bool to define if the users UPN is added as an alias to the local account during account creation.
 * `DefaultSystemInformation` String to define the system information to be shown by default, options are `Serial`, `MAC`, `ComuputerName`, `Hostname`, `SystemVersion`, and `IP`, default is nothing
+* `CustomNoMADLocation` String to define the location of a custom NoMAD installation location to support automatic ACL declaration when `KeychainAdd` is utilized, default is `/Applications/NoMAD.app`
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
