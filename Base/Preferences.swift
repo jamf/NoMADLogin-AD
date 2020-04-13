@@ -35,7 +35,7 @@ enum Preferences: String {
     case CreateAdminIfGroupMember
     /// Should existing mobile accounts be converted into plain local accounts? Set as a `Bool`.
     case CustomNoMADLocation
-    /// If defined it specifies the custom location of the appication to be given access to the keychain item. Set as a `String`
+    /// If defined it specifies the custom location of the application to be given access to the keychain item. Set as a `String`
     case DemobilizeUsers
     /// Should we always have a password already set up before demobilizing
     case DemobilizeForcePasswordCheck
