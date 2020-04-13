@@ -803,8 +803,12 @@ extension SignIn: NoMADUserSessionDelegate {
             os_log("AD authentication failed, off domain.", log: uiLog, type: .default)
             if getManagedPreference(key: .LocalFallback) as? Bool ?? false {
                 os_log("Local fallback enabled, passing off to local authentication", log: uiLog, type: .default)
-                setRequiredHintsAndContext()
-                completeLogin(authResult: .allow)
+                if NoLoMechanism.verifyUser(name: shortName, auth: passString)  {
+                    setRequiredHintsAndContext()
+                    completeLogin(authResult: .allow)
+                } else {
+                    authFail()
+                }
                 return
             } else {
                 authFail();
