@@ -71,7 +71,7 @@ class Logger {
     func logit(_ level: LogLevel, message: String) {
         if (level.rawValue <= loglevel.rawValue) {
             if #available(OSX 10.12, *) {
-                os_log("%{public}@", log: log!, type: .debug)
+                os_log("%{public}@", log: log!, type: .debug, message)
             } else {
                 NSLog("level: \(level) - " + message)
             }

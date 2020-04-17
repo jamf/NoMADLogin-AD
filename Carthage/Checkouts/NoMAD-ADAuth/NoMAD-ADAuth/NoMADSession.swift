@@ -739,7 +739,7 @@ public class NoMADSession : NSObject {
                 // Get the attribute name (before ;),
                 // then add to attributes array if it doesn't exist.
                 var attributeName = attribute[0].trim()
-                if let index = attributeName.index(of: ";") {
+                if let index = attributeName.firstIndex(of: ";") {
                     attributeName = String(attributeName[..<index])
                 }
                 if !attributes.contains(attributeName) {
@@ -936,7 +936,7 @@ public class NoMADSession : NSObject {
                 // build a dictionary and add the KDC into it then write it back to defaults
                 let realm = NSMutableDictionary()
                 //realm.setValue(myLDAPServers.currentServer, forKey: "kdc")
-                realm.setValue(currentServer, forKey: "kpasswd")
+                realm.setValue(currentServer, forKey: "kpasswd_server")
                 kerbRealms[kerberosRealm] = realm
                 kerbPrefs?.set(kerbRealms, forKey: "realms")
                 return true
@@ -944,6 +944,55 @@ public class NoMADSession : NSObject {
         } else {
             myLogger.logit(LogLevel.base, message: "Couldn't find kpasswd server that matches current LDAP server. Letting system chose.")
             return false
+        }
+    }
+    
+    // calculate password complexity
+    
+    fileprivate func getComplexity(pso: String="") -> Int? {
+        
+        if pso == "" {
+            // no PSO for the user, get domain default
+            
+            let result = try? getLDAPInformation([ "minPwdLength"], baseSearch: true, searchTerm: "", test: true, overrideDefaultNamingContext: false)
+            
+            if result == nil {
+                return nil
+            }
+            
+            let resultClean = getAttributesForSingleRecordFromCleanedLDIF([ "minPwdLength"], ldif: result!)
+            
+            let final = resultClean[ "minPwdLength"] ?? ""
+            
+            if final == "" {
+                return nil
+            } else {
+                return Int(final)
+            }
+        } else {
+            // go get the pso
+            
+            let tempDefault = defaultNamingContext
+            
+            defaultNamingContext = pso
+            
+            let result = try? getLDAPInformation(["msDS-MinimumPasswordLength"], baseSearch: false, searchTerm: "(objectClass=msDS-PasswordSettings)")
+            // set the default naming context back
+            
+            defaultNamingContext = tempDefault
+            
+            if result == nil {
+                return nil
+            }
+            
+            let resultClean = getAttributesForSingleRecordFromCleanedLDIF([ "msDS-MinimumPasswordLength"], ldif: result!)
+            let final = resultClean["msDS-MinimumPasswordLength"] ?? ""
+            
+            if final == "" {
+                return nil
+            } else {
+                return Int(final)
+            }
         }
     }
     
@@ -1001,55 +1050,6 @@ public class NoMADSession : NSObject {
             let libDefaults = NSMutableDictionary()
             libDefaults.setValue(realm, forKey: "default_realm")
             kerbPrefs?.set(libDefaults, forKey: "libdefaults")
-        }
-    }
-    
-    // calculate password complexity
-    
-    fileprivate func getComplexity(pso: String="") -> Int? {
-        
-        if pso == "" {
-            // no PSO for the user, get domain default
-            
-            let result = try? getLDAPInformation([ "minPwdLength"], baseSearch: true, searchTerm: "", test: true, overrideDefaultNamingContext: false)
-            
-            if result == nil {
-                return nil
-            }
-            
-            let resultClean = getAttributesForSingleRecordFromCleanedLDIF([ "minPwdLength"], ldif: result!)
-            
-            let final = resultClean[ "minPwdLength"] ?? ""
-            
-            if final == "" {
-                return nil
-            } else {
-                return Int(final)
-            }
-        } else {
-            // go get the pso
-            
-            let tempDefault = defaultNamingContext
-            
-            defaultNamingContext = pso
-            
-            let result = try? getLDAPInformation(["msDS-MinimumPasswordLength"], baseSearch: false, searchTerm: "(objectClass=msDS-PasswordSettings)")
-            // set the default naming context back
-            
-            defaultNamingContext = tempDefault
-            
-            if result == nil {
-                return nil
-            }
-            
-            let resultClean = getAttributesForSingleRecordFromCleanedLDIF([ "msDS-MinimumPasswordLength"], ldif: result!)
-            let final = resultClean["msDS-MinimumPasswordLength"] ?? ""
-            
-            if final == "" {
-                return nil
-            } else {
-                return Int(final)
-            }
         }
     }
 }
