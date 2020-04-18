@@ -446,9 +446,23 @@ class NoLoMechanism: NSObject {
         
         return true
     }
+    
+    func getEFIUUID(key: String) -> String? {
+        let chosen = IORegistryEntryFromPath(kIOMasterPortDefault, "IODeviceTree:/chosen")
+        var properties : Unmanaged<CFMutableDictionary>?
+        let err = IORegistryEntryCreateCFProperties(chosen, &properties, kCFAllocatorDefault, IOOptionBits.init(bitPattern: 0))
+
+        if err != 0 {
+            return nil
+        }
+
+        guard let props = properties!.takeRetainedValue() as? [ String : AnyHashable ],
+            let uuid = props[key] as? Data else {
+                return nil
+        }
+        return String.init(data: uuid, encoding: String.Encoding.utf8)
+    }
 }
-
-
 
 
 //MARK: - ContextAndHintHandling Protocol

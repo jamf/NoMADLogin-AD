@@ -33,6 +33,7 @@
 		603B5D552434466100F37078 /* WifiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 603B5D442434458D00F37078 /* WifiView.xib */; };
 		603B5D562434466100F37078 /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B5D452434458D00F37078 /* WifiManager.swift */; };
 		603B5D592434487600F37078 /* SystemInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B5D582434487600F37078 /* SystemInfoHelper.swift */; };
+		60CBA964244AB5A6009102B0 /* RuleChanger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CBA963244AB5A6009102B0 /* RuleChanger.swift */; };
 		9C0A3EA41FF2CCD70030A04F /* LoggingDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */; };
 		9C468F812006A95400A475FC /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C468F802006A95400A475FC /* Preferences.swift */; };
 		9C6027461FE8224000B99B51 /* ContextAndHintHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6027451FE8224000B99B51 /* ContextAndHintHandling.swift */; };
@@ -103,6 +104,7 @@
 		603B5D452434458D00F37078 /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
 		603B5D4E2434462F00F37078 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		603B5D582434487600F37078 /* SystemInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfoHelper.swift; sourceTree = "<group>"; };
+		60CBA963244AB5A6009102B0 /* RuleChanger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleChanger.swift; sourceTree = "<group>"; };
 		9C0A3EA31FF2CCD70030A04F /* LoggingDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDefinitions.swift; sourceTree = "<group>"; };
 		9C2F03601FEB0B9A0036C08C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C468F802006A95400A475FC /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				9CBDCFAA1FC5CDB600CF73F4 /* NoLoMechanism.swift */,
 				9CBDCFAB1FC5CDB600CF73F4 /* CheckAD.swift */,
 				9CA733FB202E491E00EA1FE6 /* PowerControl.swift */,
+				60CBA963244AB5A6009102B0 /* RuleChanger.swift */,
 				9CBDCFA81FC5CDB600CF73F4 /* CreateUser.swift */,
 				9CBDCFA91FC5CDB600CF73F4 /* LogOnly.swift */,
 				9CC74CC81FFED59B00EBCCD5 /* DeMobilize.swift */,
@@ -449,6 +452,7 @@
 				9CBDCFBA1FC5CE6100CF73F4 /* SignIn.swift in Sources */,
 				9CBDCFB01FC5CDB600CF73F4 /* CheckAD.swift in Sources */,
 				9C9E3F5B207D8BDD001C7BB8 /* KeychainAdd.swift in Sources */,
+				60CBA964244AB5A6009102B0 /* RuleChanger.swift in Sources */,
 				603B5D532434465D00F37078 /* NibLoadable.swift in Sources */,
 				9CBDCFB51FC5CE2200CF73F4 /* NoMADLoginAD.m in Sources */,
 				9CDF3A3420EBEE4100D69F43 /* EULA.swift in Sources */,

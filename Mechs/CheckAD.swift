@@ -65,25 +65,11 @@ class CheckAD: NoLoMechanism {
         os_log("NoLo hasn't run, trying autologin", log: checkADLog, type: .debug)
         try? "Run Once".write(to: URL.init(fileURLWithPath: "/tmp/nolorun"), atomically: true, encoding: String.Encoding.utf8)
 
-        if let uuid = getEFIUUID() {
+        if let uuid = getEFIUUID(key: "efilogin-unlock-ident") {
             if let name = NoLoMechanism.getShortname(uuid: uuid) {
                 setContextString(type: kAuthorizationEnvironmentUsername, value: name)
             }
         }
         return true
-    }
-    
-    fileprivate func getEFIUUID() -> String? {
-        let chosen = IORegistryEntryFromPath(kIOMasterPortDefault, "IODeviceTree:/chosen")
-        var properties : Unmanaged<CFMutableDictionary>?
-        let err = IORegistryEntryCreateCFProperties(chosen, &properties, kCFAllocatorDefault, IOOptionBits.init(bitPattern: 0))
-
-        if err != 0 {
-            return nil
-        }
-
-        guard let props = properties!.takeRetainedValue() as? [ String : AnyHashable ] else { return nil }
-        guard let uuid = props["efilogin-unlock-ident"] as? Data else { return nil }
-        return String.init(data: uuid, encoding: String.Encoding.utf8)
     }
 }
