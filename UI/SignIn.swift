@@ -310,7 +310,7 @@ class SignIn: NSWindowController, DSQueryable {
                 systemInfo.title = sysInfo[1]
             case "MAC":
                 systemInfo.title = sysInfo[2]
-            case "ComuputerName":
+            case "ComputerName":
                 systemInfo.title = sysInfo[3]
             case "Hostname":
                 systemInfo.title = sysInfo[4]
