@@ -103,6 +103,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fUserInput = (strcmp(mechanismId, "UserInput") == 0);
     mechanism->fNotify = (strcmp(mechanismId, "Notify") == 0);
     mechanism->fRunScript = (strcmp(mechanismId, "RunScript") == 0);
+    mechanism->fRuleChanger = (strcmp(mechanismId, "RuleChanger") == 0);
     *outMechanism = mechanism;
     
     os_log_debug(pluginLog, "NoLoPlugin:MechanismCreate: inPlugin=%p, inEngine=%p, mechanismId='%{public}s'", inPlugin, inEngine, mechanismId);
@@ -171,6 +172,16 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         UserInput * userInput = [[UserInput alloc] initWithMechanism:mechanism];
         [userInput run];
         NSLog(@"User Input done");
+    } else if (mechanism->fRuleChanger) {
+        NSLog(@"Calling RuleChanger");
+        RuleChanger * ruleChanger = [[RuleChanger alloc] initWithMechanism:mechanism];
+        [ruleChanger run];
+        NSLog(@"RuleChanger done");
+    } else {
+        NSLog(@"Unknown rule, ignoring");
+        mechanism->fPlugin->fCallbacks->SetResult(mechanism->fEngine, kAuthorizationResultAllow);
+        NSLog(@"Returning allow");
+        return kAuthorizationResultAllow;
     }
     
     return noErr;

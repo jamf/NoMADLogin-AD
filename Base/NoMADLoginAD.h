@@ -51,6 +51,7 @@ struct MechanismRecord {
     Boolean                         fUserInput;
     Boolean                         fRunScript;
     Boolean                         fNotify;
+    Boolean                         fRuleChanger;
 };
 
 typedef struct MechanismRecord MechanismRecord;

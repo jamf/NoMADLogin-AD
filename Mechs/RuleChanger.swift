@@ -19,7 +19,6 @@ class RuleChanger: NoLoMechanism {
 
     @objc func run() {
         os_log("Rule changer beginning check", log: ruleChangerLog, type: .debug)
-        
         if isResetPasswordSituation() || isSystemUpdate() {
             os_log("Resetting rules for system.login.console to default", log: ruleChangerLog, type: .debug)
             stashRules()
@@ -28,6 +27,7 @@ class RuleChanger: NoLoMechanism {
             denyLogin()
         } else if FileManager.default.fileExists(atPath: kStashFile) {
             os_log("Rules need to be reset back to custom", log: ruleChangerLog, type: .debug)
+            updateRules()
             _ = cliTask("/usr/bin/killall loginwindow")
             denyLogin()
         } else {
@@ -37,17 +37,19 @@ class RuleChanger: NoLoMechanism {
     }
     
     private func isResetPasswordSituation() -> Bool {
-        getEFIUUID(key: "efilogin-reset-ident") != nil
+        os_log("Checking for password reset", log: ruleChangerLog, type: .error)
+        return (getEFIUUID(key: "efilogin-reset-ident") != nil)
     }
     
     private func isSystemUpdate() -> Bool {
+        os_log("Checking for System Update", log: ruleChangerLog, type: .error)
         return FileManager.default.fileExists(atPath: "/var/db/.StagedAppleUpgrade")
     }
     
     private func stashRules() {
         var rights: CFDictionary?
         let err = AuthorizationRightGet(kConsoleRight, &rights)
-        
+        os_log("Stashing current rule set", log: ruleChangerLog, type: .error)
         if let rights = rights as? [String:CFDictionary],
             err == errAuthorizationSuccess,
             let mechs = rights[kMechanisms],
@@ -55,6 +57,7 @@ class RuleChanger: NoLoMechanism {
             
             let fileURL = URL.init(fileURLWithPath: kStashFile)
             do {
+                os_log("Writing rule stash file", log: ruleChangerLog, type: .error)
                 try data.write(to: fileURL)
                 try FileManager.default.setAttributes([FileAttributeKey.posixPermissions : 0o750], ofItemAtPath: kStashFile)
             } catch {
@@ -69,8 +72,20 @@ class RuleChanger: NoLoMechanism {
         if let data = try? Data.init(contentsOf: fileURL),
             let rules = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] {
              var rights: CFDictionary?
-             let err = AuthorizationRightGet(kConsoleRight, &rights)
-            
+             var err = AuthorizationRightGet(kConsoleRight, &rights)
+            if var rights = rights as? [String:AnyObject],
+                err == errAuthorizationSuccess {
+                rights[kMechanisms] = rules as AnyObject
+                err = AuthorizationRightSet(getAuth(), kConsoleRight, rights as CFTypeRef, nil, nil, nil)
+                os_log("Authorition Right Set Result: %{public}@", log: ruleChangerLog, type: .error, err.description)
+            }
         }
+    }
+    
+    private func getAuth() -> AuthorizationRef {
+        os_log("Creating new AuthRef", log: ruleChangerLog, type: .error)
+        var authRef : AuthorizationRef? = nil
+        _ = AuthorizationCreate(nil, nil, AuthorizationFlags(rawValue: 0), &authRef)
+        return authRef!
     }
 }
