@@ -38,7 +38,7 @@ class NoLoMechanism: NSObject {
     /// - Parameter mechanism: The base `AuthorizationPlugin` to be used.
     @objc init(mechanism: UnsafePointer<MechanismRecord>) {
         os_log("Initializing NoLoSwiftMech", log: noLoMechlog, type: .debug)
-        os_log("Version: 1.4.0")
+        os_log("Version: 1.4.1")
         self.mech = mechanism.pointee
         self.mechCallbacks = mechanism.pointee.fPlugin.pointee.fCallbacks.pointee
         self.mechEngine = mechanism.pointee.fEngine
