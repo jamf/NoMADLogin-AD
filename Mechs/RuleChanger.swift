@@ -16,18 +16,19 @@ class RuleChanger: NoLoMechanism {
     private let kConsoleRight = "system.login.console"
     private let kMechanisms = "mechanisms"
     private let kStashFile = "/var/db/NoMADAuthRules"
-
+    private let kRuleChangerMech = "NoMADLoginAD:RuleChanger,privileged"
+    
     @objc func run() {
         os_log("Rule changer beginning check", log: ruleChangerLog, type: .debug)
-        if isResetPasswordSituation() || isSystemUpdate() {
-            os_log("Resetting rules for system.login.console to default", log: ruleChangerLog, type: .debug)
-            stashRules()
-            _ = cliTask("/usr/local/bin/authchanger -reset")
-            _ = cliTask("/usr/bin/killall loginwindow")
-            denyLogin()
-        } else if FileManager.default.fileExists(atPath: kStashFile) {
+        
+        if FileManager.default.fileExists(atPath: kStashFile) {
             os_log("Rules need to be reset back to custom", log: ruleChangerLog, type: .debug)
             updateRules()
+            allowLogin()
+        } else if isResetPasswordSituation() || isSystemUpdate() {
+            os_log("Resetting rules for system.login.console to default", log: ruleChangerLog, type: .debug)
+            stashRules()
+            _ = cliTask("/usr/local/bin/authchanger -reset -preLogin \(kRuleChangerMech)")
             _ = cliTask("/usr/bin/killall loginwindow")
             denyLogin()
         } else {
@@ -52,9 +53,9 @@ class RuleChanger: NoLoMechanism {
         os_log("Stashing current rule set", log: ruleChangerLog, type: .error)
         if let rights = rights as? [String:CFDictionary],
             err == errAuthorizationSuccess,
-            let mechs = rights[kMechanisms],
-            let data = try? NSKeyedArchiver.archivedData(withRootObject: mechs) {
+            let mechs = rights[kMechanisms] {
             
+            let data = NSKeyedArchiver.archivedData(withRootObject: mechs)
             let fileURL = URL.init(fileURLWithPath: kStashFile)
             do {
                 os_log("Writing rule stash file", log: ruleChangerLog, type: .error)
@@ -68,16 +69,22 @@ class RuleChanger: NoLoMechanism {
     
     private func updateRules() {
         let fileURL = URL.init(fileURLWithPath: kStashFile)
-
+        
         if let data = try? Data.init(contentsOf: fileURL),
             let rules = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] {
-             var rights: CFDictionary?
-             var err = AuthorizationRightGet(kConsoleRight, &rights)
+            var rights: CFDictionary?
+            var err = AuthorizationRightGet(kConsoleRight, &rights)
             if var rights = rights as? [String:AnyObject],
                 err == errAuthorizationSuccess {
                 rights[kMechanisms] = rules as AnyObject
                 err = AuthorizationRightSet(getAuth(), kConsoleRight, rights as CFTypeRef, nil, nil, nil)
-                os_log("Authorition Right Set Result: %{public}@", log: ruleChangerLog, type: .error, err.description)
+                os_log("Authorization Right Set Result: %{public}@", log: ruleChangerLog, type: .error, err.description)
+                do {
+                    os_log("Removing rule stash file", log: ruleChangerLog, type: .error)
+                    try FileManager.default.removeItem(at: fileURL)
+                } catch {
+                    os_log("Failed to remove rule stash file", log: ruleChangerLog, type: .error)
+                }
             }
         }
     }
