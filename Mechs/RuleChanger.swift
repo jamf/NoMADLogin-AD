@@ -18,14 +18,22 @@ class RuleChanger: NoLoMechanism {
     private let kStashFile = "/var/db/NoMADAuthRules"
     private let kRuleChangerMech = "NoMADLoginAD:RuleChanger,privileged"
     
+    // update files to track
+    private let kInitialUpgradePath = "/private/var/db/.StagedAppleUpgrade"
+    private let kContinuingUpgradePath = "/private/var/db/.AppleUpgrade"
+    
     @objc func run() {
         os_log("Rule changer beginning check", log: ruleChangerLog, type: .debug)
         
-        if FileManager.default.fileExists(atPath: kStashFile) {
+        if FileManager.default.fileExists(atPath: kStashFile) && isResetPasswordSituation() {
             os_log("Rules need to be reset back to custom", log: ruleChangerLog, type: .debug)
             updateRules()
             allowLogin()
-        } else if isResetPasswordSituation() || isSystemUpdate() {
+        } else if FileManager.default.fileExists(atPath: kStashFile) && !isUpdateStillGoing() {
+            os_log("Rules need to be reset back to custom", log: ruleChangerLog, type: .debug)
+            updateRules()
+            allowLogin()
+        } else if !FileManager.default.fileExists(atPath: kStashFile) && ( isResetPasswordSituation() || isSystemUpdate() ) {
             os_log("Resetting rules for system.login.console to default", log: ruleChangerLog, type: .debug)
             stashRules()
             _ = cliTask("/usr/local/bin/authchanger -reset -preLogin \(kRuleChangerMech)")
@@ -38,13 +46,18 @@ class RuleChanger: NoLoMechanism {
     }
     
     private func isResetPasswordSituation() -> Bool {
-        os_log("Checking for password reset", log: ruleChangerLog, type: .error)
+        os_log("Checking for password reset", log: ruleChangerLog, type: .default)
         return (getEFIUUID(key: "efilogin-reset-ident") != nil)
     }
     
     private func isSystemUpdate() -> Bool {
-        os_log("Checking for System Update", log: ruleChangerLog, type: .error)
-        return FileManager.default.fileExists(atPath: "/var/db/.StagedAppleUpgrade")
+        os_log("Checking for System Update", log: ruleChangerLog, type: .default)
+        return FileManager.default.fileExists(atPath: kInitialUpgradePath)
+    }
+    
+    private func isUpdateStillGoing() -> Bool {
+        os_log("Checking if system update is still continuing", log: ruleChangerLog, type: .debug)
+        return FileManager.default.fileExists(atPath: kContinuingUpgradePath)
     }
     
     private func stashRules() {
