@@ -32,8 +32,9 @@ class RuleChanger: NoLoMechanism {
         } else if FileManager.default.fileExists(atPath: kStashFile) && !isUpdateStillGoing() {
             os_log("Rules need to be reset back to custom", log: ruleChangerLog, type: .debug)
             updateRules()
+            _ = cliTask("/usr/bin/killall loginwindow")
             allowLogin()
-        } else if !FileManager.default.fileExists(atPath: kStashFile) && ( isResetPasswordSituation() || isSystemUpdate() ) {
+        } else if !FileManager.default.fileExists(atPath: kStashFile) && ( isResetPasswordSituation() || isUpdateStillGoing() ) {
             os_log("Resetting rules for system.login.console to default", log: ruleChangerLog, type: .debug)
             stashRules()
             _ = cliTask("/usr/local/bin/authchanger -reset -preLogin \(kRuleChangerMech)")
