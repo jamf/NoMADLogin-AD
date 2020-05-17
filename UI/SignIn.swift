@@ -165,14 +165,17 @@ class SignIn: NSWindowController, DSQueryable {
     }
     
     @objc fileprivate func updateWindowAfterResize() {
-        os_log("Reconfiguring login window after screen change", log: uiLog, type: .debug)
-        loginApperance()
+        
+        if self.window?.isVisible ?? true {
+            os_log("Reconfiguring login window after screen change", log: uiLog, type: .debug)
+            loginApperance()
+            
+            os_log("Become first responder", log: uiLog, type: .debug)
+            username.becomeFirstResponder()
+        }
         
         os_log("create background windows", log: uiLog, type: .debug)
         createBackgroundWindow()
-
-        os_log("Become first responder", log: uiLog, type: .debug)
-        username.becomeFirstResponder()
     }
     
     fileprivate func shakeOff() {
