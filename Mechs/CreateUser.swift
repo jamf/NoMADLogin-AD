@@ -749,6 +749,7 @@ class CreateUser: NoLoMechanism {
                 getManagedPreference(key: .SecureTokenManagementFullName) as? String ?? "NoMAD Login",
                 "-home",
                 "/private/var/_nomadlogin",
+                "-admin",
                 "-picture",
                 getManagedPreference(key: .SecureTokenManagementIconPath) as? String ?? "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle/Contents/Resources/NoMADFDEIcon.png"
             ]
