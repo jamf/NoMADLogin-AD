@@ -103,6 +103,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fUserInput = (strcmp(mechanismId, "UserInput") == 0);
     mechanism->fNotify = (strcmp(mechanismId, "Notify") == 0);
     mechanism->fRunScript = (strcmp(mechanismId, "RunScript") == 0);
+    mechanism->fPKINIT = (strcmp(mechanismId, "PKINIT") == 0);
     *outMechanism = mechanism;
     
     os_log_debug(pluginLog, "NoLoPlugin:MechanismCreate: inPlugin=%p, inEngine=%p, mechanismId='%{public}s'", inPlugin, inEngine, mechanismId);
@@ -171,6 +172,11 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         UserInput * userInput = [[UserInput alloc] initWithMechanism:mechanism];
         [userInput run];
         NSLog(@"User Input done");
+    } else if (mechanism->fPKINIT) {
+        NSLog(@"Calling PKINIT");
+        PKINIT * pkinit = [[PKINIT alloc] initWithMechanism:mechanism];
+        [pkinit run];
+        NSLog(@"PKINIT done");
     }
     
     return noErr;

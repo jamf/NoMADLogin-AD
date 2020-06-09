@@ -49,6 +49,7 @@ struct MechanismRecord {
     Boolean                         fUserInput;
     Boolean                         fRunScript;
     Boolean                         fNotify;
+    Boolean                         fPKINIT;
 };
 
 typedef struct MechanismRecord MechanismRecord;
