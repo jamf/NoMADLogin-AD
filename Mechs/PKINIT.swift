@@ -41,7 +41,7 @@ class PKINIT: NoLoMechanism {
         }
         
         // switch uid to user so we have access to home directory and other things
-        seteuid(userUID)
+        //seteuid(userUID)
         
         guard var accounts = findCerts() else {
             os_log("No attached tokens, exiting", log: pkinitLog, type: .default)
@@ -55,6 +55,8 @@ class PKINIT: NoLoMechanism {
             for identity in pkinitAccounts {
                 for account in accounts {
                     if account.pkhh == identity.value {
+                        os_log("Found principal: %{public}@", log: pkinitLog, type: .default, identity.key)
+                        os_log("pkhh: %{public}@", log: pkinitLog, type: .default, account.pkhh)
                         tempAccounts.append(CardIdentity.init(principal: identity.key, pkhh: account.pkhh, identity: account.identity))
                     }
                 }
@@ -79,9 +81,11 @@ class PKINIT: NoLoMechanism {
         var searchReturn: AnyObject?
         var myCert: SecCertificate?
 
+        var identities = [CardIdentity]()
+        
         if #available(OSX 10.12, *) {
             let tokenSearchDict: [String:AnyObject] = [
-                kSecAttrAccessGroup as String:  kSecAttrAccessGroupToken,
+                //kSecAttrAccessGroup as String:  kSecAttrAccessGroupToken,
                 kSecClass as String: kSecClassIdentity,
                 kSecReturnAttributes as String: true as AnyObject,
                 kSecReturnRef as String: true as AnyObject,
@@ -89,21 +93,40 @@ class PKINIT: NoLoMechanism {
             ]
         
             myErr = SecItemCopyMatching(tokenSearchDict as CFDictionary, &searchReturn)
+            os_log("Finished cert search", log: pkinitLog, type: .default)
             
             if myErr != 0 || searchReturn == nil {
+                os_log("No certs found", log: pkinitLog, type: .default)
                 return nil
             }
 
             let foundIdentites = searchReturn as! CFArray as Array
-
+            os_log("Found identities: %{public}@", log: pkinitLog, type: .default, String(foundIdentites.count))
+            
             for identity in foundIdentites {
                 myErr = SecIdentityCopyCertificate(identity["v_Ref"] as! SecIdentity, &myCert)
+                
                 if myErr != 0 {
+                    os_log("Unable to get SecIdentity", log: pkinitLog, type: .default)
                     continue
                 }
+                
+                var pkhh = "Unknown"
+                
+                if let certPubKeyHash = identity["pkhh"] as? Data,
+                    let pkhhString = String.init(data: certPubKeyHash, encoding: .utf8) {
+                    pkhh = pkhhString
+                }
+                os_log("Found identity: %{public}@", log: pkinitLog, type: .default, (identity.debugDescription ?? "NO DEBUG DESCRIPTION"))
+                identities.append(CardIdentity.init(principal: getPrincipal(identity: myCert!), pkhh: pkhh, identity: identity["v_Ref"] as! SecIdentity))
             }
         }
-        return nil
+        
+        if identities.count > 1 {
+            return identities
+        } else {
+            return nil
+        }
     }
     
     private func getCreds(cert: SecIdentity, user: String, pin: String="") -> String {
@@ -131,6 +154,7 @@ class PKINIT: NoLoMechanism {
         if major == 0 {
             return ""
         } else {
+            os_log("Kerberos Error: %{public}@", log: pkinitLog, type: .default, err.debugDescription)
             return err.debugDescription
         }
     }
@@ -162,5 +186,38 @@ class PKINIT: NoLoMechanism {
                 os_log("Unable to get home.", log: keychainAddLog, type: .error)
                 return (nil, nil)
             }
+    }
+    
+    fileprivate func getPrincipal(identity: SecCertificate) -> String {
+
+        let noPrincipal = "none"
+
+        // get all the OIDS
+
+        guard let myOIDs : NSDictionary = SecCertificateCopyValues(identity, nil, nil) else { return noPrincipal }
+
+        // find which OID we want
+
+        guard let oid = myOIDs["2.5.29.17"] else { return noPrincipal }
+
+            if myOIDs["2.5.29.17"] == nil {
+                return noPrincipal
+            }
+
+            guard let myUPNRaw = myOIDs["2.5.29.17"] as? NSDictionary else { return noPrincipal }
+            guard let myUPNValues = myUPNRaw["value"] as? NSArray else { return noPrincipal }
+            for item in myUPNValues {
+                // cast to dictionary
+                guard let itemDict = item as? NSDictionary else { return noPrincipal }
+                guard let itemValue = itemDict["value"] as? String else { return noPrincipal }
+                if itemValue.contains("@") {
+                    //print(itemValue)
+                    return itemValue
+                }
+            }
+
+        // return the principal that we think we want
+
+        return noPrincipal
     }
 }
