@@ -49,7 +49,7 @@ For those of you that are new to NoLo, the basic features are:
 * Mapping of NT Domain to AD Domain via `NTtoADDomainMappings` a Dictionary of Strings, e.g. [ NOMAD: nomad.menu], would allow a user to sign in as "NOMAD\user" and that would be converted to "user@nomad.menu" before authenticating to AD.
 * `AliasNTName` Bool to define if the user's NT style name is added as an alias to the local account during account creation.
 * `AliasUPN` Bool to define if the users UPN is added as an alias to the local account during account creation.
-* `DefaultSystemInformation` a String to define the system information to be shown by default, options are `Serial`, `MAC`, `ComuputerName`, `Hostname`, `SystemVersion`, and `IP`, default is nothing
+* `DefaultSystemInformation` a String to define the system information to be shown by default, options are `Serial`, `MAC`, `ComputerName`, `Hostname`, `SystemVersion`, and `IP`, default is nothing
 * `CustomNoMADLocation` a String to define the location of a custom NoMAD installation to support automatic ACL declaration when `KeychainAdd` is utilized, default is `/Applications/NoMAD.app`
 * Fixed a issue where `LocalFallback` used in conjunction with `DenyLocal` and `PasswordOverwriteSilent` would cause unintentional password overwrites.
 * `UIDTool` a String to determine the path of an executable that is run when a new user is created. It is expected to return the UID that the user should be created with. It passes in the new users username as the first argument, default is to use the built in functionality
