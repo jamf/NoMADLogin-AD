@@ -159,7 +159,7 @@ class NoLoMechanism: NSObject {
         os_log("Setting context hint for UID: %{public}@", log: noLoMechlog, type: .debug, uid)
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
         var data = uid_t.init(bitPattern: Int32(uid))
-        var value = AuthorizationValue(length: MemoryLayout<uid_t>.size, data: UnsafeMutableRawPointer.init(&data))
+        var value = AuthorizationValue(length: MemoryLayout<uid_t>.size, data: &data) // It didnt want to build with the old code? -Johan
         let error = mechCallbacks.SetContextValue(mechEngine, "uid", flags, &value)
         if error != noErr {
             logOSStatusErr(error, sender: "setUID")
@@ -171,7 +171,7 @@ class NoLoMechanism: NSObject {
         os_log("Setting context hint for GID: %{public}@", log: noLoMechlog, type: .debug, gid)
         let flags = AuthorizationContextFlags(rawValue: AuthorizationContextFlags.RawValue(1 << 0))
         var data = gid_t.init(bitPattern: Int32(gid))
-        var value = AuthorizationValue(length: MemoryLayout<gid_t>.size, data: UnsafeMutableRawPointer.init(&data))
+        var value = AuthorizationValue(length: MemoryLayout<gid_t>.size, data: &data) // It didnt want to build with the old code? -Johan
         let error = mechCallbacks.SetContextValue(self.mechEngine, "gid", flags, &value)
         if error != noErr {
             logOSStatusErr(error, sender: "setGID")

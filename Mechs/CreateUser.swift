@@ -355,42 +355,48 @@ class CreateUser: NoLoMechanism {
         os_log("Starting SecureToken Operations", log: createUserLog, type: .debug)
         if #available(OSX 10.13.4, *), getManagedPreference(key: .ManageSecureTokens) as? Bool ?? false && !(getManagedPreference(key: .GuestUserAccounts) as? [String] ?? ["Guest", "guest"]).contains(nomadUser!){
             
-            if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
-                os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
-                addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+            // Checking to make sure secureToken credentials are accessible.
+            if secureTokenCreds["username"] != "" {
             
-                if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
-                    // Now that the user is given a token we need to remove the service account
-                    os_log("Enable Only First user Enabled, deleting the service account", log: createUserLog, type: .debug)
-                    
-                    // Nuking the account in unrecoverable fashion. If the secure token operation were to fail above the following deletion command will also fail and leave us in a recoverable state
-                    let launchPath = "/usr/sbin/sysadminctl"
-                    let args = [
-                        "-deleteUser",
-                        "\(String(describing: secureTokenCreds["username"]))",
-                        "-secure"
-                    ]
-                    _ = cliTask(launchPath, arguments: args, waitForTermination: true)
-                } else {
-                    os_log("Rotating the service account password", log: createUserLog, type: .debug)
+                if !(getManagedPreference(key: .SecureTokenManagementEnableOnlyAdminUsers) as? Bool ?? false && !isAdmin) {
+                    os_log("Manage SecureTokens is Enabled, Giving the user a token", log: createUserLog, type: .debug)
+                    addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
                 
-                    // Rotating the Secure Token passphrase
-                    let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
-                    _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]!), secureTokenManagementPasswordLocation)
+                    if getManagedPreference(key: .SecureTokenManagementOnlyEnableFirstUser) as? Bool ?? false {
+                        // Now that the user is given a token we need to remove the service account
+                        os_log("Enable Only First user Enabled, deleting the service account", log: createUserLog, type: .debug)
+                        
+                        // Nuking the account in unrecoverable fashion. If the secure token operation were to fail above the following deletion command will also fail and leave us in a recoverable state
+                        let launchPath = "/usr/sbin/sysadminctl"
+                        let args = [
+                            "-deleteUser",
+                            "\(String(describing: secureTokenCreds["username"]))",
+                            "-secure"
+                        ]
+                        _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+                    } else {
+                        os_log("Rotating the service account password", log: createUserLog, type: .debug)
+                    
+                        // Rotating the Secure Token passphrase
+                        let secureTokenManagementPasswordLocation = getManagedPreference(key: .SecureTokenManagementPasswordLocation) as? String ?? "/var/db/.nomadLoginSecureTokenPassword"
+                        _ = CreateSecureTokenManagementUser(String(describing: secureTokenCreds["username"]!), secureTokenManagementPasswordLocation)
+                    }
                 }
+                
+            // This else if is to maintain historic functionality that the first user logging in with EnableFDE enabled will be given a Secure Token
+            } else if getManagedPreference(key: .EnableFDE) as? Bool ?? false {
+                os_log("Historic EnableFDE function enabled, Assigning the user a token then deleting the service account", log: createUserLog, type: .debug)
+                addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
+                let launchPath = "/usr/sbin/sysadminctl"
+                let args = [
+                    "-deleteUser",
+                    "\(String(describing: secureTokenCreds["username"]))",
+                    "-secure"
+                ]
+                _ = cliTask(launchPath, arguments: args, waitForTermination: true)
             }
-            
-        // This else if is to maintain historic functionality that the first user logging in with EnableFDE enabled will be given a Secure Token
-        } else if getManagedPreference(key: .EnableFDE) as? Bool ?? false {
-            os_log("Historic EnableFDE function enabled, Assigning the user a token then deleting the service account", log: createUserLog, type: .debug)
-            addSecureToken(shortName, pass, secureTokenCreds["username"] ?? "", secureTokenCreds["password"] ?? "")
-            let launchPath = "/usr/sbin/sysadminctl"
-            let args = [
-                "-deleteUser",
-                "\(String(describing: secureTokenCreds["username"]))",
-                "-secure"
-            ]
-            _ = cliTask(launchPath, arguments: args, waitForTermination: true)
+        } else {
+            os_log("SecureToken Credentials inaccessible, failing silently", log: createUserLog, type: .info)
         }
         
         os_log("Checking for aliases to add...", log: createUserLog, type: .debug)
