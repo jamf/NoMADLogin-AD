@@ -396,7 +396,7 @@ class CreateUser: NoLoMechanism {
                 _ = cliTask(launchPath, arguments: args, waitForTermination: true)
             }
         } else {
-            os_log("SecureToken Credentials inaccessible, failing silently", log: createUserLog, type: .default)
+            os_log("SecureToken Credentials inaccessible, failing silently", log: createUserLog, type: .error)
         }
         
         os_log("Checking for aliases to add...", log: createUserLog, type: .debug)
@@ -669,7 +669,7 @@ class CreateUser: NoLoMechanism {
     
     fileprivate func GetSecureTokenCreds() -> [String:String] {
         
-        os_log("Starting SecureToken Credential acquisition process", log: createUserLog, type: .debug)
+        os_log("Starting SecureToken Credential acquisition process", log: createUserLog, type: .default)
         
         // Initializing the return variables
         var secureTokenCreds = ["username":"",
