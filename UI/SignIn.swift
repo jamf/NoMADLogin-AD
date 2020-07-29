@@ -47,6 +47,8 @@ class SignIn: NSWindowController, DSQueryable {
     @IBOutlet weak var networkSelection: NSButton!
     @IBOutlet weak var systemInfo: NSButton!
     @IBOutlet weak var powerControlStack: NSStackView!
+    @IBOutlet weak var loginWindowTextField: NSTextField!
+    @IBOutlet weak var loginWindowTextWindow: NSWindow!
     
     //MARK: - Shutdown and Restart
     
@@ -84,6 +86,7 @@ class SignIn: NSWindowController, DSQueryable {
 
         os_log("Become first responder", log: uiLog, type: .debug)
         username.becomeFirstResponder()
+        
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
         
         // Disabling due to it causing screen resizing during EULA
@@ -324,6 +327,18 @@ class SignIn: NSWindowController, DSQueryable {
             default:
                 break
             }
+        }
+        
+        loginWindowTextWindow.level = .screenSaver
+        loginWindowTextWindow.backgroundColor = .clear
+        loginWindowTextWindow.orderFrontRegardless()
+        loginWindowTextWindow.canBecomeVisibleWithoutLogin = true
+        
+        if let loginwindowText = UserDefaults(suiteName: "com.apple.loginwindow")?.string(forKey: "LoginwindowText"){
+            os_log("LoginwindowText defined: %{public}@", log: uiLog, type: .debug, loginwindowText)
+            loginWindowTextField.stringValue = loginwindowText
+        } else{
+            os_log("No LoginwindowText defined", log: uiLog, type: .debug)
         }
     }
 
