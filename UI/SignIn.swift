@@ -86,11 +86,13 @@ class SignIn: NSWindowController, DSQueryable {
         username.becomeFirstResponder()
         os_log("Finsished loading loginwindow", log: uiLog, type: .debug)
         
-        let notificationCenter = NotificationCenter.default
+        // Disabling due to it causing screen resizing during EULA
+        /* let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self,
                                        selector: #selector(updateWindowAfterResize),
                                        name: NSApplication.didChangeScreenParametersNotification,
                                        object: nil)
+         */
     }
 
 

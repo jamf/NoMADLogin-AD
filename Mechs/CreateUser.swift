@@ -396,7 +396,7 @@ class CreateUser: NoLoMechanism {
                 _ = cliTask(launchPath, arguments: args, waitForTermination: true)
             }
         } else {
-            os_log("SecureToken Credentials inaccessible, failing silently", log: createUserLog, type: .info)
+            os_log("SecureToken Credentials inaccessible, failing silently", log: createUserLog, type: .default)
         }
         
         os_log("Checking for aliases to add...", log: createUserLog, type: .debug)
@@ -677,7 +677,7 @@ class CreateUser: NoLoMechanism {
         
         // Getting the list of secure token enabled users
         let secureTokenUsers = GetSecureTokenUserList()
-        os_log("SecureToken Authorized Users: %{public}@", log: createUserLog, type: .debug, secureTokenUsers.joined(separator: ", "))
+        os_log("SecureToken Authorized Users: %{public}@", log: createUserLog, type: .default, secureTokenUsers.joined(separator: ", "))
         
         // Reading the managed perferences
         let secureTokenManagementUsername = getManagedPreference(key: .SecureTokenManagementUsername) as? String ?? "_nomadlogin"
@@ -688,7 +688,7 @@ class CreateUser: NoLoMechanism {
         if secureTokenUsers.count == 0 {
             // Nobody has the initial token
             if !CreateSecureTokenManagementUser(secureTokenManagementUsername, secureTokenManagementPasswordLocation){
-                os_log("Unable to create SecureToken User", log: createUserLog, type: .debug)
+                os_log("Unable to create SecureToken User", log: createUserLog, type: .error)
             }
             let secureTokenManagementPassword = String(data: FileManager.default.contents(atPath: secureTokenManagementPasswordLocation)!, encoding: .ascii)!
             addSecureToken(secureTokenManagementUsername, secureTokenManagementPassword, secureTokenManagementUsername, secureTokenManagementPassword)
@@ -707,7 +707,7 @@ class CreateUser: NoLoMechanism {
             
         } else {
             // The Secure Token management account does not have a token, but there are tokens already given
-            os_log("Secure Token management unable to get credentials", log: createUserLog, type: .debug)
+            os_log("Secure Token management unable to get credentials", log: createUserLog, type: .error)
         }
         return secureTokenCreds
     }
@@ -720,7 +720,7 @@ class CreateUser: NoLoMechanism {
         // Checking if the account exists
         if cliTask("/usr/bin/dscl", arguments: [".", "-list", "/Users"], waitForTermination: true).components(separatedBy: "\n").contains(username){
             // User already exists, should rotate the password
-            os_log("Secure Token management account exists, rotating password", log: createUserLog, type: .debug)
+            os_log("Secure Token management account exists, rotating password", log: createUserLog, type: .default)
             
             // Getting the old password
             let oldPassword = String(data: FileManager.default.contents(atPath: passwordLocation)!, encoding: .ascii)!
@@ -740,7 +740,7 @@ class CreateUser: NoLoMechanism {
             _ = cliTask(launchPath, arguments: args, waitForTermination: true)
             
         } else {
-            os_log("Secure Token management account being created", log: createUserLog, type: .debug)
+            os_log("Secure Token management account being created", log: createUserLog, type: .default)
         
             // Creating the user record with sysadminctl becuase it does the magic that allows it to delegate tokens vs manually creating via dscl
             var launchPath = "/usr/sbin/sysadminctl"
@@ -796,7 +796,10 @@ class CreateUser: NoLoMechanism {
         let partialList = secureTokenListRaw.components(separatedBy: "\n")
         var secureTokenUsers = [String]()
         for entry in partialList {
-            secureTokenUsers.append(entry.components(separatedBy: ",")[0])
+            let username = entry.components(separatedBy: ",")[0].trimmingCharacters(in: .whitespacesAndNewlines)
+            if username != ""{
+                secureTokenUsers.append(entry.components(separatedBy: ",")[0])
+            }
         }
         
         return secureTokenUsers
