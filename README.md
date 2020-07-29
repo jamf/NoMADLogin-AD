@@ -52,7 +52,7 @@ For those of you that are new to NoLo, the basic features are:
 * `CustomNoMADLocation` a String to define the location of a custom NoMAD installation to support automatic ACL declaration when `KeychainAdd` is utilized, default is `/Applications/NoMAD.app`
 * Fixed a issue where `LocalFallback` used in conjunction with `DenyLocal` and `PasswordOverwriteSilent` would cause unintentional password overwrites.
 * `UIDTool` a String to determine the path of an executable that is run when a new user is created. It is expected to return the UID that the user should be created with. It passes in the new users username as the first argument, default is to use the built in functionality
-* Continued support for the `com.apple.loginwindow` domain with the new support of the `LoginwindowText` key
+* Extended support for the `com.apple.loginwindow` domain with new support of the `LoginwindowText` key
 
 ## What's new in 1.3.1
 * `UseCNForFullNameFallback` a Boolean that determines if to use CN as the fullname on the account when the givenName and sn fields are blank
