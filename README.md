@@ -43,7 +43,6 @@ For those of you that are new to NoLo, the basic features are:
 * `GuestUserLast` a String to define the last name of the guest user account
 * `AllowNetworkSelection` a Boolean to define if the network selection is hidden, default is `false`
 * System information has been added as a hidden button in the lower left hand corner of the the NoMAD Login Window
-* React to screen resolution changes better, but probably still not what it should be.
 * Lowercase user supplied domain when checking against `AdditionalADDomains` so that the comparision is more sane.
 * `AdditionalADDomainList` an array of Strings that will cause a pull down domain menu in the Sign In window. Users can select a domain from the menu and then only enter the shortname in the text field.
 * Mapping of NT Domain to AD Domain via `NTtoADDomainMappings` a Dictionary of Strings, e.g. [ NOMAD: nomad.menu], would allow a user to sign in as "NOMAD\user" and that would be converted to "user@nomad.menu" before authenticating to AD.
