@@ -247,6 +247,10 @@ class CreateUser: NoLoMechanism {
             kODAttributeADUser: [getHint(type: .kerberos_principal) as? String ?? ""]
         ]
         
+        if let guid = findGUID() {
+            attrs[kODAttributeTypeGUID] = [guid]
+        }
+        
         if #available(macOS 10.15, *) {
             os_log("Replacing default bash shell with zsh for Catalina and above", log: createUserLog, type: .debug)
             attrs[kODAttributeTypeUserShell] = ["/bin/zsh"]
@@ -474,6 +478,23 @@ class CreateUser: NoLoMechanism {
         }
         os_log("Found first available UID: %{public}@", log: createUserLog, type: .default, newUID)
         return newUID
+    }
+    
+    /// Finds a GUID to use
+    
+    func findGUID() -> String? {
+        if let guidToolPath = getManagedPreference(key: .GUIDTool) as? String {
+            os_log("Checking GUIDTool", log: createUserLog, type: .debug)
+            if FileManager.default.isExecutableFile(atPath: guidToolPath) {
+                os_log("Calling GUIDTool", log: createUserLog, type: .debug)
+                let uid = cliTask(guidToolPath, arguments: [nomadUser ?? "NONE" ], waitForTermination: true)
+                if uid != "" {
+                    os_log("Found custom guid, using: %{public}@", log: createUserLog, type: .debug, uid)
+                    return uid.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                }
+            }
+        }
+        return nil
     }
 
     //TODO: Convert to throws
