@@ -27,7 +27,7 @@ For those of you that are new to NoLo, the basic features are:
 * `SecureTokenManagementOnlyEnableFirstUser` a Boolean to determine if the NoMAD Login should only enable the first user that is eligable for a SecureToken, and delete the service account afterwards.
 * `SecureTokenManagementFullName` a String to define a custom Full Name for the SecureToken service account, default is `NoMAD Login`
 * `SecureTokenManagementUID` an Integer or String to define a custom UID for the SecureToken service account, default is `400`
-* `SecureTokenManagementPasswordLocation` a String to define a custom password storage location for the SecureToken service account password, default is `/var/db/.nomadLoginSecureTokenPassword`
+* `SecureTokenManagementPasswordLocation` a String to define a custom password storage location for the SecureToken service account password, default is `/var/db/.nomadLoginSecureTokenPassword`. NOTE: use `printf` to write to the file and not `echo`
 * `SecureTokenManagementPasswordLength` an Integer to define a custom SecureToken service account password length, default is `16`
 * `SecureTokenManagementUsername` a String to define a custom username for the SecureToken service account, default is `_nomadlogin`
 * Added an overwrite button to the sync password screen in the event the user does not remember their password, which bootstraps into the `PasswordOverwriteSilent` workflow - Reqest from @Ehlers299
