@@ -103,6 +103,7 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
     mechanism->fUserInput = (strcmp(mechanismId, "UserInput") == 0);
     mechanism->fNotify = (strcmp(mechanismId, "Notify") == 0);
     mechanism->fRunScript = (strcmp(mechanismId, "RunScript") == 0);
+    mechanism->fUserNerf = (strcmp(mechanismId, "UserNerf") == 0);
     *outMechanism = mechanism;
     
     os_log_debug(pluginLog, "NoLoPlugin:MechanismCreate: inPlugin=%p, inEngine=%p, mechanismId='%{public}s'", inPlugin, inEngine, mechanismId);
@@ -171,8 +172,12 @@ extern OSStatus AuthorizationPluginCreate(const AuthorizationCallbacks *callback
         UserInput * userInput = [[UserInput alloc] initWithMechanism:mechanism];
         [userInput run];
         NSLog(@"User Input done");
+    } else if (mechanism->fUserNerf) {
+        NSLog(@"Calling UserNerf");
+        UserNerf * userNerf = [[UserNerf alloc] initWithMechanism:mechanism];
+        [userNerf run];
+        NSLog(@"UserNerf done");
     }
-    
     return noErr;
 }
 
