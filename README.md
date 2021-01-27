@@ -5,7 +5,7 @@ Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLo
 NoLoAD is a replacement login window for macOS 10.12 and higher. It allows you to login to a Mac using Active Directory accounts, without the need to bind the Mac to AD and suffer all the foibles that brings.
 
 ## About this release
-The current production version of NoLoAD is 1.4.0
+The current production version of NoLoAD is 1.5.0
 
 For those of you that are new to NoLo, the basic features are:
 
@@ -18,6 +18,9 @@ For those of you that are new to NoLo, the basic features are:
 * Customize the login screen with your own art and background
 * Display a EULA for users to accept on login
 * Create a keychain item for NoMAD
+
+## What's new in 1.5.0
+* Added the ability for Autologin to occur after FileVault auth on macOS Big Sur. You'll still see the "normal" macOS login screen for FileVault, however, you will not then have to sign into NoMAD Login after that.
 
 ## What's new in 1.4.0
 * `PasswordOverwriteSilent` a Boolean to determine if the password should be silently overwritten when the AD authentication succeeds, should be used in conjunction with `DenyLocal`.
