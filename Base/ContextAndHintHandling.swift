@@ -99,13 +99,19 @@ extension ContextAndHintHandling {
             os_log("Couldn't retrieve context value: %{public}@", log: uiLog, type: .debug, type)
             return nil
         }
-        if type == "longname" {
-            return String.init(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
-        } else {
-            let item = Data.init(bytes: value!.pointee.data!, count: value!.pointee.length)
-            os_log("get context error: %{public}@", log: uiLog, type: .debug, item.description)
+        
+        return String(bytesNoCopy: value!.pointee.data!, length: value!.pointee.length, encoding: .utf8, freeWhenDone: false)
+    }
+    
+    func getContextData(type: String) -> Data? {
+        var value: UnsafePointer<AuthorizationValue>?
+        var flags = AuthorizationContextFlags()
+        let err = mech?.fPlugin.pointee.fCallbacks.pointee.GetContextValue((mech?.fEngine)!, type, &flags, &value)
+        if err != errSecSuccess {
+            os_log("Couldn't retrieve context value: %{public}@", log: uiLog, type: .debug, type)
+            return nil
         }
-
-        return nil
+        
+        return Data(bytes: value!.pointee.data!, count: value!.pointee.length)
     }
 }

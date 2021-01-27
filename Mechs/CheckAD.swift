@@ -64,13 +64,24 @@ class CheckAD: NoLoMechanism {
 
         os_log("NoLo hasn't run, trying autologin", log: checkADLog, type: .debug)
         try? "Run Once".write(to: URL.init(fileURLWithPath: "/tmp/nolorun"), atomically: true, encoding: String.Encoding.utf8)
+        
+        if let username = getContextString(type: "fvusername"), let password = getContextString(type: "fvpassword") {
+            os_log("Found username in context, doing autologin", log: checkADLog, type: .debug)
+            setContextString(type: kAuthorizationEnvironmentUsername, value: username)
+            setContextString(type: kAuthorizationEnvironmentPassword, value: password)
+            return true
+        } else {
+            if let uuid = getEFIUUID() {
+                if let name = NoLoMechanism.getShortname(uuid: uuid) {
+                    os_log("Found username in EFI, doing autologin", log: checkADLog, type: .debug)
 
-        if let uuid = getEFIUUID() {
-            if let name = NoLoMechanism.getShortname(uuid: uuid) {
-                setContextString(type: kAuthorizationEnvironmentUsername, value: name)
+                    setContextString(type: kAuthorizationEnvironmentUsername, value: name)
+                    return true
+                }
             }
         }
-        return true
+        os_log("Unable to get a username, ignoring autologin", log: checkADLog, type: .debug)
+        return false
     }
     
     fileprivate func getEFIUUID() -> String? {
