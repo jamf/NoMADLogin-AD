@@ -42,18 +42,7 @@ class EULA : NoLoMechanism {
         }
         os_log("Displaying window", log: eulaLog, type: .debug)
         
-        //NSApp.runModal(for: eula.window!)
-        
-        let modalSession = NSApp.beginModalSession(for: eula.window!)
-        
-        while NSApp.runModalSession(modalSession) == .continue {
-            
-            // let things run for a 1/10 second before going back
-            
-            RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-        }
-        
-        NSApp.endModalSession(modalSession)
+        NSApp.runModal(for: eula.window!)
         
         os_log("EULA mech complete", log: eulaLog, type: .debug)
     }

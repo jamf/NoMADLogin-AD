@@ -33,9 +33,6 @@ class EULAUI : NSWindowController {
         os_log("Calling super.windowDidLoad", log: uiLog, type: .default)
         super.windowDidLoad()
         
-        let scrollNotification = NSNotification.Name.init(rawValue: "NSScrollViewDidLiveScroll")
-        NotificationCenter.default.addObserver(self, selector: #selector(checkScrollPosition), name: scrollNotification, object: nil)
-        
         os_log("EULA window showing.", log: eulaLog, type: .default )
         // set everything to off
         
@@ -72,12 +69,20 @@ class EULAUI : NSWindowController {
 
         os_log("create background windows", log: eulaLog, type: .default)
         createBackgroundWindow()
-        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self,
+                                       selector: #selector(displayConfigurationUpdated),
+                                       name: NSApplication.didChangeScreenParametersNotification,
+                                       object: nil)
     }
     
-    @objc func checkScrollPosition() {
-        
+    @objc func displayConfigurationUpdated() {
+        os_log("Screen Paramaters updated", log: eulaLog, type: .default)
+        createBackgroundWindow()
+        self.window?.makeKeyAndOrderFront(nil)
+        self.window?.center()
     }
+    
     @IBAction func agreeAction(_ sender: Any) {
         
         if agreeButton.state == .on {
@@ -180,7 +185,7 @@ class EULAUI : NSWindowController {
         }
         backgroundWindow.close()
         effectWindow.close()
-        NSApp.abortModal()
+        NSApp.stopModal()
         self.window?.close()
     }
     

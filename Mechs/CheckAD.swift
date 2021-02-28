@@ -40,12 +40,14 @@ class CheckAD: NoLoMechanism {
             return
         }
         os_log("Displaying window", log: checkADLog, type: .debug)
+        signIn.registerForScreenChanges()
         NSApp.runModal(for: signIn.window!)
         os_log("CheckAD mech complete", log: checkADLog, type: .debug)
     }
 
     @objc func tearDown() {
         os_log("Got teardown request", log: checkADLog, type: .debug)
+        signIn.unregisterForScreenChanges()
         signIn.loginTransition()
     }
 

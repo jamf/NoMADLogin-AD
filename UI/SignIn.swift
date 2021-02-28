@@ -150,6 +150,24 @@ class SignIn: NSWindowController, DSQueryable {
         }
     }
 
+    func registerForScreenChanges() {
+        os_log("Registering for Screen Changes", log: uiLog, type: .debug)
+
+        NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification,
+                                               object: NSApplication.shared,
+                                               queue: OperationQueue.main) {
+                                               notification -> Void in
+            os_log("Screen Changed", log: uiLog, type: .debug)
+            self.createBackgroundWindow()
+            self.window?.center()
+            self.window?.makeKeyAndOrderFront(nil)
+        }
+    }
+    
+    func unregisterForScreenChanges() {
+        os_log("Unregistering for Screen Changes", log: uiLog, type: .debug)
+        NotificationCenter.default.removeObserver(self, name: NSApplication.didChangeScreenParametersNotification, object: NSApplication.shared)
+    }
 
     func loginTransition() {
         os_log("Transitioning... fade our UI away", log: uiLog, type: .debug)
