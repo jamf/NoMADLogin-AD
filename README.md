@@ -1,3 +1,20 @@
+
+# NoMAD Projects Archived
+
+Jamf has decided to archive the NoMAD repos on GitHub. Going forward they aren’t going to receive any updates. 
+
+While they are read-only, they aren’t being deleted. That means that anyone who wants to fork and use the code is welcome to do so. Everything remains MIT licensed and open source.
+
+The projects are still here and still open source, they just won’t be maintained by Jamf. Any existing issues or PRs have been closed.
+
+You can see the official announcement on the [Jamf Blog](https://www.jamf.com/blog/jamf-to-archive-nomad-open-source-projects/).
+
+There is still an active user community on the [MacAdmins Slack nomad channel](https://macadmins.slack.com/archives/C1Y2Y14QG).
+
+As always, have fun and read the man pages.
+
+macshome
+
 # NoMAD Login AD
 
 Hi everyone! You have found your way to the repo for **NoMAD Login AD**, or NoLoAD for short. This project can be seen as a companion to our other AD authentication product for macOS, [NoMAD](https://nomad.menu). You can use either one independently from each other, and both contain all the bits and pieces you need to talk to AD.
